@@ -1,7 +1,4 @@
 #include "file.h"
-#include "csv.c"
-#include "json.c"
-#include "../CSVMatrixCreator/CSV_createMatrix.h"
 
 
 static FileType fileType;
