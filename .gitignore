@@ -6,7 +6,7 @@
 *.exe
 *.obj
 *.log
-*.exe
+.exe
 
 # Build systems
 # CMake
