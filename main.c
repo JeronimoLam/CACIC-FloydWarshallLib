@@ -2,15 +2,14 @@
 #include <stdio.h>
 #include <getopt.h>
 
-#include "Matrix/matrix.h"
+//#include "Matrix/matrix.h"
 #include "DataType/dataType.h"
 #include "FileReader/file.h"
 
-int * matrix;
-int size;
+void print_matrix(void*, int, DataType);
 
 int main(int argc, char *argv[]) {
-
+    int size;
     FILE *file;
     int c;
     int dataTypeFlag = 0;
@@ -80,8 +79,8 @@ int main(int argc, char *argv[]) {
     size = calculateMatrixSize(getFileType(), file);
     printf("Matrix Size: %d\n", size);
 
-    matrix = createMatrix(getFileType(), file, size);
-    print_matrix();
+    void * matrix = createMatrix(getFileType(), getDataType(), file, size);
+    print_matrix(matrix, size, getDataType());
 
     // Closes the file
     fclose(file);
@@ -92,18 +91,43 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-/*
-    for (int row = 0; row < N; row++) {
-        for (int col = 0; col < N; col++) {
-            if (!fscanf(file, "%d,", &matrix[row*N + col])) {
-                break;
+void print_matrix(void* matrix, int size, DataType dataType) {
+    int i, j;
+    switch(dataType) {
+        case TYPE_INT:
+            for (i = 0; i < size; i++) {
+                for (j = 0; j < size; j++) {
+                    printf("%d ", ((int*)matrix)[i * size + j]);
+                }
+                printf("\n");
             }
-            printf("%d ", matrix[row*N + col]); // Imprime cada número a medida que se lee
-        }
-        printf("\n");
+            break;
+        case TYPE_FLOAT:
+            for (i = 0; i < size; i++) {
+                for (j = 0; j < size; j++) {
+                    printf("%f ", ((float*)matrix)[i * size + j]);
+                }
+                printf("\n");
+            }
+            break;
+        case TYPE_DOUBLE:
+            for (i = 0; i < size; i++) {
+                for (j = 0; j < size; j++) {
+                    printf("%lf ", ((double*)matrix)[i * size + j]);
+                }
+                printf("\n");
+            }
+            break;
+        case TYPE_CHAR:
+            for (i = 0; i < size; i++) {
+                for (j = 0; j < size; j++) {
+                    printf("%c ", ((char*)matrix)[i * size + j]);
+                }
+                printf("\n");
+            }
+            break;
+        default:
+            printf("Unsupported data type for printing.\n");
+            break;
     }
-*/
-
-
-
-
+}

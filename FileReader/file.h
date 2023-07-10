@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../CSVMatrixCreator/CSV_createMatrix.h"
 
     typedef enum {
         CSV,
@@ -16,6 +17,6 @@
     char *fileTypeToString();
 
     int calculateMatrixSize(FileType, FILE*);
-    int* createMatrix(FileType, FILE*, int);
+    void* createMatrix(FileType, DataType,  FILE*, int);
 
 #endif //TEST_FILE_H

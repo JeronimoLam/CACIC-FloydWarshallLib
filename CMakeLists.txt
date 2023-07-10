@@ -3,4 +3,4 @@ project(Test C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Test main.c Matrix/matrix.c Matrix/matrix.h DataType/dataType.c DataType/dataType.h FileReader/file.c FileReader/file.h)
+add_executable(Test main.c Matrix/matrix.c Matrix/matrix.h DataType/dataType.c DataType/dataType.h FileReader/file.c FileReader/file.h CSVMatrixCreator/CSV_createMatrix.c CSVMatrixCreator/CSV_createMatrix.h CSV_Utils/CSV_Utils.c CSV_Utils/CSV_Utils.h)

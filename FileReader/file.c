@@ -1,6 +1,8 @@
 #include "file.h"
 #include "csv.c"
 #include "json.c"
+#include "../CSVMatrixCreator/CSV_createMatrix.h"
+
 
 static FileType fileType;
 
@@ -61,10 +63,10 @@ int calculateMatrixSize(FileType ft, FILE* file){
     }
 }
 
-int* createMatrix(FileType ft, FILE* file, int size){
+void* createMatrix(FileType ft, DataType dt, FILE* file, int size){
     switch (ft) {
         case CSV:
-            return CSV_createMatrix(file, size);
+            return CSV_createMatrix(file, size, dt);
         case JSON:
             return JSON_createMatrix(file, size);
     }
