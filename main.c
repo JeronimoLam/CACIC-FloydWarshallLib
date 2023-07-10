@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 
     while ((c = getopt_long(argc, argv, "a:r:cifd", long_options, &option_index)) != -1) {
         switch (c) {
-            case 'a':a
+            case 'a':
                 file = getFile(optarg);
                 if (file == NULL) {
                     return -1;
