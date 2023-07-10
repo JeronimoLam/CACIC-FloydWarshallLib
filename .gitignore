@@ -35,5 +35,6 @@ CPackSourceConfig.cmake
 /cmake-build-*/
 *.ninja*
 *.ninja
+.ninja*
 
 
