@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
     FILE *file;
     int c;
+    int dataTypeFlag = 0;
 
     static struct option long_options[] = {
             {"absolute-path", required_argument, 0, 'a'},
@@ -43,27 +44,38 @@ int main(int argc, char *argv[]) {
                 }
                 break;
             case 'c':
-                setDataType(TYPE_CHAR);
-                printf("%s\n", dataTypeToString());
-                break;
             case 'i':
-                setDataType(TYPE_INT);
-                printf("%s\n", dataTypeToString());
-                break;
             case 'f':
-                setDataType(TYPE_FLOAT);
-                printf("%s\n", dataTypeToString());
-                break;
             case 'd':
-                setDataType(TYPE_DOUBLE);
-                printf("%s\n", dataTypeToString());
+                if (dataTypeFlag) {
+                    fprintf(stderr, "Error: only one data type argument can be used at a time.\n");
+                    exit(EXIT_FAILURE);
+                }
+                dataTypeFlag = 1;
+
+                switch(c) {
+                    case 'c':
+                        setDataType(TYPE_CHAR);
+                        break;
+                    case 'i':
+                        setDataType(TYPE_INT);
+                        break;
+                    case 'f':
+                        setDataType(TYPE_FLOAT);
+                        break;
+                    case 'd':
+                        setDataType(TYPE_DOUBLE);
+                        break;
+                }
                 break;
+
             default:
                 fprintf(stderr, "Usage: %s --absolute-path path --relative-path path -c -i -f -d\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
 
+    printf("%s\n", dataTypeToString());
     printf("File Type: %s\n", fileTypeToString());
 
     // Calculation of matrix size
@@ -86,11 +98,11 @@ int main(int argc, char *argv[]) {
         while (token != NULL) {
             token = trim(token);
             //printf("%s\t", token);
-           /* if (isNumber(token))
-            {
-                matrix[row * N + col] = atoi(token);
-            }*/
-           int test = atoi(token);
+            /* if (isNumber(token))
+             {
+                 matrix[row * N + col] = atoi(token);
+             }*/
+            int test = atoi(token);
             matrix[row * size + col] = atoi(token);
             token = strtok(NULL, ",");
             col++;

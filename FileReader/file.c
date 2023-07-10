@@ -8,15 +8,15 @@ FILE* getFile(const char* filename) {
 
     // Check the file extension
     if (ext == NULL || (strcmp(ext, ".csv") != 0 && strcmp(ext, ".json") != 0)) {
-        printf("Error: Invalid file extension. Only .csv and .json files are supported.\n");
-        return NULL;
+        fprintf(stderr, "Error: Invalid file extension. Only .csv and .json files are supported.\n");
+        exit(EXIT_FAILURE);
     }
 
     // Try to open the file
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Error: Unable to open file.\n");
-        return NULL;
+        fprintf(stderr, "Error: Unable to open file.\n");
+        exit(EXIT_FAILURE);
     }
     else{
         if (strcmp(ext, ".csv") == 0) {
