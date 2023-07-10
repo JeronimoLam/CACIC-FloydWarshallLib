@@ -28,4 +28,7 @@ CPackSourceConfig.cmake
 *.sublime-project
 *.sublime-workspace
 .idea/
+/cmake-build-debug/
+/cmake-build-*/
+
 
