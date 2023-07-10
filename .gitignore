@@ -4,6 +4,9 @@
 *.out
 *.a
 *.exe
+*.obj
+*.log
+*.exe
 
 # Build systems
 # CMake
