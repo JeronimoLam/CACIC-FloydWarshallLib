@@ -3,4 +3,4 @@ project(Test C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Test main.c Matrix/matrix.c Matrix/matrix.h DataType/dataType.c DataType/dataType.h FileReader/file.c FileReader/file.h CSV/CSV_createMatrix.c CSV/CSV_Utils.h CSV/CSV_Functions.c JSON/JSON_CreateMatrix.c JSON/JSON_Utils.h JSON/JSON_Functions.c)
+add_executable(Test main.c Matrix/matrix.c Matrix/matrix.h DataType/dataType.c DataType/dataType.h FileReader/file.c FileReader/file.h FileTypes/CSV/CSV_createMatrix.c FileTypes/CSV/CSV_Utils.h FileTypes/CSV/CSV_Functions.c FileTypes/JSON/JSON_CreateMatrix.c FileTypes/JSON/JSON_Utils.h FileTypes/JSON/JSON_Functions.c)

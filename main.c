@@ -15,8 +15,9 @@ int main(int argc, char *argv[]) {
     int dataTypeFlag = 0;
 
     static struct option long_options[] = {
-            {"absolute-path", required_argument, 0, 'a'},
-            {"relative-path", required_argument, 0, 'r'},
+            {"path", required_argument, 0, 'p'},
+            //{"absolute-path", required_argument, 0, 'a'},
+            //{"relative-path", required_argument, 0, 'r'},
             {"char",           no_argument, 0, 'c'},
             {"int",           no_argument, 0, 'i'},
             {"float",         no_argument, 0, 'f'},
@@ -26,9 +27,16 @@ int main(int argc, char *argv[]) {
 
     int option_index = 0;
 
-    while ((c = getopt_long(argc, argv, "a:r:cifd", long_options, &option_index)) != -1) {
+//    while ((c = getopt_long(argc, argv, "a:r:cifd", long_options, &option_index)) != -1) {
+    while ((c = getopt_long(argc, argv, "p:cifd", long_options, &option_index)) != -1) {
         switch (c) {
-            case 'a':
+            case 'p':
+                file = getFile(optarg);
+                if (file == NULL) {
+                    return -1;
+                }
+                break;
+            /*case 'a':
                 file = getFile(optarg);
                 if (file == NULL) {
                     return -1;
@@ -39,7 +47,7 @@ int main(int argc, char *argv[]) {
                 if (file == NULL) {
                     return -1;
                 }
-                break;
+                break;*/
             case 'c':
             case 'i':
             case 'f':
@@ -67,12 +75,18 @@ int main(int argc, char *argv[]) {
                 break;
 
             default:
-                fprintf(stderr, "Usage: %s --absolute-path path --relative-path path -c -i -f -d\n", argv[0]);
+                fprintf(stderr, "Usage: %s --path path -c -i -f -d\n", argv[0]);
+//                fprintf(stderr, "Usage: %s --absolute-path path --relative-path path -c -i -f -d\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
-
     printf("File Type: %s\n", fileTypeToString());
+
+    if(getDataType() == UNDEFINED){
+        printf("Auto-Detecting Data Type...\n");
+        AutoDetectDataType(getFileType(), file);
+    }
+
     printf("Selected %s\n", dataTypeToString());
 
     // Calculation of matrix size

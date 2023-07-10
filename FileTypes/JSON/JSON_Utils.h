@@ -9,5 +9,6 @@
 
 int JSON_calculateMatrixSize(FILE *);
 int *JSON_createMatrix(FILE *,  int);
+void JSON_AutoDetectDataType(FILE * file);
 
 #endif //TEST_JSON_UTILS_H

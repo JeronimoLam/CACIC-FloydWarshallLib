@@ -1,6 +1,5 @@
 #include "file.h"
 
-
 static FileType fileType;
 
 FILE* getFile(const char* filename) {
@@ -58,6 +57,16 @@ int calculateMatrixSize(FileType ft, FILE* file){
         case JSON:
             return JSON_calculateMatrixSize(file);
     }
+}
+
+void AutoDetectDataType(FileType ft, FILE* file){
+    switch (ft) {
+        case CSV:
+            CSV_AutoDetectDataType(file);
+        case JSON:
+            JSON_AutoDetectDataType(file);
+    }
+    rewind(file);
 }
 
 void* createMatrix(FileType ft, DataType dt, FILE* file, int size){

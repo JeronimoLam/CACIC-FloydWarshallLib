@@ -1,6 +1,6 @@
 #include "dataType.h"
 
-static DataType myType;
+static DataType myType = UNDEFINED;
 
 //Setter
 void setDataType(DataType type) {
@@ -29,6 +29,7 @@ char* dataTypeToString() {
         case TYPE_CHAR:
             sprintf(result, "%s%s", prefix, "CHAR");
             break;
+        case UNDEFINED:
         default:
             sprintf(result, "%s%s", prefix, "unknown");
     }

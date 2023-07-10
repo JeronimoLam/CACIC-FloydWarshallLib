@@ -95,3 +95,16 @@ int CSV_calculateMatrixSize(FILE *file) {
 
     return N;
 }
+
+void CSV_AutoDetectDataType(FILE * file) {
+    char c;
+    int N = 1; // Start at 1 to count the first column
+
+    while(((c = getc(file)) != EOF)){
+        if(c == '.'){
+            setDataType(TYPE_FLOAT);
+            return;
+        }
+    }
+    setDataType(TYPE_INT);
+}

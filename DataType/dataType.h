@@ -9,6 +9,7 @@ typedef enum {
     TYPE_FLOAT,
     TYPE_DOUBLE,
     TYPE_CHAR,
+    UNDEFINED,
 } DataType;
 
 void setDataType(DataType type);

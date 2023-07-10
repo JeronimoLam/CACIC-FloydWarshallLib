@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../CSV/CSV_Utils.h"
-#include "../JSON/JSON_Utils.h"
+#include "../FileTypes/CSV/CSV_Utils.h"
+#include "../FileTypes/JSON/JSON_Utils.h"
 
     typedef enum {
         CSV,
@@ -19,5 +19,6 @@
 
     int calculateMatrixSize(FileType, FILE*);
     void* createMatrix(FileType, DataType, FILE*, int);
+    void AutoDetectDataType(FileType, FILE*);
 
 #endif //TEST_FILE_H
