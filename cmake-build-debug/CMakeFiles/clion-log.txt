@@ -1,4 +1,10 @@
-"C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.2/bin/ninja/win/ninja.exe" -G Ninja -S D:\PC_Files\Documents\Facultad\PPS\Test -B D:\PC_Files\Documents\Facultad\PPS\Test\cmake-build-debug
+"C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S D:\PC_Files\Documents\Facultad\PPS\PPS-FloydWarshallLib -B D:\PC_Files\Documents\Facultad\PPS\PPS-FloydWarshallLib\cmake-build-debug
+-- The C compiler identification is GNU 11.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/JetBrains/CLion 2022.2/bin/mingw/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: D:/PC_Files/Documents/Facultad/PPS/Test/cmake-build-debug
+-- Build files have been written to: D:/PC_Files/Documents/Facultad/PPS/PPS-FloydWarshallLib/cmake-build-debug

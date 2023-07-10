@@ -14,7 +14,7 @@ DataType getDataType() {
 
 //ToString
 char* dataTypeToString() {
-    const char *prefix = "Datatype: ";
+    const char *prefix = "Data Type: ";
     char *result = malloc(30);  // allocate enough memory for the prefix and the datatype string
     switch (myType) {
         case TYPE_INT:

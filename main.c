@@ -9,8 +9,6 @@
 int * matrix;
 int size;
 
-FILE* getFile(const char* filename);
-
 int main(int argc, char *argv[]) {
 
     FILE *file;
@@ -75,42 +73,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    printf("%s\n", dataTypeToString());
     printf("File Type: %s\n", fileTypeToString());
+    printf("Selected %s\n", dataTypeToString());
 
     // Calculation of matrix size
-    size = calculateMatrixSize(file);
+    size = calculateMatrixSize(getFileType(), file);
+    printf("Matrix Size: %d\n", size);
 
-    matrix = (int *)malloc(size * size * sizeof(int));
-
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    char *token;
-    int row = 0, col = 0;
-
-    while ((read = getline(&line, &len, file)) != -1) {
-        // Remove trailing newline
-        line[strcspn(line, "\n")] = '\0';
-
-        // Split line into tokens (cells)
-        token = strtok(line, ",");
-        while (token != NULL) {
-            token = trim(token);
-            //printf("%s\t", token);
-            /* if (isNumber(token))
-             {
-                 matrix[row * N + col] = atoi(token);
-             }*/
-            int test = atoi(token);
-            matrix[row * size + col] = atoi(token);
-            token = strtok(NULL, ",");
-            col++;
-        }
-        col = 0;
-        row++;
-    }
-
+    matrix = createMatrix(getFileType(), file, size);
     print_matrix();
 
     // Closes the file
@@ -118,7 +88,6 @@ int main(int argc, char *argv[]) {
 
     // Free memory
     free(matrix);
-    printf("test\n");
 
     return 0;
 }

@@ -14,9 +14,6 @@
 extern int * matrix;
 extern int size;
 
-// Function to calculate size of matrix
-int calculateMatrixSize(FILE *file);
-
 // Function to get a line from a file, POSIX style
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 

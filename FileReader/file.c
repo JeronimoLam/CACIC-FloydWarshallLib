@@ -1,4 +1,6 @@
 #include "file.h"
+#include "csv.c"
+#include "json.c"
 
 static FileType fileType;
 
@@ -47,5 +49,23 @@ char *fileTypeToString() {
             return "JSON";
         default:
             return "Unknown";
+    }
+}
+
+int calculateMatrixSize(FileType ft, FILE* file){
+    switch (ft) {
+        case CSV:
+            return CSV_calculateMatrixSize(file);
+        case JSON:
+            return JSON_calculateMatrixSize(file);
+    }
+}
+
+int* createMatrix(FileType ft, FILE* file, int size){
+    switch (ft) {
+        case CSV:
+            return CSV_createMatrix(file, size);
+        case JSON:
+            return JSON_createMatrix(file, size);
     }
 }

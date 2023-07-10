@@ -1,7 +1,9 @@
-#include "matrix.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
-
-ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
+static ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
     const size_t chunk = 128;
     char *buffer = *lineptr;
     size_t capacity = *n;
@@ -62,7 +64,7 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
     return length;
 }
 
-char *trim(char *str)
+static char *trim(char *str)
 {
     char *end;
 
@@ -82,13 +84,47 @@ char *trim(char *str)
     return str;
 }
 
+int CSV_calculateMatrixSize(FILE *file) {
+    char c;
+    int N = 1; // Start at 1 to count the first column
 
-void print_matrix() {
-    for(int i = 0; i < size; i++) {
-        for(int j = 0; j < size; j++) {
-            printf("%d ", matrix[i*size + j]);
+    while(((c = getc(file)) != '\n') && (c != EOF)){
+        if(c == ','){
+            N++;
         }
-        printf("\n");
     }
+
+    rewind(file);  // Reset the file pointer to the beginning of the file
+
+    return N;
 }
 
+int* CSV_createMatrix(FILE* file, int size) {
+    int *matrix = (int *)malloc(size * size * sizeof(int));
+
+    char *line = NULL;
+    size_t len = 0;
+    char *token;
+    int row = 0, col = 0;
+
+    while ((getline(&line, &len, file)) != -1) {
+        // Remove trailing newline
+        line[strcspn(line, "\n")] = '\0';
+
+        // Split line into tokens (cells)
+        token = strtok(line, ",");
+        while (token != NULL) {
+            token = trim(token);  // You need to ensure the trim() function is defined
+            matrix[row * size + col] = atoi(token);
+            token = strtok(NULL, ",");
+            col++;
+        }
+        col = 0;
+        row++;
+    }
+
+    if (line)
+        free(line);
+
+    return matrix;
+}
