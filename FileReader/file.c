@@ -59,6 +59,7 @@ void calculateMatrixSize(FileType ft, FILE* file){
     }
 }
 
+
 void AutoDetectDataType(FileType ft, FILE* file){
     switch (ft) {
         case CSV:

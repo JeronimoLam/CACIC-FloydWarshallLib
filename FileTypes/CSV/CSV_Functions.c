@@ -28,6 +28,7 @@ void CSV_calculateMatrixSize(FILE *file) {
     char line[1024];
     int cols = 1, tmp_cols, rows = 0; // Start at 1 to count the first column
 
+
     while (fgets(line, sizeof(line), file)) {
         if (strlen(line) <= 1) continue; // Ignore empty lines or lines that only contain a newline character
         tmp_cols = 0;
