@@ -12,6 +12,9 @@
 #include <ctype.h>
 
 // Function to print the matrix
-void print_matrix(void * size);
+void setCols(int cols);
+int getCols();
+void setRows(int rows);
+int getRows();
 
 #endif //TEST_MATRIX_H

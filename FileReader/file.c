@@ -50,12 +50,12 @@ char *fileTypeToString() {
     }
 }
 
-int calculateMatrixSize(FileType ft, FILE* file){
+void calculateMatrixSize(FileType ft, FILE* file){
     switch (ft) {
         case CSV:
-            return CSV_calculateMatrixSize(file);
+            CSV_calculateMatrixSize(file);
         case JSON:
-            return JSON_calculateMatrixSize(file);
+            JSON_calculateMatrixSize(file);
     }
 }
 
@@ -69,11 +69,11 @@ void AutoDetectDataType(FileType ft, FILE* file){
     rewind(file);
 }
 
-void* createMatrix(FileType ft, DataType dt, FILE* file, int size){
+void* createMatrix(FileType ft, DataType dt, FILE* file, int cols, int rows){
     switch (ft) {
         case CSV:
-            return CSV_createMatrix(file, size, dt);
+            return CSV_createMatrix(file, cols, rows, dt);
         case JSON:
-            return JSON_createMatrix(file, size);
+            return JSON_createMatrix(file, cols, rows, dt);
     }
 }

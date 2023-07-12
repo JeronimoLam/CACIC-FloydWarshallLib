@@ -9,11 +9,11 @@
 #include <ctype.h>
 #include "../../DataType/dataType.h"
 
-void* CSV_createMatrix(FILE* file, int size, DataType dataType);
+void* CSV_createMatrix(FILE*, int, int, DataType);
 
 ssize_t getline (char **, size_t *, FILE *);
 char *trim(char *);
-int CSV_calculateMatrixSize(FILE *);
+void CSV_calculateMatrixSize(FILE *);
 void CSV_AutoDetectDataType(FILE * file);
 
 #endif // CSV_CREATE_MATRIX_H

@@ -1,11 +1,24 @@
 #include "matrix.h"
-/*
-void print_matrix() {
-    for(int i = 0; i < size; i++) {
-        for(int j = 0; j < size; j++) {
-            printf("%d ", matrix[i*size + j]);
-        }
-        printf("\n");
-    }
+
+static int cols;
+static int rows;
+static void * matrix;
+
+// Setters and getters
+void setCols(int c) {
+    cols = c;
 }
-*/
+int getCols() {
+    return cols;
+}
+void setRows(int r) {
+    rows = r;
+}
+int getRows() {
+    return rows;
+}
+
+
+
+
+

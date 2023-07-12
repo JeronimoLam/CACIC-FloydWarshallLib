@@ -1,66 +1,7 @@
 #include "CSV_Utils.h"
+#include "../../Matrix/matrix.h"
 
-ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
-    const size_t chunk = 128;
-    char *buffer = *lineptr;
-    size_t capacity = *n;
-    size_t length = 0;
-
-    // Allocate initial buffer if one does not exist
-    if (buffer == NULL || capacity == 0) {
-        capacity = chunk;
-        buffer = malloc(capacity);
-        if (buffer == NULL) {
-            return -1; // allocation failed
-        }
-    }
-
-    // Read the line character by character
-    int c;
-    while ((c = fgetc(stream)) != EOF) {
-        // Resize the buffer if we exceed capacity
-        if (length + 1 > capacity) {
-            // Double the buffer size
-            capacity *= 2;
-            buffer = realloc(buffer, capacity);
-            if (buffer == NULL) {
-                return -1; // allocation failed
-            }
-        }
-
-        // Store the character and increment length
-        buffer[length++] = c;
-
-        // Stop at newline
-        if (c == '\n') {
-            break;
-        }
-    }
-
-    // Null terminate the string
-    if (length + 1 > capacity) {
-        // Resize the buffer if we've run out of space for the null terminator
-        capacity++;
-        buffer = realloc(buffer, capacity);
-        if (buffer == NULL) {
-            return -1; // allocation failed
-        }
-    }
-    buffer[length] = '\0';
-
-    // Return the buffer and its size via output parameters
-    *lineptr = buffer;
-    *n = capacity;
-
-    // If we read no characters return -1
-    if(length == 0) {
-        return -1;
-    }
-
-    // Otherwise, return the number of characters read, including newline, but not including null terminator
-    return length;
-}
-
+// Trims the string
 char *trim(char *str)
 {
     char *end;
@@ -81,24 +22,35 @@ char *trim(char *str)
     return str;
 }
 
-int CSV_calculateMatrixSize(FILE *file) {
-    char c;
-    int N = 1; // Start at 1 to count the first column
 
-    while(((c = getc(file)) != '\n') && (c != EOF)){
-        if(c == ','){
-            N++;
+// reads the whole file and calculates the size of the matrix
+void CSV_calculateMatrixSize(FILE *file) {
+    char line[1024];
+    int cols = 1, tmp_cols, rows = 0; // Start at 1 to count the first column
+
+    while (fgets(line, sizeof(line), file)) {
+        if (strlen(line) <= 1) continue; // Ignore empty lines or lines that only contain a newline character
+        tmp_cols = 0;
+        char* token = strtok(line, ",");
+        while (token) {
+            tmp_cols++;
+            token = strtok(NULL, ",");
         }
+        if (cols < tmp_cols) {
+            cols = tmp_cols;
+        }
+        rows++;
     }
 
     rewind(file);  // Reset the file pointer to the beginning of the file
-
-    return N;
+    setCols(cols);
+    setRows(rows);
 }
 
+// Scans the file looking for a '.' to determine if the data type is INT
+// If '.' is found, the data type is set to FLOAT
 void CSV_AutoDetectDataType(FILE * file) {
     char c;
-    int N = 1; // Start at 1 to count the first column
 
     while(((c = getc(file)) != EOF)){
         if(c == '.'){

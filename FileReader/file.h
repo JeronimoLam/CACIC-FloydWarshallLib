@@ -17,8 +17,8 @@
     FileType getFileType();
     char *fileTypeToString();
 
-    int calculateMatrixSize(FileType, FILE*);
-    void* createMatrix(FileType, DataType, FILE*, int);
+    void calculateMatrixSize(FileType, FILE*);
+    void* createMatrix(FileType, DataType, FILE*, int, int);
     void AutoDetectDataType(FileType, FILE*);
 
 #endif //TEST_FILE_H

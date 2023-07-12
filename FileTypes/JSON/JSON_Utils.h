@@ -6,9 +6,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#include "../../DataType/dataType.h"
 
-int JSON_calculateMatrixSize(FILE *);
-int *JSON_createMatrix(FILE *,  int);
-void JSON_AutoDetectDataType(FILE * file);
+
+void JSON_calculateMatrixSize(FILE *);
+int *JSON_createMatrix(FILE *,  int, int, DataType);
+void JSON_AutoDetectDataType(FILE *);
 
 #endif //TEST_JSON_UTILS_H

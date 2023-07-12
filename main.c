@@ -5,6 +5,7 @@
 //#include "Matrix/matrix.h"
 #include "DataType/dataType.h"
 #include "FileReader/file.h"
+#include "Matrix/matrix.h"
 
 void print_matrix(void*, int, DataType);
 
@@ -36,18 +37,6 @@ int main(int argc, char *argv[]) {
                     return -1;
                 }
                 break;
-            /*case 'a':
-                file = getFile(optarg);
-                if (file == NULL) {
-                    return -1;
-                }
-                break;
-            case 'r':
-                file = getFile(optarg);
-                if (file == NULL) {
-                    return -1;
-                }
-                break;*/
             case 'c':
             case 'i':
             case 'f':
@@ -76,7 +65,6 @@ int main(int argc, char *argv[]) {
 
             default:
                 fprintf(stderr, "Usage: %s --path path -c -i -f -d\n", argv[0]);
-//                fprintf(stderr, "Usage: %s --absolute-path path --relative-path path -c -i -f -d\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
@@ -90,17 +78,17 @@ int main(int argc, char *argv[]) {
     printf("Selected %s\n", dataTypeToString());
 
     // Calculation of matrix size
-    size = calculateMatrixSize(getFileType(), file);
-    printf("Matrix Size: %d\n", size);
+    calculateMatrixSize(getFileType(), file);
+    printf("Matrix Size: %d X %d\n", getCols(), getRows());
 
-    void * matrix = createMatrix(getFileType(), getDataType(), file, size);
-    print_matrix(matrix, size, getDataType());
+    void * matrix = createMatrix(getFileType(), getDataType(), file, getCols(), getRows());
+    print_matrix(matrix, getCols(), getDataType());
 
     // Closes the file
     fclose(file);
 
     // Free memory
-    free(matrix);
+    //free(matrix);
 
     return 0;
 }
