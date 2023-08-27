@@ -2,18 +2,19 @@
 #include <stdio.h>
 #include <getopt.h>
 
-//#include "Matrix/matrix.h"
-#include "DataType/dataType.h"
-#include "FileReader/file.h"
-#include "Matrix/matrix.h"
 
-void print_matrix(void*, int, DataType);
+#include "Floyd-Warshall/FW_Lib_Functions.h"
+
+#include "FileReader/file.h"
+
 
 int main(int argc, char *argv[]) {
     int size;
+    char *path;
     FILE *file;
     int c;
     int dataTypeFlag = 0;
+    DataType dataType = UNDEFINED;
 
     static struct option long_options[] = {
             {"path", required_argument, 0, 'p'},
@@ -32,6 +33,7 @@ int main(int argc, char *argv[]) {
     while ((c = getopt_long(argc, argv, "p:cifd", long_options, &option_index)) != -1) {
         switch (c) {
             case 'p':
+                path = optarg;
                 file = getFile(optarg);
                 if (file == NULL) {
                     return -1;
@@ -49,40 +51,28 @@ int main(int argc, char *argv[]) {
 
                 switch(c) {
                     case 'c':
-                        setDataType(TYPE_CHAR);
+                        dataType = TYPE_CHAR;
                         break;
                     case 'i':
-                        setDataType(TYPE_INT);
+                        dataType = TYPE_INT;
                         break;
                     case 'f':
-                        setDataType(TYPE_FLOAT);
+                        dataType = TYPE_FLOAT;
                         break;
                     case 'd':
-                        setDataType(TYPE_DOUBLE);
+                        dataType = TYPE_DOUBLE;
                         break;
                 }
                 break;
 
             default:
-                fprintf(stderr, "Usage: %s --path path -c -i -f -d\n", argv[0]);
+                fprintf(stderr, "Usage: %s -p (--path) path -c -i -f -d\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
-    printf("File Type: %s\n", fileTypeToString());
 
-    if(getDataType() == UNDEFINED){
-        printf("Auto-Detecting Data Type...\n");
-        AutoDetectDataType(getFileType(), file);
-    }
+    create_structure(dataType, path);
 
-    printf("Selected %s\n", dataTypeToString());
-
-    // Calculation of matrix size
-    calculateMatrixSize(getFileType(), file);
-    printf("Matrix Size: %d X %d\n", getCols(), getRows());
-
-    void * matrix = createMatrix(getFileType(), getDataType(), file, getCols(), getRows());
-    print_matrix(matrix, getCols(), getDataType());
 
     // Closes the file
     fclose(file);
@@ -91,45 +81,4 @@ int main(int argc, char *argv[]) {
     //free(matrix);
 
     return 0;
-}
-
-void print_matrix(void* matrix, int size, DataType dataType) {
-    int i, j;
-    switch(dataType) {
-        case TYPE_INT:
-            for (i = 0; i < size; i++) {
-                for (j = 0; j < size; j++) {
-                    printf("%d ", ((int*)matrix)[i * size + j]);
-                }
-                printf("\n");
-            }
-            break;
-        case TYPE_FLOAT:
-            for (i = 0; i < size; i++) {
-                for (j = 0; j < size; j++) {
-                    printf("%f ", ((float*)matrix)[i * size + j]);
-                }
-                printf("\n");
-            }
-            break;
-        case TYPE_DOUBLE:
-            for (i = 0; i < size; i++) {
-                for (j = 0; j < size; j++) {
-                    printf("%lf ", ((double*)matrix)[i * size + j]);
-                }
-                printf("\n");
-            }
-            break;
-        case TYPE_CHAR:
-            for (i = 0; i < size; i++) {
-                for (j = 0; j < size; j++) {
-                    printf("%c ", ((char*)matrix)[i * size + j]);
-                }
-                printf("\n");
-            }
-            break;
-        default:
-            printf("Unsupported data type for printing.\n");
-            break;
-    }
 }

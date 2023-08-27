@@ -6,19 +6,17 @@
 #include <string.h>
 #include "../FileTypes/CSV/CSV_Utils.h"
 #include "../FileTypes/JSON/JSON_Utils.h"
+#include "../Floyd-Warshall/FW_Lib.h"  // Only include the struct definition
 
-    typedef enum {
-        CSV,
-        JSON,
-    } FileType;
 
     FILE* getFile(const char*);
     void setFileType(FileType);
     FileType getFileType();
     char *fileTypeToString();
 
-    void calculateMatrixSize(FileType, FILE*);
-    void* createMatrix(FileType, DataType, FILE*, int, int);
-    void AutoDetectDataType(FileType, FILE*);
+    void calculateMatrixSize(FW_Matrix *, FILE *);
+
+    void* createMatrix(FW_Matrix , FILE*);
+    DataType AutoDetectDataType(FileType, FILE*);
 
 #endif //TEST_FILE_H

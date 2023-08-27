@@ -1,6 +1,6 @@
 #include "JSON_Utils.h"
 
-int *JSON_createMatrix(FILE * file,  int cols, int rows, DataType type) {
+int *JSON_createMatrix(FW_Matrix FW, FILE * file) {
     // Implement Function
     return NULL;
 }

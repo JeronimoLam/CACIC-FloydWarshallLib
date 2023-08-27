@@ -7,13 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../../DataType/dataType.h"
+#include "../../Floyd-Warshall/FW_Lib.h"
 
-void* CSV_createMatrix(FILE*, int, int, DataType);
+void* CSV_createMatrix(FW_Matrix, FILE*);
 
-ssize_t getline (char **, size_t *, FILE *);
 char *trim(char *);
-void CSV_calculateMatrixSize(FILE *);
-void CSV_AutoDetectDataType(FILE * file);
+void CSV_calculateMatrixSize(FW_Matrix *, FILE *);
+DataType CSV_AutoDetectDataType(FILE * file);
 
 #endif // CSV_CREATE_MATRIX_H

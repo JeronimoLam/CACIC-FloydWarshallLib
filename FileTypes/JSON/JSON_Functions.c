@@ -7,6 +7,7 @@ void JSON_calculateMatrixSize(FILE *file) {
     // Implement Function
 }
 
-void JSON_AutoDetectDataType(FILE * file) {
+DataType JSON_AutoDetectDataType(FILE * file) {
     // Implement Function
+    return UNDEFINED;
 }

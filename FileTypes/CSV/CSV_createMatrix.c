@@ -5,8 +5,11 @@ static void* createFloatMatrix(FILE*, int, int);
 static void* createDoubleMatrix(FILE*, int, int);
 static void* createCharMatrix(FILE*, int, int);
 
-void* CSV_createMatrix(FILE* file, int cols, int rows, DataType dataType) {
-    switch(dataType) {
+void* CSV_createMatrix(FW_Matrix FW, FILE* file) {
+    int cols = FW.cols;
+    int rows = FW.rows;
+
+    switch(FW.datatype) {
         case TYPE_INT:
             return createIntMatrix(file, cols, rows);
         case TYPE_FLOAT:

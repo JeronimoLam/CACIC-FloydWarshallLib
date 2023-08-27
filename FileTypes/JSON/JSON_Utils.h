@@ -6,11 +6,12 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-#include "../../DataType/dataType.h"
+#include "../../Floyd-Warshall/FW_Lib.h"
 
+
+int *JSON_createMatrix(FW_Matrix FW, FILE * file);
 
 void JSON_calculateMatrixSize(FILE *);
-int *JSON_createMatrix(FILE *,  int, int, DataType);
-void JSON_AutoDetectDataType(FILE *);
+DataType JSON_AutoDetectDataType(FILE *);
 
 #endif //TEST_JSON_UTILS_H

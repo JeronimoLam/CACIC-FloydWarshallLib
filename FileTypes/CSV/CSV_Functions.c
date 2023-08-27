@@ -1,5 +1,4 @@
 #include "CSV_Utils.h"
-#include "../../Matrix/matrix.h"
 
 // Trims the string
 char *trim(char *str)
@@ -24,7 +23,7 @@ char *trim(char *str)
 
 
 // reads the whole file and calculates the size of the matrix
-void CSV_calculateMatrixSize(FILE *file) {
+void CSV_calculateMatrixSize( FW_Matrix *FW, FILE *file) {
     char line[1024];
     int cols = 1, tmp_cols, rows = 0; // Start at 1 to count the first column
 
@@ -43,21 +42,22 @@ void CSV_calculateMatrixSize(FILE *file) {
         rows++;
     }
 
+
     rewind(file);  // Reset the file pointer to the beginning of the file
-    setCols(cols);
-    setRows(rows);
+    // Set the cols and rows directly into the FW_Matrix structure using the pointer
+    FW->cols = cols;
+    FW->rows = rows;
 }
 
 // Scans the file looking for a '.' to determine if the data type is INT
 // If '.' is found, the data type is set to FLOAT
-void CSV_AutoDetectDataType(FILE * file) {
+DataType CSV_AutoDetectDataType(FILE * file) {
     char c;
 
     while(((c = getc(file)) != EOF)){
         if(c == '.'){
-            setDataType(TYPE_FLOAT);
-            return;
+            return TYPE_FLOAT;
         }
     }
-    setDataType(TYPE_INT);
+    return TYPE_INT;
 }
