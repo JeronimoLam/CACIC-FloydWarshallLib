@@ -87,3 +87,12 @@ void* createMatrix(FW_Matrix FW, FILE * file){
             return JSON_createMatrix(FW, file);
     }
 }
+
+void saveMatrix(FW_Matrix * FW, char* path, int dist_matrix, int path_matrix){
+    switch (FW->fileType) {
+        case CSV:
+            return CSV_saveMatrix(FW, path, dist_matrix, path_matrix);
+        case JSON:
+            return JSON_saveMatrix(FW, path, dist_matrix, path_matrix);
+    }
+}

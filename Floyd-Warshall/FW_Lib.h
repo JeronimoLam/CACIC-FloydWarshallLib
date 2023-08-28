@@ -1,6 +1,10 @@
 #ifndef TEST_FW_LIB_H
 #define TEST_FW_LIB_H
 
+#include <limits.h>
+
+#define INFINITE SHRT_MAX
+
 typedef enum {
     TYPE_INT,
     TYPE_FLOAT,
@@ -15,6 +19,8 @@ typedef enum {
 } FileType;
 
 typedef struct {
+    void * dist;
+    unsigned int * path;
     FileType fileType;
     DataType datatype;
     int cols;

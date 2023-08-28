@@ -71,8 +71,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    create_structure(dataType, path);
 
+    FW_Matrix data = create_structure(dataType, path);
+    compute_FW(&data);
+    save_structure(&data, "./output", 1, 0);
 
     // Closes the file
     fclose(file);

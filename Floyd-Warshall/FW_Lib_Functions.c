@@ -3,6 +3,8 @@
 void print_matrix(void*, int, DataType);
 char* dataTypeToString(DataType);
 
+int bloque = 2;
+
 FW_Matrix create_structure(DataType dataType, char * path){
     FW_Matrix FW;
     FILE* file = NULL;
@@ -28,22 +30,32 @@ FW_Matrix create_structure(DataType dataType, char * path){
     printf("Selected %s\n", dataTypeToString(FW.datatype));
 
     // Calculation of matrix size
-    calculateMatrixSize(&FW, file);
-    FW.norm_size = (FW.cols > FW.rows) ? FW.cols : FW.rows;
+    calculateMatrixSize(&FW, file); // Calulates rows and cols
+    FW.norm_size = (FW.cols > FW.rows) ? FW.cols : FW.rows; // Calculates the max size of the matrix (nxn)
+    //The matrix must be able to be divided into blocks
+    if(FW.norm_size % bloque != 0){
+        FW.norm_size = FW.norm_size + (bloque - (FW.norm_size % bloque));
+    }
 
-    printf("Matrix Size: %d X %d\n", FW.cols, FW.rows);
+    printf("Matrix Size: %d X %d\n", FW.rows, FW.cols);
+    printf("Block Size: %d\n", bloque);
+    printf("Normalized Size: %d X %d\n\n", FW.norm_size, FW.norm_size);
 
-    void * matrix = createMatrix(FW, file);
-    print_matrix(matrix, FW.norm_size, FW.datatype);
+    FW.dist = createMatrix(FW, file);
+    print_matrix(FW.dist, FW.norm_size, FW.datatype);
 
     return FW;
 }
 
-void compute_FW(FW_Matrix FW){
+void compute_FW(FW_Matrix * FW){
 
 }
-void save_structure(){
-
+void save_structure(FW_Matrix * FW, char * path,int dist_matrix, int path_matrix){
+    if (dist_matrix == 0 & path_matrix == 0){
+        printf("Select a matrix to export\n");
+        return;
+    }
+    saveMatrix(FW, path, dist_matrix, path_matrix);
 }
 
 

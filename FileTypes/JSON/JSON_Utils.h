@@ -10,6 +10,8 @@
 
 
 int *JSON_createMatrix(FW_Matrix FW, FILE * file);
+void JSON_saveMatrix(FW_Matrix *, char *, int, int);
+
 
 void JSON_calculateMatrixSize(FILE *);
 DataType JSON_AutoDetectDataType(FILE *);
