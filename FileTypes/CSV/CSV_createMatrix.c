@@ -1,19 +1,19 @@
 #include <float.h>
 #include "CSV_Utils.h"
 
-static void* createIntMatrix(FILE*, int);
-static void* createFloatMatrix(FILE*, int);
-static void* createDoubleMatrix(FILE*, int);
-static void* createCharMatrix(FILE*, int);
+static void* createIntMatrix(FILE*, unsigned int, unsigned int);
+static void* createFloatMatrix(FILE*, unsigned int, unsigned int);
+static void* createDoubleMatrix(FILE*, unsigned int, unsigned int);
+static void* createCharMatrix(FILE*, unsigned int, unsigned int);
 
 void* CSV_createMatrix(FW_Matrix FW, FILE* file) {
     switch(FW.datatype) {
         case TYPE_INT:
-            return createIntMatrix(file, FW.norm_size);
+            return createIntMatrix(file, FW.norm_size, FW.BS);
         case TYPE_FLOAT:
-            return createFloatMatrix(file,  FW.norm_size);
+            return createFloatMatrix(file,  FW.norm_size, FW.BS);
         case TYPE_DOUBLE:
-            return createDoubleMatrix(file,  FW.norm_size);
+            return createDoubleMatrix(file,  FW.norm_size, FW.BS);
 //        case TYPE_CHAR:
 //            return createCharMatrix(file,  FW.norm_size);
         default:
@@ -22,7 +22,7 @@ void* CSV_createMatrix(FW_Matrix FW, FILE* file) {
 }
 
 // These functions are similar but each one uses atoi, atof, strtod, or a simple assignment, respectively.
-static void* createIntMatrix(FILE* file, int size) {
+static void* createIntMatrix(FILE* file, unsigned int size, unsigned int BS) {
     int *matrix = (int *)malloc(size * size * sizeof(int));
     char *token;
     int row = 0, col = 0;
@@ -47,9 +47,21 @@ static void* createIntMatrix(FILE* file, int size) {
         col = 0; // Reset column counter for the next row
     }
 
-    return matrix;
+    //Reorder by blocks
+    int *block_matrix = (int *)malloc(size * size * sizeof(int));
+
+    unsigned int I,J,i,j,blockSize,r;
+    r = size / BS;
+    blockSize = BS * BS;
+    for(I=0; I<r; I++)
+        for(J=0; J<r; J++)
+            for(i=0; i < BS; i++)
+                for(j=0; j < BS; j++)
+                    block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+
+    return block_matrix;
 }
-static void* createFloatMatrix(FILE* file, int size) {
+static void* createFloatMatrix(FILE* file, unsigned int size, unsigned int BS) {
     float *matrix = (float *)malloc(size * size * sizeof(float));
     char *token;
     int row = 0, col = 0;
@@ -73,10 +85,23 @@ static void* createFloatMatrix(FILE* file, int size) {
         col = 0; // Reset column counter for the next row
     }
 
-    return matrix;
+    //Reorder by blocks
+    float *block_matrix = (float *)malloc(size * size * sizeof(float));
+
+    unsigned int I,J,i,j,blockSize,r;
+    r = size / BS;
+    blockSize = BS * BS;
+    for(I=0; I<r; I++)
+        for(J=0; J<r; J++)
+            for(i=0; i < BS; i++)
+                for(j=0; j < BS; j++)
+                    block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+
+
+    return block_matrix;
 }
 
-static void* createDoubleMatrix(FILE* file, int size) {
+static void* createDoubleMatrix(FILE* file, unsigned int size, unsigned int BS) {
     double *matrix = (double *)malloc(size * size * sizeof(double));
     char *token;
     int row = 0, col = 0;
@@ -100,7 +125,19 @@ static void* createDoubleMatrix(FILE* file, int size) {
         col = 0; // Reset column counter for the next row
     }
 
-    return matrix;
+    //Reorder by blocks
+    double *block_matrix = (double *)malloc(size * size * sizeof(double));
+
+    unsigned int I,J,i,j,blockSize,r;
+    r = size / BS;
+    blockSize = BS * BS;
+    for(I=0; I<r; I++)
+        for(J=0; J<r; J++)
+            for(i=0; i < BS; i++)
+                for(j=0; j < BS; j++)
+                    block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+
+    return block_matrix;
 }
 /*
 static void* createCharMatrix(FILE* file, int cols) {

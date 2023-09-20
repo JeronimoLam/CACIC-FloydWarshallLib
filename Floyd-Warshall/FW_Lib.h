@@ -23,9 +23,9 @@ typedef struct {
     unsigned int * path;
     FileType fileType;
     DataType datatype;
-    int cols;
-    int rows;
-    int norm_size;
+    unsigned int size;
+    unsigned int norm_size;
+    unsigned int BS;
 } FW_Matrix;
 
 #endif //TEST_FW_LIB_H

@@ -7,7 +7,6 @@
 
 #include "FileReader/file.h"
 
-
 int main(int argc, char *argv[]) {
     int size;
     char *path;
@@ -72,13 +71,12 @@ int main(int argc, char *argv[]) {
     }
 
 
-    FW_Matrix data = create_structure(dataType, path);
+    FW_Matrix data = create_structure(dataType, path, -1);
     compute_FW(&data);
-    save_structure(&data, "./output", 1, 0);
+    save_structure(data, "./output", 1, 0);
 
     // Closes the file
     fclose(file);
-
     // Free memory
     //free(matrix);
 

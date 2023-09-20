@@ -10,7 +10,7 @@
 #include "../../Floyd-Warshall/FW_Lib.h"
 
 void * CSV_createMatrix(FW_Matrix, FILE*);
-void CSV_saveMatrix(FW_Matrix *,char * path,  int, int);
+void CSV_saveMatrix(FW_Matrix,char *,  int, int);
 
 char *trim(char *);
 void CSV_calculateMatrixSize(FW_Matrix *, FILE *);

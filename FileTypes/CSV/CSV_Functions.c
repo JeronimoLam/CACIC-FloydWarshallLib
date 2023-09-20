@@ -23,30 +23,24 @@ char *trim(char *str)
 
 
 // reads the whole file and calculates the size of the matrix
-void CSV_calculateMatrixSize( FW_Matrix *FW, FILE *file) {
+void CSV_calculateMatrixSize(FW_Matrix *FW, FILE *file) {
     char line[1024];
-    int cols = 1, tmp_cols, rows = 0; // Start at 1 to count the first column
-
+    int size = 0; // Initialize to 0
 
     while (fgets(line, sizeof(line), file)) {
         if (strlen(line) <= 1) continue; // Ignore empty lines or lines that only contain a newline character
-        tmp_cols = 0;
+
+        size = 0;
         char* token = strtok(line, ",");
         while (token) {
-            tmp_cols++;
+            size++;
             token = strtok(NULL, ",");
         }
-        if (cols < tmp_cols) {
-            cols = tmp_cols;
-        }
-        rows++;
+        break;
     }
 
-
     rewind(file);  // Reset the file pointer to the beginning of the file
-    // Set the cols and rows directly into the FW_Matrix structure using the pointer
-    FW->cols = cols;
-    FW->rows = rows;
+    FW->size = size;
 }
 
 // Scans the file looking for a '.' to determine if the data type is INT
@@ -56,7 +50,7 @@ DataType CSV_AutoDetectDataType(FILE * file) {
 
     while(((c = getc(file)) != EOF)){
         if(c == '.'){
-            return TYPE_FLOAT;
+            return TYPE_DOUBLE;
         }
     }
     return TYPE_INT;
