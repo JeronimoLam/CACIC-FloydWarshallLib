@@ -1,25 +1,25 @@
 #include "matrix_operations.h"
 
-void generarMatrizFloat(int n, float ***matriz) {
-    *matriz = (float **)malloc(n * sizeof(float *));
+void generarMatrizInt(int n, int ***matriz) {
+    *matriz = (int **)malloc(n * sizeof(int *));
     for (int i = 0; i < n; i++) {
-        (*matriz)[i] = (float *)malloc(n * sizeof(float));
+        (*matriz)[i] = (int *)malloc(n * sizeof(int));
         for (int j = 0; j < n; j++) {
-            (*matriz)[i][j] = (float)rand() / (float)(RAND_MAX) * 100.0; // Genera un número flotante aleatorio entre 0 y 100
+            (*matriz)[i][j] = rand() % 101; // Genera un número aleatorio entre 0 y 100
         }
     }
 }
 
-void guardarMatrizCSVFloat(float **matriz, int n, const char *path) {
+void guardarMatrizCSVInt(int **matriz, int n, const char *path) {
     FILE *file = fopen(path, "w");
     if (file == NULL) {
         printf("No se pudo abrir el archivo para escribir el CSV.\n");
-        return;
+        exit(1);
     }
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            fprintf(file, "%.2f", matriz[i][j]);
+            fprintf(file, "%d", matriz[i][j]);
             if (j < n - 1) fprintf(file, ",");
         }
         fprintf(file, "\n");
@@ -28,22 +28,22 @@ void guardarMatrizCSVFloat(float **matriz, int n, const char *path) {
     fclose(file);
 }
 
-void guardarMatrizJSONFloat(float **matriz, int n, const char *path) {
+void guardarMatrizJSONInt(int **matriz, int n, const char *path) {
     FILE *file = fopen(path, "w");
     if (file == NULL) {
         printf("No se pudo abrir el archivo para escribir el JSON.\n");
-        return;
+        exit(1);
     }
 
     fprintf(file, "{\n");
-    fprintf(file, "  \"tipo\": \"float\",\n");
+    fprintf(file, "  \"tipo\": \"int\",\n");
     fprintf(file, "  \"dimension\": %d,\n", n);
     fprintf(file, "  \"matriz\": [\n");
 
     for (int i = 0; i < n; i++) {
         fprintf(file, "    [");
         for (int j = 0; j < n; j++) {
-            fprintf(file, "%.2f", matriz[i][j]);
+            fprintf(file, "%d", matriz[i][j]);
             if (j < n - 1) fprintf(file, ", ");
         }
         fprintf(file, "]");

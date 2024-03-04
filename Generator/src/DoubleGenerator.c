@@ -15,12 +15,12 @@ void guardarMatrizCSVDouble(double **matriz, int n, const char *path) {
     FILE *file = fopen(path, "w");
     if (file == NULL) {
         printf("No se pudo abrir el archivo para escribir el CSV.\n");
-        return;
+        exit(1);
     }
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            fprintf(file, "%.2lf", matriz[i][j]);
+            fprintf(file, "%.16lf", matriz[i][j]);
             if (j < n - 1) fprintf(file, ",");
         }
         fprintf(file, "\n");
@@ -33,7 +33,7 @@ void guardarMatrizJSONDouble(double **matriz, int n, const char *path) {
     FILE *file = fopen(path, "w");
     if (file == NULL) {
         printf("No se pudo abrir el archivo para escribir el JSON.\n");
-        return;
+        exit(1);
     }
 
     fprintf(file, "{\n");
@@ -44,7 +44,7 @@ void guardarMatrizJSONDouble(double **matriz, int n, const char *path) {
     for (int i = 0; i < n; i++) {
         fprintf(file, "    [");
         for (int j = 0; j < n; j++) {
-            fprintf(file, "%.2lf", matriz[i][j]);
+            fprintf(file, "%.16lf", matriz[i][j]);
             if (j < n - 1) fprintf(file, ", ");
         }
         fprintf(file, "]");
