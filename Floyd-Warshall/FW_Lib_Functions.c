@@ -56,15 +56,48 @@ FW_Matrix create_structure(DataType dataType, char * path, int BS){
     return FW;
 }
 
-void compute_FW(FW_Matrix * FW){
+void compute_FW(FW_Matrix FW){
 
 }
-void save_structure(FW_Matrix FW, char * path,int dist_matrix, int path_matrix){
+
+void save_structure(FW_Matrix FW, char * path, char * name, FileType fileType, int dist_matrix, int path_matrix){
     if (dist_matrix == 0 & path_matrix == 0){
         printf("Select a matrix to export\n");
         return;
     }
-    saveMatrix(FW, path, dist_matrix, path_matrix);
+
+    if (dist_matrix == 1){
+        printf("Exporting Distance Matrix...\n");
+    }
+    else{
+        printf("Exporting Path Matrix...\n");
+    }
+
+// Create copies of path and name for manipulation
+    char pathCopy[1024];
+    char nameCopy[256];  // Assuming name length won't exceed 256, adjust as needed
+    strncpy(pathCopy, path, sizeof(pathCopy) - 1);
+    strncpy(nameCopy, name, sizeof(nameCopy) - 1);
+    pathCopy[sizeof(pathCopy) - 1] = '\0';  // Ensure null termination
+    nameCopy[sizeof(nameCopy) - 1] = '\0';  // Ensure null termination
+
+    // Remove trailing '/' or '\' from pathCopy
+    int pathLength = strlen(pathCopy);
+    if (pathCopy[pathLength - 1] == '/' || pathCopy[pathLength - 1] == '\\') {
+        pathCopy[pathLength - 1] = '\0';
+    }
+
+    // Modify nameCopy to contain content only until the first '.'
+    char *dotPosition = strchr(nameCopy, '.');
+    if (dotPosition != NULL) {
+        *dotPosition = '\0';
+    }
+
+    char fullPath[1024];  // Buffer for full path
+    sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
+    printf("Full Path: %s\n", fullPath);
+
+    saveMatrix(FW, fullPath, fileType, dist_matrix, path_matrix);
 }
 
 

@@ -7,7 +7,7 @@
 #include "../FileReader/file.h"
 
 FW_Matrix create_structure(DataType, char *, int);
-void compute_FW(FW_Matrix *);
-void save_structure(FW_Matrix, char*, int, int);
+void compute_FW(FW_Matrix);
+void save_structure(FW_Matrix, char*, char*, FileType, int, int);
 
 #endif //TEST_FW_LIB_H

@@ -72,8 +72,8 @@ int main(int argc, char *argv[]) {
 
 
     FW_Matrix data = create_structure(dataType, path, -1);
-    compute_FW(&data);
-    save_structure(data, "./output", 1, 0);
+    compute_FW(data);
+    save_structure(data, "./output/", "Result.csv", CSV, 1, 1);
 
     // Closes the file
     fclose(file);

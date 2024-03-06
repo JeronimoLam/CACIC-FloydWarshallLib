@@ -9,11 +9,12 @@ static void saveDoubleMatrixToCSV(void * , char * , unsigned int , unsigned int 
 void CSV_saveMatrix(FW_Matrix FW, char * path, int dist_matrix, int path_matrix) {
     switch(FW.datatype) {
         case TYPE_INT:
+
             if (dist_matrix) {
                 saveIntMatrixToCSV(FW.dist, path,FW.norm_size, FW.size, "distancias.csv", FW.BS);
             }
             if (path_matrix) {
-                saveIntMatrixToCSV(FW.path, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
+                saveIntMatrixToCSV(FW.dist, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
             }
             break;
         case TYPE_FLOAT:
@@ -36,7 +37,7 @@ void CSV_saveMatrix(FW_Matrix FW, char * path, int dist_matrix, int path_matrix)
             return;
     }
 }
-static void saveIntMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * filename, unsigned int BS){
+static void saveIntMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * extension, unsigned int BS){
     int * matrix_int = (int *)matrix;  // Casting void* to int*
 
     // Reorder the matrix from blocks to rows to be saved
@@ -54,7 +55,9 @@ static void saveIntMatrixToCSV(void * matrix, char * path, unsigned int norm_siz
 
     // Open the file
     char fullPath[1024];  // Buffer for full path
-    sprintf(fullPath, "%s/%s", path, filename);
+    sprintf(fullPath, "%s_%s", path, extension);
+    printf("%s\n", fullPath);
+
 
     FILE *file = fopen(fullPath, "w");
     if (file == NULL) {
@@ -75,7 +78,7 @@ static void saveIntMatrixToCSV(void * matrix, char * path, unsigned int norm_siz
     fclose(file);
 }
 
-static void saveFloatMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * filename, unsigned int BS){
+static void saveFloatMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * extension, unsigned int BS){
     float * matrix_float = (float *)matrix;  // Casting void* to float*
 
     // Reorder the matrix from blocks to rows to be saved
@@ -93,7 +96,7 @@ static void saveFloatMatrixToCSV(void * matrix, char * path, unsigned int norm_s
 
     // Open the file
     char fullPath[1024];  // Buffer for full path
-    sprintf(fullPath, "%s/%s", path, filename);  // Concatenate path and filename
+    sprintf(fullPath, "%s_%s", path, extension);  // Concatenate path and filename
 
     FILE *file = fopen(fullPath, "w");  // Use the full path here
     if (file == NULL) {
@@ -114,7 +117,7 @@ static void saveFloatMatrixToCSV(void * matrix, char * path, unsigned int norm_s
     fclose(file);
 }
 
-static void saveDoubleMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * filename, unsigned int BS){
+static void saveDoubleMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * extension, unsigned int BS){
     double * matrix_double = (double *)matrix;  // Casting void* to double*
 
     // Reorder the matrix to be saved
@@ -132,8 +135,8 @@ static void saveDoubleMatrixToCSV(void * matrix, char * path, unsigned int norm_
 
     // Open the file
     char fullPath[1024];  // Buffer for full path
-    sprintf(fullPath, "%s/%s", path, filename);  // Concatenate path and filename
-
+    sprintf(fullPath, "%s_%s", path, extension);  // Concatenate path and filename
+    printf("%s\n", fullPath);
     FILE *file = fopen(fullPath, "w");  // Use the full path here
     if (file == NULL) {
         printf("Could not open file for saving.\n");

@@ -88,11 +88,14 @@ void* createMatrix(FW_Matrix FW, FILE * file){
     }
 }
 
-void saveMatrix(FW_Matrix FW, char* path, int dist_matrix, int path_matrix){
-    switch (FW.fileType) {
+void saveMatrix(FW_Matrix FW, char* path, FileType ft, int  dist_matrix, int path_matrix){
+    switch (fileType) {
         case CSV:
             return CSV_saveMatrix(FW, path, dist_matrix, path_matrix);
         case JSON:
             return JSON_saveMatrix(FW, path, dist_matrix, path_matrix);
+        default:
+            printf("Error: Invalid file type.\n");
+            break;
     }
 }
