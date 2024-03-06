@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
             {"path", required_argument, 0, 'p'},
             //{"absolute-path", required_argument, 0, 'a'},
             //{"relative-path", required_argument, 0, 'r'},
-            {"char",           no_argument, 0, 'c'},
+            {"char",          no_argument, 0, 'c'},
             {"int",           no_argument, 0, 'i'},
             {"float",         no_argument, 0, 'f'},
             {"double",        no_argument, 0, 'd'},
