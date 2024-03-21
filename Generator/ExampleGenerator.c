@@ -69,7 +69,7 @@ int main() {
         case 'i': {
             int **matrizInt;
             generarMatrizInt(n, &matrizInt);
-            if (formato == 'C') {
+            if (formato == 'C' || formato == 'c') {
                 guardarMatrizCSVInt(matrizInt, n, path);
             } else {
                 guardarMatrizJSONInt(matrizInt, n, path);
@@ -81,7 +81,7 @@ int main() {
         case 'f': {
             float **matrizFloat;
             generarMatrizFloat(n, &matrizFloat);
-            if (formato == 'C') {
+            if (formato == 'C' || formato == 'c') {
                 guardarMatrizCSVFloat(matrizFloat, n, path);
             } else {
                 guardarMatrizJSONFloat(matrizFloat, n, path);
@@ -93,7 +93,7 @@ int main() {
         case 'd': {
             double **matrizDouble;
             generarMatrizDouble(n, &matrizDouble);
-            if (formato == 'C') {
+            if (formato == 'C' || formato == 'c') {
                 guardarMatrizCSVDouble(matrizDouble, n, path);
             } else {
                 guardarMatrizJSONDouble(matrizDouble, n, path);

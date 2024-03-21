@@ -9,6 +9,19 @@ unsigned int nextPowerOf2(unsigned int);
 //void graphFromRowsToBlocks(FW_Matrix);
 //void graphFromBlocksToRows(FW_Matrix FW, int * A );
 
+/**
+ * @brief Initializes and loads a matrix from a file, preparing it for the Floyd-Warshall algorithm.
+ *
+ * This function opens a file specified by 'path', detects the data type and the structure of the matrix,
+ * calculates the required normalized size (power of two), and divides the matrix into blocks according to the block
+ * size specified by 'BS'. Then, it loads the matrix into memory according to these parameters.
+ *
+ * @param dataType Data type of the matrix elements. If UNDEFINED is specified, the function will attempt to
+ * auto-detect it.
+ * @param path Path to the file containing the matrix.
+ * @param BS Block size for matrix division. If -1 is passed, the default block size is used.
+ * @return FW_Matrix Structure containing the matrix divided into blocks, among other relevant metadata.
+ */
 FW_Matrix create_structure(DataType dataType, char * path, int BS){
     FW_Matrix FW;
     FILE* file = NULL;
@@ -56,10 +69,37 @@ FW_Matrix create_structure(DataType dataType, char * path, int BS){
     return FW;
 }
 
+/**
+ * @brief Performs the Floyd-Warshall algorithm calculation on the provided matrix.
+ *
+ * This function is expected to implement the logic of the Floyd-Warshall algorithm to calculate the shortest distances
+ * between all pairs of vertices in a graph, using the distance matrix contained in 'FW'. It is expected to
+ * parallelize the calculations to improve performance.
+ *
+ * @param FW FW_Matrix structure containing the distance matrix and additional metadata necessary for
+ * the calculation.
+ * @note This function is pending implementation, and its description may change based on the specific
+ * details of the final implementation.
+ */
 void compute_FW(FW_Matrix FW){
 
 }
 
+/**
+ * @brief Saves the distance matrix or the shortest path matrix to a file.
+ *
+ * This function exports the distance matrix or the path matrix (as specified by the parameters) to a file
+ * at the specified path. The function adjusts the file name to prevent overwrites and ensures the file format
+ * is correct according to the specified type.
+ *
+ * @param FW The FW_Matrix structure containing the matrices to be exported.
+ * @param path Path to the directory where the exported file will be saved.
+ * @param name Base name for the exported file. The function may modify this name to prevent overwrites.
+ * @param fileType File type for the export (e.g., binary or text).
+ * @param dist_matrix Indicates whether the distance matrix should be exported (1) or not (0).
+ * @param path_matrix Indicates whether the shortest path matrix should be exported (1) or not (0).
+ * @note If both dist_matrix and path_matrix are set to 0, the function will not perform any action.
+ */
 void save_structure(FW_Matrix FW, char * path, char * name, FileType fileType, int dist_matrix, int path_matrix){
     if (dist_matrix == 0 & path_matrix == 0){
         printf("Select a matrix to export\n");
