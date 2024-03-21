@@ -4,12 +4,11 @@
 *.out
 *.a
 *.exe
-*.obj
-*.log
+*.ob*.log
 *.exe
 
 #Folders
-./output/
+output/
 
 # Build systems
 # CMake
