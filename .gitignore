@@ -9,7 +9,7 @@
 *.exe
 
 #Folders
-./output/*
+./output/
 
 # Build systems
 # CMake
@@ -39,4 +39,3 @@ CPackSourceConfig.cmake
 *.ninja*
 *.ninja
 .ninja*
-
