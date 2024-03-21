@@ -1,4 +1,4 @@
-gcc -o main_executable ^
+gcc -O0 -g -o main_executable ^
 main.c ^
 FileReader/file.c ^
 FileTypes/CSV/CSV_createMatrix.c ^

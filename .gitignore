@@ -29,7 +29,7 @@ CPackSourceConfig.cmake
 *.swo
 *.swn
 .DS_Store
-.vscode/
+
 *.sublime-project
 *.sublime-workspace
 .idea/
