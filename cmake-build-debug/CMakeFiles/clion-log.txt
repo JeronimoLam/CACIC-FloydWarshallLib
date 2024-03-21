@@ -1,4 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S D:\PC_Files\Documents\Facultad\PPS\PPS-FloydWarshallLib -B D:\PC_Files\Documents\Facultad\PPS\PPS-FloydWarshallLib\cmake-build-debug
--- Configuring done
--- Generating done
--- Build files have been written to: D:/PC_Files/Documents/Facultad/PPS/PPS-FloydWarshallLib/cmake-build-debug
