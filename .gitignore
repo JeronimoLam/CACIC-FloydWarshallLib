@@ -8,6 +8,9 @@
 *.log
 *.exe
 
+#Folders
+output/
+
 # Build systems
 # CMake
 CMakeCache.txt
