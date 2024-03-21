@@ -9,7 +9,7 @@
 *.exe
 
 #Folders
-output/*
+./output/*
 
 # Build systems
 # CMake
