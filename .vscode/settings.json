@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "matrix_operations.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "json_utils.h": "c",
+        "csv_utils.h": "c",
+        "fw_lib_commontypes.h": "c",
+        "file.h": "c"
     }
 }

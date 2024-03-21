@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "FW_Lib.h"
+#include "FW_Lib_CommonTypes.h"
 #include "../FileReader/file.h"
 
 FW_Matrix create_structure(DataType, char *, int);

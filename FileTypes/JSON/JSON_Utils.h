@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../../Floyd-Warshall/FW_Lib.h"
+#include "../../Floyd-Warshall/FW_Lib_CommonTypes.h"
 
 
 int *JSON_createMatrix(FW_Matrix, FILE *);
