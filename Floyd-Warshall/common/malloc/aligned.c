@@ -1,3 +1,4 @@
+//TODO Delete common folder
 /*
 #include <stdint.h>
 #include <stdlib.h>

@@ -1,6 +1,7 @@
 #ifndef BLOCKS_H
 #define BLOCKS_H
 
+//TODO implement the following functions
 int * matrix2block_INT() {
     // Implementation goes here
 }

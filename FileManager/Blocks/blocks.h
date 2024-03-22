@@ -1,6 +1,8 @@
 #ifndef BLOCKS_H
 #define BLOCKS_H
 
+//TODO check if the block size is a multiple of the matrix size
+//TODO check the params
 int * matrix2block_INT();
 int * block2matrix_INT();
 
