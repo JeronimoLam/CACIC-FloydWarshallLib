@@ -6,6 +6,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "../../Floyd-Warshall/FW_Lib_CommonTypes.h"
+#include "../Block_Operations/blocks.h"
+
 
 
 int *JSON_createMatrix(FW_Matrix, FILE *);

@@ -37,20 +37,21 @@ void CSV_saveMatrix(FW_Matrix FW, char * path, int dist_matrix, int path_matrix)
     }
 }
 static void saveIntMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * extension, unsigned int BS){
-    int * matrix_int = (int *)matrix;  // Casting void* to int*
+    // int * matrix_int = (int *)matrix;  // Casting void* to int*
 
-    // Reorder the matrix from blocks to rows to be saved
-    int * ordered_matrix_int = malloc(norm_size * norm_size * sizeof(int));
-    unsigned int I,J,i,j,blockSize,r;
-    r = norm_size / BS;
+    // // Reorder the matrix from blocks to rows to be saved
+    // int * ordered_matrix_int = malloc(norm_size * norm_size * sizeof(int));
+    // unsigned int I,J,i,j,blockSize,r;
+    // r = norm_size / BS;
 
-    blockSize = BS * BS;
-    for(I=0; I<r; I++)
-        for(J=0; J<r; J++)
-            for(i=0; i < BS; i++)
-                for(j=0; j < BS; j++)
-                    ordered_matrix_int[I * norm_size * BS + J * BS + i * norm_size + j] = matrix_int[I * norm_size * BS + J * blockSize + i * BS + j];
-    free(matrix_int); // Is not used anymore
+    // blockSize = BS * BS;
+    // for(I=0; I<r; I++)
+    //     for(J=0; J<r; J++)
+    //         for(i=0; i < BS; i++)
+    //             for(j=0; j < BS; j++)
+    //                 ordered_matrix_int[I * norm_size * BS + J * BS + i * norm_size + j] = matrix_int[I * norm_size * BS + J * blockSize + i * BS + j];
+    int * ordered_matrix_int = reorganizeToLinear(matrix, norm_size, BS, TYPE_INT);
+    free(matrix); // Is not used anymore
 
     // Open the file
     char fullPath[1024];  // Buffer for full path
@@ -78,20 +79,22 @@ static void saveIntMatrixToCSV(void * matrix, char * path, unsigned int norm_siz
 }
 
 static void saveFloatMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * extension, unsigned int BS){
-    float * matrix_float = (float *)matrix;  // Casting void* to float*
+    // float * matrix_float = (float *)matrix;  // Casting void* to float*
 
-    // Reorder the matrix from blocks to rows to be saved
-    float * ordered_matrix_float = malloc(norm_size * norm_size * sizeof(float));
-    unsigned int I,J,i,j,blockSize,r;
-    r = norm_size / BS;
+    // // Reorder the matrix from blocks to rows to be saved
+    // float * ordered_matrix_float = malloc(norm_size * norm_size * sizeof(float));
+    // unsigned int I,J,i,j,blockSize,r;
+    // r = norm_size / BS;
 
-    blockSize = BS * BS;
-    for(I=0; I<r; I++)
-        for(J=0; J<r; J++)
-            for(i=0; i < BS; i++)
-                for(j=0; j < BS; j++)
-                    ordered_matrix_float[I * norm_size * BS + J * BS + i * norm_size + j] = matrix_float[I * norm_size * BS + J * blockSize + i * BS + j];
-    free(matrix_float); // Is not used anymore
+    // blockSize = BS * BS;
+    // for(I=0; I<r; I++)
+    //     for(J=0; J<r; J++)
+    //         for(i=0; i < BS; i++)
+    //             for(j=0; j < BS; j++)
+    //                 ordered_matrix_float[I * norm_size * BS + J * BS + i * norm_size + j] = matrix_float[I * norm_size * BS + J * blockSize + i * BS + j];
+    
+    float * ordered_matrix_float = reorganizeToLinear(matrix, norm_size, BS, TYPE_FLOAT);
+    free(matrix); // Is not used anymore
 
     // Open the file
     char fullPath[1024];  // Buffer for full path
@@ -117,20 +120,23 @@ static void saveFloatMatrixToCSV(void * matrix, char * path, unsigned int norm_s
 }
 
 static void saveDoubleMatrixToCSV(void * matrix, char * path, unsigned int norm_size, unsigned int size, char * extension, unsigned int BS){
-    double * matrix_double = (double *)matrix;  // Casting void* to double*
+    // double * matrix_double = (double *)matrix;  // Casting void* to double*
 
-    // Reorder the matrix to be saved
-    double * ordered_matrix_double = malloc(norm_size * norm_size * sizeof(double));
-    unsigned int I,J,i,j,blockSize,r;
-    r = norm_size / BS;
+    // // Reorder the matrix to be saved
+    // double * ordered_matrix_double = malloc(norm_size * norm_size * sizeof(double));
+    // unsigned int I,J,i,j,blockSize,r;
+    // r = norm_size / BS;
 
-    blockSize = BS * BS;
-    for(I=0; I<r; I++)
-        for(J=0; J<r; J++)
-            for(i=0; i < BS; i++)
-                for(j=0; j < BS; j++)
-                    ordered_matrix_double[I * norm_size * BS + J * BS + i * norm_size + j] = matrix_double[I * norm_size * BS + J * blockSize + i * BS + j];
-    free(matrix_double); // Is not used anymore
+    // blockSize = BS * BS;
+    // for(I=0; I<r; I++)
+    //     for(J=0; J<r; J++)
+    //         for(i=0; i < BS; i++)
+    //             for(j=0; j < BS; j++)
+    //                 ordered_matrix_double[I * norm_size * BS + J * BS + i * norm_size + j] = matrix_double[I * norm_size * BS + J * blockSize + i * BS + j];
+
+    double * ordered_matrix_double = reorganizeToLinear(matrix, norm_size, BS, TYPE_INT);
+
+    free(matrix); // Is not used anymore
 
     // Open the file
     char fullPath[1024];  // Buffer for full path

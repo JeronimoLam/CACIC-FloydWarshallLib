@@ -14,8 +14,7 @@ void* CSV_createMatrix(FW_Matrix FW, FILE* file) {
             return createFloatMatrix(file,  FW.norm_size, FW.BS);
         case TYPE_DOUBLE:
             return createDoubleMatrix(file,  FW.norm_size, FW.BS);
-//        case TYPE_CHAR:
-//            return createCharMatrix(file,  FW.norm_size);
+
         default:
             return NULL;
     }
@@ -47,19 +46,21 @@ static void* createIntMatrix(FILE* file, unsigned int size, unsigned int BS) {
         col = 0; // Reset column counter for the next row
     }
 
-    //Reorder by blocks
-    int *block_matrix = (int *)malloc(size * size * sizeof(int));
+    return reorganizeToBlocks(matrix, size, BS, TYPE_INT);
 
-    unsigned int I,J,i,j,blockSize,r;
-    r = size / BS;
-    blockSize = BS * BS;
-    for(I=0; I<r; I++)
-        for(J=0; J<r; J++)
-            for(i=0; i < BS; i++)
-                for(j=0; j < BS; j++)
-                    block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+    // //Reorder by blocks
+    // int *block_matrix = (int *)malloc(size * size * sizeof(int));
 
-    return block_matrix;
+    // unsigned int I,J,i,j,blockSize,r;
+    // r = size / BS;
+    // blockSize = BS * BS;
+    // for(I=0; I<r; I++)
+    //     for(J=0; J<r; J++)
+    //         for(i=0; i < BS; i++)
+    //             for(j=0; j < BS; j++)
+    //                 block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+
+    // return block_matrix;
 }
 static void* createFloatMatrix(FILE* file, unsigned int size, unsigned int BS) {
     float *matrix = (float *)malloc(size * size * sizeof(float));
@@ -85,20 +86,21 @@ static void* createFloatMatrix(FILE* file, unsigned int size, unsigned int BS) {
         col = 0; // Reset column counter for the next row
     }
 
-    //Reorder by blocks
-    float *block_matrix = (float *)malloc(size * size * sizeof(float));
+    return reorganizeToBlocks(matrix, size, BS, TYPE_FLOAT);
+    // //Reorder by blocks
+    // float *block_matrix = (float *)malloc(size * size * sizeof(float));
 
-    unsigned int I,J,i,j,blockSize,r;
-    r = size / BS;
-    blockSize = BS * BS;
-    for(I=0; I<r; I++)
-        for(J=0; J<r; J++)
-            for(i=0; i < BS; i++)
-                for(j=0; j < BS; j++)
-                    block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+    // unsigned int I,J,i,j,blockSize,r;
+    // r = size / BS;
+    // blockSize = BS * BS;
+    // for(I=0; I<r; I++)
+    //     for(J=0; J<r; J++)
+    //         for(i=0; i < BS; i++)
+    //             for(j=0; j < BS; j++)
+    //                 block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
 
 
-    return block_matrix;
+    // return block_matrix;
 }
 
 static void* createDoubleMatrix(FILE* file, unsigned int size, unsigned int BS) {
@@ -125,17 +127,18 @@ static void* createDoubleMatrix(FILE* file, unsigned int size, unsigned int BS) 
         col = 0; // Reset column counter for the next row
     }
 
-    //Reorder by blocks
-    double *block_matrix = (double *)malloc(size * size * sizeof(double));
+    return reorganizeToBlocks(matrix, size, BS, TYPE_DOUBLE);
+    // //Reorder by blocks
+    // double *block_matrix = (double *)malloc(size * size * sizeof(double));
 
-    unsigned int I,J,i,j,blockSize,r;
-    r = size / BS;
-    blockSize = BS * BS;
-    for(I=0; I<r; I++)
-        for(J=0; J<r; J++)
-            for(i=0; i < BS; i++)
-                for(j=0; j < BS; j++)
-                    block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
+    // unsigned int I,J,i,j,blockSize,r;
+    // r = size / BS;
+    // blockSize = BS * BS;
+    // for(I=0; I<r; I++)
+    //     for(J=0; J<r; J++)
+    //         for(i=0; i < BS; i++)
+    //             for(j=0; j < BS; j++)
+    //                 block_matrix[I * size * BS + J * blockSize + i *BS + j] = matrix[I * size * BS + J * BS + i * size + j];
 
-    return block_matrix;
+    // return block_matrix;
 }

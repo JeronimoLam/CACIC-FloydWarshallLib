@@ -1,6 +1,8 @@
 #include "src/matrix_operations.h"
 
 #include <time.h>
+#include <string.h>
+
 
 #define DEFAULT_TYPE 'i'
 #define DEFAULT_SIZE 15
