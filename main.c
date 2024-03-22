@@ -2,9 +2,9 @@
 #include <getopt.h>
 
 
-#include "Floyd-Warshall/FW_Lib_Functions.h"
+#include "include/FW_Lib_Functions.h"
 
-#include "FileManager/file_handler.h"
+#include "File_Manager/file_handler.h"
 
 int main(int argc, char *argv[]) {
     int size;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     FW_Matrix data = create_structure(dataType, path, -1);
     print_FW(data, 1, 0);
     compute_FW(data);
-    save_structure(data, "./output/", "Result.csv", CSV, 1, 0);
+    save_structure(data, "./Output/", "Result.csv", CSV, 1, 0);
 
     // Closes the file
     fclose(file);

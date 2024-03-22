@@ -1,4 +1,4 @@
-#include "FW_Lib_Functions.h"
+#include "../include/FW_Lib_Functions.h"
 
 #define FW_DEFAULT_BLOCK_SIZE 2
 #define FW_DEFAULT_THREAD_NUM 2

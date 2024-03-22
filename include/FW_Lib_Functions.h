@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "FW_Lib_CommonTypes.h"
-#include "../FileManager/file_handler.h"
+#include "../File_Manager/file_handler.h"
 
 /**
  * @brief Initializes and loads a matrix from a file, preparing it for the Floyd-Warshall algorithm.
