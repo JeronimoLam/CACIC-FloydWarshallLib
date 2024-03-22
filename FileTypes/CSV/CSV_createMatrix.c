@@ -139,27 +139,3 @@ static void* createDoubleMatrix(FILE* file, unsigned int size, unsigned int BS) 
 
     return block_matrix;
 }
-/*
-static void* createCharMatrix(FILE* file, int cols) {
-    char *matrix = (char *)malloc(cols * cols * sizeof(char));
-
-    char *token;
-    int row = 0, col = 0;
-
-    char line[2048];
-    while (fgets(line, sizeof(line), file)) {
-        line[strcspn(line, "\n")] = '\0';
-        token = strtok(line, ",");
-        while (token != NULL) {
-            token = trim(token);  // You need to ensure the trim() function is defined
-            matrix[row * cols + col] = token[0]; // Convert string to char and store in matrix
-            token = strtok(NULL, ",");
-            col++;
-        }
-        col = 0;
-        row++;
-    }
-
-    return matrix;
-}
-*/
