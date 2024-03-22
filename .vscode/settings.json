@@ -6,6 +6,7 @@
         "csv_utils.h": "c",
         "fw_lib_commontypes.h": "c",
         "file.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "fw_lib_functions.h": "c"
     }
 }

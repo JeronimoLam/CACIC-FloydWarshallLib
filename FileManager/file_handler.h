@@ -1,8 +1,8 @@
 #ifndef TEST_FILE_H
 #define TEST_FILE_H
 
-#include "../FileTypes/CSV/CSV_Utils.h"
-#include "../FileTypes/JSON/JSON_Utils.h"
+#include "./CSV/CSV_Utils.h"
+#include "./JSON/JSON_Utils.h"
 
 
     FILE* getFile(const char*);
