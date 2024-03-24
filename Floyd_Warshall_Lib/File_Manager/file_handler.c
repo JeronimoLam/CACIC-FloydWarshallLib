@@ -25,7 +25,6 @@ FILE* getFile(const char* filename) {
         else if (strcmp(ext, ".json") == 0) {
             setFileType(JSON);
         }
-        printf("File Loaded\n");
     }
 
     return file;

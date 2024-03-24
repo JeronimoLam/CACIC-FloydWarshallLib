@@ -24,16 +24,23 @@ FW_Matrix create_structure(DataType, char *, int);
 /**
  * @brief Performs the Floyd-Warshall algorithm calculation on the provided matrix.
  *
- * This function is expected to implement the logic of the Floyd-Warshall algorithm to calculate the shortest distances
- * between all pairs of vertices in a graph, using the distance matrix contained in 'FW'. It is expected to
- * parallelize the calculations to improve performance.
+ * This function implements the logic of the Floyd-Warshall algorithm to calculate the shortest distances between all pairs
+ * of vertices in a graph, using the distance matrix contained in 'FW'. The calculations are parallelized to improve performance.
  *
- * @param FW FW_Matrix structure containing the distance matrix and additional metadata necessary for
- * the calculation.
- * @note This function is pending implementation, and its description may change based on the specific
- * details of the final implementation.
+ * @param FW The FW_Matrix struct containing the distance matrix and other parameters.
+ * @param threads_num The number of threads to be used for parallel execution.
  */
-void compute_FW(FW_Matrix);
+void compute_FW_paralell(FW_Matrix, int);
+
+
+
+/**
+ * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs
+ * of vertices in a graph, using the distance matrix contained in 'FW'.
+ *
+ * @param matrix The FW_Matrix on which to perform the computation.
+ */
+void compute_FW_sequential(FW_Matrix);
 
 
 /**

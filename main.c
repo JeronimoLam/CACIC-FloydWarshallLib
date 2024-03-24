@@ -3,7 +3,10 @@
 
 #include "include/FW_lib_CommonTypes.h"
 #include "include/FW_lib_Functions.h"
-#include "Floyd_Warshall_Lib/File_Manager/file_handler.h"
+
+#include <string.h>
+FILE* check_file(const char*);
+
 
 int main(int argc, char *argv[]) {
     int size;
@@ -26,12 +29,11 @@ int main(int argc, char *argv[]) {
 
     int option_index = 0;
 
-//    while ((c = getopt_long(argc, argv, "a:r:cifd", long_options, &option_index)) != -1) {
     while ((c = getopt_long(argc, argv, "p:cifd", long_options, &option_index)) != -1) {
         switch (c) {
             case 'p':
                 path = optarg;
-                file = getFile(optarg);
+                file = check_file(optarg);
                 if (file == NULL) {
                     return -1;
                 }
@@ -72,7 +74,7 @@ int main(int argc, char *argv[]) {
     FW_Matrix data = create_structure(dataType, path, -1);
     printf("Leido --------------------------------------------");
     print_FW(data, 1, 0, 1);
-    compute_FW(data);
+    compute_FW_paralell(data, -1); // TODO: Adjust thread num
     printf("Procesado --------------------------------------------");
     print_FW(data, 1, 0, 1);
     save_structure(data, "./Output/", "Result.csv", CSV, 1, 0);
@@ -84,3 +86,23 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+FILE* check_file(const char* filename) {
+
+    // Get the extension
+    char *ext = strrchr(filename, '.');
+
+    // Check the file extension
+    if (ext == NULL || (strcmp(ext, ".csv") != 0 && strcmp(ext, ".json") != 0)) {
+        fprintf(stderr, "Error: Invalid file extension. Only .csv and .json files are supported.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Try to open the file
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        fprintf(stderr, "Error: Unable to open file.\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
