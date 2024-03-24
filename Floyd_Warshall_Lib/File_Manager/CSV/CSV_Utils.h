@@ -1,7 +1,7 @@
 // File: CSV/CSV_createMatrix.h
 
-#ifndef CSV_CREATE_MATRIX_H
-#define CSV_CREATE_MATRIX_H
+#ifndef CREATE_MATRIX_H
+#define CREATE_MATRIX_H
 
 #include <stdio.h>
 #include <string.h>
@@ -18,4 +18,4 @@ char *trim(char *);
 void CSV_calculateMatrixSize(FW_Matrix *, FILE *);
 DataType CSV_AutoDetectDataType(FILE *);
 
-#endif // CSV_CREATE_MATRIX_H
+#endif // CREATE_MATRIX_H

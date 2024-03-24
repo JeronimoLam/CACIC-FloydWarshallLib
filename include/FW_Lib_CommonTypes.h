@@ -1,5 +1,5 @@
-#ifndef TEST_FW_LIB_H
-#define TEST_FW_LIB_H
+#ifndef FW_LIB_COMMON_TYPES_H
+#define FW_LIB_COMMON_TYPES_H
 
 #include <limits.h>
 
@@ -28,4 +28,4 @@ typedef struct {
     unsigned int BS;
 } FW_Matrix;
 
-#endif //TEST_FW_LIB_H
+#endif //FW_LIB_COMMON_TYPES_H

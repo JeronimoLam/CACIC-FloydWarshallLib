@@ -1,5 +1,5 @@
-#ifndef TEST_FW_LIB_FUNCTIONS_H
-#define TEST_FW_LIB_FUNCTIONS_H
+#ifndef FW_LIB_FUNCTIONS_H
+#define FW_LIB_FUNCTIONS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,4 +76,4 @@ void print_FW(FW_Matrix element, int dist, int path, int blocks);
 
 
 
-#endif //TEST_FW_LIB_H
+#endif //FW_LIB_FUNCTIONS_H

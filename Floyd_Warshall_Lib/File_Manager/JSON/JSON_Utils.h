@@ -1,5 +1,5 @@
-#ifndef TEST_JSON_UTILS_H
-#define TEST_JSON_UTILS_H
+#ifndef JSON_UTILS_H
+#define JSON_UTILS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,4 +17,4 @@ void JSON_saveMatrix(FW_Matrix, char *, int, int);
 void JSON_calculateMatrixSize(FILE *);
 DataType JSON_AutoDetectDataType(FILE *);
 
-#endif //TEST_JSON_UTILS_H
+#endif //JSON_UTILS_H

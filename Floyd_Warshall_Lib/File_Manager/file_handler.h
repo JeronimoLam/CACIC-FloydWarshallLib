@@ -1,5 +1,5 @@
-#ifndef TEST_FILE_H
-#define TEST_FILE_H
+#ifndef FILE_HANDLER_H
+#define FILE_HANDLER_H
 
 #include "./CSV/CSV_Utils.h"
 #include "./JSON/JSON_Utils.h"
@@ -17,4 +17,4 @@
 
     DataType AutoDetectDataType(FileType, FILE*);
 
-#endif //TEST_FILE_H
+#endif //FILE_HANDLER_H
