@@ -6,13 +6,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <float.h>
+
 #include "../../../include/FW_Lib_CommonTypes.h"
 #include "../Block_Operations/blocks.h"
 
 void * CSV_createMatrix(FW_Matrix, FILE*);
 void CSV_saveMatrix(FW_Matrix,char *,  int, int);
 
-// char *trim(char *);
+char *trim(char *);
 void CSV_calculateMatrixSize(FW_Matrix *, FILE *);
 DataType CSV_AutoDetectDataType(FILE *);
 

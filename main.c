@@ -5,8 +5,6 @@
 #include "include/FW_lib_Functions.h"
 #include "Floyd_Warshall_Lib/File_Manager/file_handler.h"
 
-// #include "Floyd_Warshall_Lib/File_Manager/file_handler.h"
-
 int main(int argc, char *argv[]) {
     int size;
     char *path;
@@ -72,8 +70,11 @@ int main(int argc, char *argv[]) {
 
 
     FW_Matrix data = create_structure(dataType, path, -1);
-    print_FW(data, 1, 0);
+    printf("Leido --------------------------------------------");
+    print_FW(data, 1, 0, 1);
     compute_FW(data);
+    printf("Procesado --------------------------------------------");
+    print_FW(data, 1, 0, 1);
     save_structure(data, "./Output/", "Result.csv", CSV, 1, 0);
 
     // Closes the file

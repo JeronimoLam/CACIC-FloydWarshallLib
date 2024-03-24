@@ -9,6 +9,7 @@
         "time.h": "c",
         "fw_lib_functions.h": "c",
         "blocks.h": "c",
-        "file_handler.h": "c"
+        "file_handler.h": "c",
+        "ctype.h": "c"
     }
 }

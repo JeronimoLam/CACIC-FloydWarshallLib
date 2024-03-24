@@ -72,7 +72,7 @@ char *  FW_details_to_string(FW_Matrix element, int dist, int path);
  * @param dist Flag indicating whether to print the distance matrix (1) or not (0).
  * @param path Flag indicating whether to print the path matrix (1) or not (0).
  */
-void print_FW(FW_Matrix element, int dist, int path);
+void print_FW(FW_Matrix element, int dist, int path, int blocks);
 
 
 

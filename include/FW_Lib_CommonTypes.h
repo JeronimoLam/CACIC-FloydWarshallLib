@@ -20,7 +20,7 @@ typedef enum {
 
 typedef struct {
     void * dist;
-    unsigned int * path;
+    int * path;
     FileType fileType;
     DataType datatype;
     unsigned int size;
