@@ -78,25 +78,25 @@ int main(int argc, char *argv[])
         }
     }
 
-    // printf("------------------------SECUENCIAL------------------------\n");
-    // double timetick_s = dwalltime();
+    printf("------------------------SECUENCIAL------------------------\n");
+    double timetick_s = dwalltime();
 
-    // printf(" ==> Leyendo \n");
-    // FW_Matrix data2 = create_structure(dataType, path, BS);
-    // printf("{%s}\n", FW_details_to_string(data2));
+    printf(" ==> Leyendo \n");
+    FW_Matrix data2 = create_structure(dataType, path, BS);
+    printf("{%s}\n", FW_details_to_string(data2));
 
-    // printf(" ==> Procesado \n");
-    // double timetick_s_compute = dwalltime();
-    // compute_FW_sequential(data2);
-    // double timetick_fs_compute = dwalltime();
+    printf(" ==> Procesado \n");
+    double timetick_s_compute = dwalltime();
+    compute_FW_sequential(data2);
+    double timetick_fs_compute = dwalltime();
 
-    // printf(" ==> Guardando \n");
-    // save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, 1, 0);
-    // double timetick_fs = dwalltime();
+    printf(" ==> Guardando \n");
+    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, 1, 0);
+    double timetick_fs = dwalltime();
 
-    //     // Free memory
-    // free(data2.dist);
-    // free(data2.path);
+        // Free memory
+    free(data2.dist);
+    free(data2.path);
 
     printf("------------------------PARALELO------------------------\n");
     double timetick_p = dwalltime();
@@ -119,10 +119,10 @@ int main(int argc, char *argv[])
     
     // Print Times
     printf("Tiempo Libreria Entera Paralelo %f \n", timetick_fp - timetick_p);
-    // printf("Tiempo Libreria Entera Secuencial %f \n", timetick_fs - timetick_s);
+    printf("Tiempo Libreria Entera Secuencial %f \n", timetick_fs - timetick_s);
 
     printf("Tiempo Computo Paralelo %f \n", timetick_fp_compute - timetick_p_compute);
-    // printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
+    printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
 
     // Free memory
     free(data.dist);
