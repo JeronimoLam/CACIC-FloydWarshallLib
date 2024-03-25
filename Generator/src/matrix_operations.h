@@ -5,9 +5,33 @@
 #define MATRIX_OPERATIONS_H
 
 // Funciones para generar matrices
-void generarMatrizInt(int n, int ***matriz);
-void generarMatrizFloat(int n, float ***matriz);
-void generarMatrizDouble(int n, double ***matriz);
+
+/**
+ * Generates a matrix of integers with random values. Its diagonal is filled with zeros.
+ *
+ * @param n The size of the matrix (n x n).
+ * @param matriz A pointer to a pointer to store the generated matrix.
+ * @param maxValue The maximum value for the elements in the matrix.
+ */
+void generarMatrizInt(int n, int ***matriz, int maxValue);
+
+/**
+ * Generates a matrix of floats with random values. Its diagonal is filled with zeros.
+ *
+ * @param n The size of the matrix (n x n).
+ * @param matriz A pointer to a pointer to store the generated matrix.
+ * @param maxValue The maximum value for the elements in the matrix.
+ */
+void generarMatrizFloat(int n, float ***matriz, float maxValue);
+
+/**
+ * Generates a matrix of dobles with random values. Its diagonal is filled with zeros.
+ *
+ * @param n The size of the matrix (n x n).
+ * @param matriz A pointer to a pointer to store the generated matrix.
+ * @param maxValue The maximum value for the elements in the matrix.
+ */
+void generarMatrizDouble(int n, double ***matriz, double maxValue);
 
 // Funciones para guardar matrices en CSV
 void guardarMatrizCSVInt(int **matriz, int n, const char *path);

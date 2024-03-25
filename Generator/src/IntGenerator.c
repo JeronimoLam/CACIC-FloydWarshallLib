@@ -1,11 +1,16 @@
 #include "matrix_operations.h"
 
-void generarMatrizInt(int n, int ***matriz) {
+void generarMatrizInt(int n, int ***matriz, int maxValue) {
     *matriz = (int **)malloc(n * sizeof(int *));
     for (int i = 0; i < n; i++) {
         (*matriz)[i] = (int *)malloc(n * sizeof(int));
         for (int j = 0; j < n; j++) {
-            (*matriz)[i][j] = rand() % 101; // Genera un número aleatorio entre 0 y 100
+            if (i == j)
+                (*matriz)[i][j] = 0;
+            else
+                // Generates a random int between 0 and maxValue
+                (*matriz)[i][j] = rand() % (maxValue + 1);
+                
         }
     }
 }

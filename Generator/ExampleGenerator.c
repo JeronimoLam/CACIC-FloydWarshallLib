@@ -68,7 +68,7 @@ int main() {
     switch (tipo) {
         case 'i': {
             int **matrizInt;
-            generarMatrizInt(n, &matrizInt);
+            generarMatrizInt(n, &matrizInt, 100);
             if (formato == 'C' || formato == 'c') {
                 guardarMatrizCSVInt(matrizInt, n, path);
             } else {
@@ -80,7 +80,7 @@ int main() {
         }
         case 'f': {
             float **matrizFloat;
-            generarMatrizFloat(n, &matrizFloat);
+            generarMatrizFloat(n, &matrizFloat, 100.0);
             if (formato == 'C' || formato == 'c') {
                 guardarMatrizCSVFloat(matrizFloat, n, path);
             } else {
@@ -92,7 +92,7 @@ int main() {
         }
         case 'd': {
             double **matrizDouble;
-            generarMatrizDouble(n, &matrizDouble);
+            generarMatrizDouble(n, &matrizDouble, 100.0);
             if (formato == 'C' || formato == 'c') {
                 guardarMatrizCSVDouble(matrizDouble, n, path);
             } else {

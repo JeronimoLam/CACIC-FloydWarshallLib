@@ -22,25 +22,37 @@ char *trim(char *str)
 }
 
 
-// reads the whole file and calculates the size of the matrix
-void CSV_calculateMatrixSize(FW_Matrix *FW, FILE *file) {
-    char line[1024];
-    int size = 0; // Initialize to 0
+// Function to read the first line of a CSV file block by block and return the number of elements in it.
+int CSV_calculateMatrixSize(FILE *file) {
+    int count = 0; // Counter for the number of elements.
+    int inElement = 0; // Flag to check if we are currently inside an element (number).
+    char buffer[1024]; // Buffer to read the file.
+    size_t bytesRead; // How many bytes were read in each iteration.
 
-    while (fgets(line, sizeof(line), file)) {
-        if (strlen(line) <= 1) continue; // Ignore empty lines or lines that only contain a newline character
+    // Read the file in blocks of 1024 bytes.
+    while ((bytesRead = fread(buffer, 1, sizeof(buffer), file)) > 0) {
+        for (size_t i = 0; i < bytesRead; ++i) {
+            // If we find a newline character, we are done.
+            if (buffer[i] == '\n') {
+                if (inElement) count++; // Make sure to count the last element before the newline.
+                return count;
+            }
 
-        size = 0;
-        char* token = strtok(line, ",");
-        while (token) {
-            size++;
-            token = strtok(NULL, ",");
+            // If we find a comma and we are inside an element, increment the counter and mark that we are leaving the element.
+            if (buffer[i] == ',' && inElement) {
+                count++;
+                inElement = 0;
+            } else if (buffer[i] != ',' && buffer[i] != '\r' && buffer[i] != ' ') {
+                // If we find a character that is not a comma, carriage return, or space, mark that we are inside an element.
+                inElement = 1;
+            }
         }
-        break;
     }
 
-    rewind(file);  // Reset the file pointer to the beginning of the file
-    FW->size = size;
+    // In case we reach the end of the file without finding a newline, there might still be one last element to count.
+    if (inElement) count++;
+
+    return count;
 }
 
 // Scans the file looking for a '.' to determine if the data type is INT

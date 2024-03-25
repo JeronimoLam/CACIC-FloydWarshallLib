@@ -1,11 +1,12 @@
 #include "matrix_operations.h"
 
-void generarMatrizDouble(int n, double ***matriz) {
+void generarMatrizDouble(int n, double ***matriz, double maxValue) {
     *matriz = (double **)malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++) {
         (*matriz)[i] = (double *)malloc(n * sizeof(double));
         for (int j = 0; j < n; j++) {
-            (*matriz)[i][j] = (double)rand() / (double)(RAND_MAX) * 100; // Genera un número doble aleatorio entre 0 y 100
+            // Generates a random double between 0 and maxValue
+            (*matriz)[i][j] = (double)rand() / (double)(RAND_MAX) * maxValue; 
         }
     }
 }

@@ -1,11 +1,16 @@
 #include "matrix_operations.h"
 
-void generarMatrizFloat(int n, float ***matriz) {
+void generarMatrizFloat(int n, float ***matriz, float maxValue) {
     *matriz = (float **)malloc(n * sizeof(float *));
     for (int i = 0; i < n; i++) {
         (*matriz)[i] = (float *)malloc(n * sizeof(float));
         for (int j = 0; j < n; j++) {
-            (*matriz)[i][j] = (float)rand() / (float)(RAND_MAX) * 100.0; // Genera un número flotante aleatorio entre 0 y 100
+            if (i == j)
+                (*matriz)[i][j] = 0;
+            else
+                // Generates a random float between 0 and maxValue
+                (*matriz)[i][j] = (float)rand() / (float)(RAND_MAX) * maxValue;
+
         }
     }
 }

@@ -49,13 +49,13 @@ char *fileTypeToString() {
     }
 }
 
-void calculateMatrixSize(FW_Matrix *FW, FILE* file){
-    switch (FW->fileType) {
+int calculateMatrixSize(FileType ft, FILE* file){
+    switch (ft) {
         case CSV:
-            CSV_calculateMatrixSize(FW, file);
+            return CSV_calculateMatrixSize(file);
             break;
         case JSON:
-            JSON_calculateMatrixSize(file);
+            return JSON_calculateMatrixSize(file);
             break;
         default:
             // Handle default case

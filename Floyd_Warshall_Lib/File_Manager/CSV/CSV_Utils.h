@@ -4,6 +4,7 @@
 #define CREATE_MATRIX_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <float.h>
@@ -15,7 +16,7 @@ void * CSV_createMatrix(FW_Matrix, FILE*);
 void CSV_saveMatrix(FW_Matrix,char *,  int, int);
 
 char *trim(char *);
-void CSV_calculateMatrixSize(FW_Matrix *, FILE *);
+int CSV_calculateMatrixSize(FILE *);
 DataType CSV_AutoDetectDataType(FILE *);
 
 #endif // CREATE_MATRIX_H

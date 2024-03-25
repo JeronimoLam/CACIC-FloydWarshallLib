@@ -52,7 +52,7 @@ static void saveIntMatrixToCSV(void *matrix, char *path, unsigned int norm_size,
     // Open the file
     char fullPath[1024]; // Buffer for full path
     sprintf(fullPath, "%s_%s", path, extension);
-    printf("%s\n", fullPath);
+    // printf("%s\n", fullPath);
 
     FILE *file = fopen(fullPath, "w");
     if (file == NULL)

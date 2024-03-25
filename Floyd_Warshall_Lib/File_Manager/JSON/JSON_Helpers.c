@@ -3,7 +3,7 @@
 //
 #include "JSON_Utils.h"
 
-void JSON_calculateMatrixSize(FILE *file) {
+int JSON_calculateMatrixSize(FILE *file) {
     // Implement Function
 }
 

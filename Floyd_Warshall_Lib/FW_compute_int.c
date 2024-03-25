@@ -1,6 +1,8 @@
 #include "FW_compute.h"
 #include "../include/FW_Lib_CommonTypes.h"
 
+//------------------------------------------------------------------------- Paralell Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
+
 
 static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int *const tmp1, int *const tmp2) __attribute__((always_inline));
 static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int *const tmp1, int *const tmp2) __attribute__((always_inline));
@@ -8,7 +10,6 @@ static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const 
 #define unlikely(x) __builtin_expect((x), 0)
 #define NO_PATH
 
-//----------------------------------------------------------------------------- Paralell Floyd-Warshall Algorithm ----------------------------------------------------------------------------
 
 void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
 {
@@ -23,7 +24,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
     uint64_t x, y;
     sem_t **S;
 
-    // asignación de memoria
+    // Asignación de memoria
     S = (sem_t **)malloc(r * sizeof(sem_t *));
     for (x = 0; x < r; x++)
         S[x] = (sem_t *)malloc(r * sizeof(sem_t));
@@ -282,7 +283,7 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
     }
 }
 
-// ------------------------------------------------------------------ Sequential FW Algorithm implementation ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------ Sequentiall Floyd-Warshall Algorithm Implementation ------------------------------------------------------------------------------------------------
 
 static inline void FW_BLOCK_SEQ(void* const graph, int BS,const uint64_t d1, const uint64_t d2, const uint64_t d3, int* const path, const uint64_t base) __attribute__((always_inline));
 
@@ -319,7 +320,7 @@ static inline void FW_BLOCK_SEQ(void* const graph, int BS, const uint64_t d1, co
 
 //Public
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-void compute_FW_int_sequential(FW_Matrix FW){ //'t' is ignored in this case (since this is a single threaded version). It stays here only to "standardize" the arguments of each FW function
+void compute_FW_int_sequential(FW_Matrix FW){ 
 	uint64_t i, j, k, r, b, kj, ik, kk, ij, row_of_blocks_disp, block_size, k_row_disp, k_col_disp, i_row_disp, j_col_disp;
 	int BS = FW.BS;
 	int n = FW.norm_size;

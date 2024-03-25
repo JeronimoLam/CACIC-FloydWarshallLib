@@ -70,7 +70,7 @@ void save_structure(FW_Matrix, char*, char*, FileType, int, int);
  *
  * @return A string containing the details of the FW_Matrix element.
  */
-char *  FW_details_to_string(FW_Matrix element, int dist, int path);
+char *  FW_details_to_string(FW_Matrix element);
 
 /**
  * Prints the FW_Matrix element along with its properties and optionally the distance and path matrices.

@@ -10,7 +10,7 @@
     FileType getFileType();
     char *fileTypeToString();
 
-    void calculateMatrixSize(FW_Matrix *, FILE *);
+    int calculateMatrixSize(FileType, FILE *);
 
     void* createMatrix(FW_Matrix , FILE*);
     void saveMatrix(FW_Matrix, char*, FileType, int, int);

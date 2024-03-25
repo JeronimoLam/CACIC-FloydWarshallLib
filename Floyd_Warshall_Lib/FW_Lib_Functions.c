@@ -2,7 +2,7 @@
 #include "File_Manager/file_handler.h"
 #include "FW_compute.h"
 
-#define FW_DEFAULT_BLOCK_SIZE 2
+#define FW_DEFAULT_BLOCK_SIZE 128
 #define FW_DEFAULT_THREAD_NUM 2 // TODO: Definir thread num
 
 
@@ -37,7 +37,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS)
     }
 
     // Calculation of matrix size
-    calculateMatrixSize(&FW, file);       // Calulates rows and cols
+    FW.size = calculateMatrixSize(FW.fileType,  file);       // Calulates rows and cols
     FW.norm_size = nextPowerOf2(FW.size); // Calculates the max size of the matrix (nxn)
 
     // Set Block Size
@@ -113,15 +113,6 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int
         return;
     }
 
-    if (dist_matrix == 1)
-    {
-        printf("Exporting Distance Matrix...\n");
-    }
-    else
-    {
-        printf("Exporting Path Matrix...\n");
-    }
-
     // Create copies of path and name for manipulation
     char pathCopy[1024];
     char nameCopy[256]; // Assuming name length won't exceed 256, adjust as needed
@@ -146,25 +137,16 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int
 
     char fullPath[1024]; // Buffer for full path
     sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
-    printf("Full Path: %s\n", fullPath);
+    // printf("Full Path: %s\n", fullPath);
 
     saveMatrix(FW, fullPath, fileType, dist_matrix, path_matrix);
 }
 
-char *FW_details_to_string(FW_Matrix element, int dist, int path)
+char *FW_details_to_string(FW_Matrix element)
 {
     char *result = malloc(1024);
     sprintf(result, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\n", element.size, element.norm_size, element.BS, dataTypeToString(element.datatype));
-    // if (dist == 1)
-    // {
-    //     printf("Distance Matrix Loaded\n");
-    //     print_matrix(element.dist, element.norm_size, element.datatype);
-    // }
-    // if (path == 1)
-    // {
-    //     printf("Path Matrix\n");
-    //     print_matrix(element.path, element.norm_size, TYPE_INT);
-    // }
+
     return result;
 }
 
