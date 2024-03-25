@@ -17,6 +17,8 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
     r = FW.norm_size / FW.BS;
     row_of_blocks_disp = FW.norm_size * FW.BS;
     num_of_bock_elems = FW.BS * FW.BS;
+    int  * D = (int *)FW.dist;
+    int * P = FW.path;
     int BS = FW.BS;
 
     // --------------------------- BLOQUE AGREGADO -----------------------
@@ -41,7 +43,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
 
     // Modificación: shared(pendientes, cv, mutex)
 
-#pragma omp parallel shared(S) default(none) firstprivate(r, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(t)
+#pragma omp parallel shared(S) default(none) firstprivate(r, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
     {
         uint64_t i, j, k, b, kj, ik, kk, ij, k_row_disp, k_col_disp, i_row_disp, j_col_disp, w;
 
