@@ -1,6 +1,12 @@
 #include "FW_compute.h"
 #include "../include/FW_Lib_CommonTypes.h"
 
+#include <omp.h>
+#include <semaphore.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+
 //------------------------------------------------------------------------- Paralell Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
 
 
@@ -43,7 +49,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
 
     // Modificación: shared(pendientes, cv, mutex)
 
-#pragma omp parallel shared(S) default(none) firstprivate(r, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
+#pragma omp parallel shared(S) default(none) firstprivate(r, BS, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
     {
         uint64_t i, j, k, b, kj, ik, kk, ij, k_row_disp, k_col_disp, i_row_disp, j_col_disp, w;
 
@@ -63,13 +69,13 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
 
         for (k = 0; k < r; k++)
         {
-            b = k * FW.BS;
+            b = k * BS;
             k_row_disp = k * row_of_blocks_disp;
             k_col_disp = k * num_of_bock_elems;
 
             // Phase 1
             kk = k_row_disp + k_col_disp;
-            FW_BLOCK_PARALLEL(FW.dist, FW.BS, kk, kk, kk, FW.path, b, tmp1, tmp2);
+            FW_BLOCK_PARALLEL(D, BS, kk, kk, kk, P, b, tmp1, tmp2);
 
 // Phase 2 y 3
 #pragma omp for schedule(dynamic) nowait
@@ -82,7 +88,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
                     if (j == k)
                         continue;
                     kj = k_row_disp + j * num_of_bock_elems;
-                    FW_BLOCK(FW.dist, FW.BS, kj, kk, kj, FW.path, b, tmp1, tmp2);
+                    FW_BLOCK(D, BS, kj, kk, kj, P, b, tmp1, tmp2);
 
                     // -------------- BLOQUE AGREGADO -------------------
 
@@ -104,7 +110,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
                     if (i == k)
                         continue;
                     ik = i * row_of_blocks_disp + k_col_disp;
-                    FW_BLOCK(FW.dist, FW.BS, ik, ik, kk, FW.path, b, tmp1, tmp2);
+                    FW_BLOCK(D, BS, ik, ik, kk, P, b, tmp1, tmp2);
 
                     // -------------- BLOQUE AGREGADO -------------------
 
@@ -143,7 +149,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
                     j_col_disp = j * num_of_bock_elems;
                     kj = k_row_disp + j_col_disp;
                     ij = i_row_disp + j_col_disp;
-                    FW_BLOCK(FW.dist, FW.BS, ij, ik, kj, FW.path, b, tmp1, tmp2);
+                    FW_BLOCK(D, BS, ij, ik, kj, P, b, tmp1, tmp2);
                 }
             }
         }
