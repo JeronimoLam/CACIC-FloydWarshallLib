@@ -82,5 +82,16 @@ char *  FW_details_to_string(FW_Matrix element);
 void print_FW(FW_Matrix element, int dist, int path, int blocks);
 
 
+/**
+ * @brief Frees the memory allocated for the FW_Matrix structure.
+ * 
+ * This function frees the dynamically allocated memory for the dist and path members of the FW_Matrix structure.
+ * After freeing the memory, the function sets the pointers to NULL to avoid dangling pointers.
+ * 
+ * @param matrix A pointer to the FW_Matrix structure to be freed.
+ */
+void freeFW_Matrix(FW_Matrix* matrix);
+
+
 
 #endif //FW_LIB_FUNCTIONS_H

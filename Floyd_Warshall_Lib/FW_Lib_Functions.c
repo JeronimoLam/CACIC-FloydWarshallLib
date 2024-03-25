@@ -142,6 +142,23 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int
     saveMatrix(FW, fullPath, fileType, dist_matrix, path_matrix);
 }
 
+
+void freeFW_Matrix(FW_Matrix* matrix) {
+    if (matrix != NULL) {
+        // Free the dynamically allocated dist member, if it's not NULL.
+        if (matrix->dist != NULL) {
+            free(matrix->dist);
+            matrix->dist = NULL; // Avoid dangling pointer
+        }
+        // Free the dynamically allocated path member, if it's not NULL.
+        if (matrix->path != NULL) {
+            free(matrix->path);
+            matrix->path = NULL; // Avoid dangling pointer
+        }
+    }
+}
+
+// Revisar cual de las 2 queda si FW_details_to_string o print_FW o  las 2
 char *FW_details_to_string(FW_Matrix element)
 {
     char *result = malloc(1024);
