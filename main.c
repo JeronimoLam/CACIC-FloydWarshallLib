@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <getopt.h>
 
-#include "include/FW_lib_CommonTypes.h"
-#include "include/FW_lib_Functions.h"
+#include "include/FW_Lib_CommonTypes.h"
+#include "include/FW_Lib_Functions.h"
 
 #define BS 128
 #define TN 12

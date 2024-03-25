@@ -135,7 +135,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int
         *dotPosition = '\0';
     }
 
-    char fullPath[1024]; // Buffer for full path
+    char fullPath[1280]; // Buffer for full path
     sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
     // printf("Full Path: %s\n", fullPath);
 
