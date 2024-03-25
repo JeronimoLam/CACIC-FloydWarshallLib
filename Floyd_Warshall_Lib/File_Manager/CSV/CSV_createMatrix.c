@@ -26,6 +26,7 @@ void *CSV_createMatrix(FW_Matrix FW, FILE *file)
 // These functions are similar but each one uses atoi, atof, strtod, or a simple assignment, respectively.
 static void *createIntMatrix(FILE *file, unsigned int size, unsigned int BS)
 {
+    rewind(file);
     int *matrix = (int *)malloc(size * size * sizeof(int));
     char *token;
     int row = 0, col = 0;
@@ -64,6 +65,7 @@ static void *createIntMatrix(FILE *file, unsigned int size, unsigned int BS)
 
     return reorganizeToBlocks(matrix, size, BS, TYPE_INT);
 }
+
 static void *createFloatMatrix(FILE *file, unsigned int size, unsigned int BS)
 {
     float *matrix = (float *)malloc(size * size * sizeof(float));

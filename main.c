@@ -5,7 +5,7 @@
 #include "include/FW_Lib_CommonTypes.h"
 #include "include/FW_Lib_Functions.h"
 
-#define BS 128
+#define BS 2
 #define TN 12
 
 double dwalltime();

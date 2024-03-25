@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/main_executable",
-            "args": ["-p", "Examples/Example_CSV_380_int.csv", "-i"],
+            "args": ["-p", "Examples/Example_CSV_5_int.csv", "-i"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
