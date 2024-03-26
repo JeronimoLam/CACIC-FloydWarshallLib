@@ -5,7 +5,7 @@
 #include "include/FW_Lib_CommonTypes.h"
 #include "include/FW_Lib_Functions.h"
 
-#define BS 128
+#define BS 2
 #define TN 12
 
 double dwalltime();
@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
     printf(" ==> Leyendo \n");
     FW_Matrix data2 = create_structure(dataType, path, BS);
     printf("%s\n", FW_details_to_string(data2));
+    // print_FW(data2, 1,0, 1);
 
     printf(" ==> Procesado \n");
     double timetick_s_compute = dwalltime();
