@@ -27,7 +27,7 @@ void *CSV_createMatrix(FW_Matrix FW, FILE *file)
 static void *createIntMatrix(FILE *file, unsigned int size, unsigned int BS) {
     rewind(file);
     int *matrix = (int *)malloc(size * size * sizeof(int));
-    char line[2048];
+    char line[12040];
     char *token;
     int row = 0, col = 0;
 

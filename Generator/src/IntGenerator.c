@@ -3,9 +3,17 @@
 // TODO: Make the generator use -1
 void generarMatrizInt(int n, int ***matriz, int maxValue) {
     *matriz = (int **)malloc(n * sizeof(int *));
+    if (*matriz == NULL) {
+        printf("No se pudo reservar memoria para la matriz.\n");
+        exit(1);
+    }
     int value;
     for (int i = 0; i < n; i++) {
         (*matriz)[i] = (int *)malloc(n * sizeof(int));
+        if ((*matriz)[i] == NULL) {
+            printf("No se pudo reservar memoria para la matriz.\n");
+            exit(1);
+        }
         for (int j = 0; j < n; j++) {
             if (i == j)
                 (*matriz)[i][j] = 0;

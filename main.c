@@ -5,8 +5,8 @@
 #include "include/FW_Lib_CommonTypes.h"
 #include "include/FW_Lib_Functions.h"
 
-#define BS 2
-#define TN 12
+#define BS 128
+#define TN 16
 
 double dwalltime();
 FILE *check_file(const char *);

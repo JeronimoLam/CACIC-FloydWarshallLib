@@ -1,5 +1,6 @@
 import csv
 import numpy as np
+import sys  # Import the sys module
 
 # Función para cargar una matriz desde un archivo CSV
 def cargar_matriz(archivo):
@@ -16,11 +17,19 @@ def cargar_matriz(archivo):
                     fila_numerica.append(float(elemento))
             matriz.append(fila_numerica)
         return np.array(matriz)
+    
+# Ensure there's a command-line argument provided
+if len(sys.argv) != 2:
+    print("Usage: python CheckCorrect.py <filename_without_extension>")
+    sys.exit(1)
+
+filename = sys.argv[1]  # Get the filename without extension from the command-line argument
+
 
 # Cargar las matrices
 matriz1 = cargar_matriz('./Output/ResultParalell_distancias.csv')
 matriz2 = cargar_matriz('./Output/ResultSecuential_distancias.csv')
-matriz3 = cargar_matriz('./Examples/512.csv')
+matriz3 = cargar_matriz(f'./Examples/{filename}.csv')
 
 # Verificar que las matrices tengan el mismo tamaño
 if matriz1.shape != matriz2.shape or matriz1.shape != matriz3.shape or matriz2.shape != matriz3.shape:
