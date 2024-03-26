@@ -5,7 +5,7 @@
 #include "include/FW_Lib_CommonTypes.h"
 #include "include/FW_Lib_Functions.h"
 
-#define BS 2
+#define BS 128
 #define TN 12
 
 double dwalltime();
@@ -90,8 +90,10 @@ int main(int argc, char *argv[])
     compute_FW_sequential(data2);
     double timetick_fs_compute = dwalltime();
 
+
     printf(" ==> Guardando \n");
     save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, 1, 0);
+
     double timetick_fs = dwalltime();
 
 
