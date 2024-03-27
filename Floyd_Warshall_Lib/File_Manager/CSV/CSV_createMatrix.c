@@ -3,6 +3,8 @@
 #include "CSV_Utils.h"
 
 static void *createIntMatrix(FILE *, unsigned int, unsigned int);
+void* createIntMatrixOneElementAtATime(FILE* file, unsigned int size, unsigned int norm_size, int BS);
+
 static void *createFloatMatrix(FILE *, unsigned int, unsigned int);
 static void *createDoubleMatrix(FILE *, unsigned int, unsigned int);
 static void *createCharMatrix(FILE *, unsigned int, unsigned int);
@@ -12,7 +14,8 @@ void *CSV_createMatrix(FW_Matrix FW, FILE *file)
     switch (FW.datatype)
     {
     case TYPE_INT:
-        return createIntMatrix(file, FW.norm_size, FW.BS);
+        return createIntMatrixOneElementAtATime(file,FW.size, FW.norm_size, FW.BS);
+        //return createIntMatrix(file, FW.norm_size, FW.BS);
     case TYPE_FLOAT:
         return createFloatMatrix(file, FW.norm_size, FW.BS);
     case TYPE_DOUBLE:
@@ -26,7 +29,9 @@ void *CSV_createMatrix(FW_Matrix FW, FILE *file)
 // These functions are similar but each one uses atoi, atof, strtod, or a simple assignment, respectively.
 static void *createIntMatrix(FILE *file, unsigned int size, unsigned int BS) {
     rewind(file);
+
     int *matrix = (int *)malloc(size * size * sizeof(int));
+    if (!matrix) exit(9); // Allocation failed
     char line[12040];
     char *token;
     int row = 0, col = 0;
@@ -68,6 +73,89 @@ static void *createIntMatrix(FILE *file, unsigned int size, unsigned int BS) {
     }
 
     return reorganizeToBlocks(matrix, size, BS, TYPE_INT);
+}
+
+// Utility function to check if a character is considered a delimiter for CSV
+int isDelimiter(char ch) {
+    return ch == ',' || ch == '\n' || ch == EOF;
+}
+
+// Function to dynamically allocate and read the next token (element) from the file
+char* readNextToken(FILE* file) {
+    size_t capacity = 10; // Initial capacity
+    size_t len = 0; // Current length of the token
+    char* token = (char*)malloc(capacity * sizeof(char));
+    if (!token) return NULL; // Allocation failed
+
+    char ch;
+    while ((ch = fgetc(file)) != EOF && !isDelimiter(ch)) {
+        // Resize token buffer if necessary
+        if (len + 1 >= capacity) {
+            capacity *= 2; // Double the capacity
+            char* newToken = (char*)realloc(token, capacity * sizeof(char));
+            if (!newToken) {
+                free(token);
+                exit(10); // Reallocation failed
+            }
+            token = newToken;
+        }
+
+        // Append the character to the token
+        token[len++] = ch;
+    }
+
+    if (len == 0 && ch == EOF) { // No more tokens
+        free(token);
+        return NULL;
+    }
+
+    // Null-terminate the token
+    token[len] = '\0';
+    return token;
+}
+
+// Converts the token to an integer, handling special cases
+int tokenToInt(char* token) {
+    if (strcmp(token, "INF") == 0 || atoi(token) == -1) {
+        return INT_MAX;
+    }
+    return atoi(token);
+}
+
+void* createIntMatrixOneElementAtATime(FILE* file, unsigned int size, unsigned int norm_size, int BS) {
+    rewind(file); // Ensure we start reading from the beginning of the file
+    
+    int* matrix = (int*)malloc(norm_size * norm_size * sizeof(int));
+    if (!matrix) exit(9); // Allocation failed
+
+    unsigned int row = 0, col = 0;
+    char* token;
+    
+    for (unsigned int i = 0; i < norm_size * norm_size; i++) {
+        if (row < size && col < size) {
+            // Only attempt to read new tokens if within the original matrix size
+                token = readNextToken(file);
+                if (token) {
+                    matrix[i] = tokenToInt(token);
+                    // free(token); // Free the token now that we're done with it
+                    if (++col == norm_size) {
+                        col = 0;
+                        row++;
+                    }
+                    continue;
+                }
+        }
+        // For cells outside the original matrix or after file content ends, fill with INT_MAX
+        matrix[i] = INT_MAX;
+        if (++col == norm_size) {
+            col = 0;
+            row++;
+        }
+    }
+
+
+    return reorganizeToBlocks(matrix, norm_size, BS, TYPE_INT);
+     
 }
 
 static void *createFloatMatrix(FILE *file, unsigned int size, unsigned int BS)

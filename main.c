@@ -78,13 +78,29 @@ int main(int argc, char *argv[])
         }
     }
 
+    printf("------------------------PARALELO------------------------\n");
+    double timetick_p = dwalltime();
+
+    printf(" ==> Leyendo \n");
+    FW_Matrix data = create_structure(dataType, path, BS);
+    printf("%s\n", FW_details_to_string(data));
+
+    printf(" ==> Procesado \n");
+    double timetick_p_compute = dwalltime();
+    compute_FW_paralell(data, TN); // TODO: Adjust thread num
+    double timetick_fp_compute = dwalltime();
+
+    printf(" ==> Guardando \n");
+    save_structure(data, "./Output/", "ResultParalell.csv", CSV, 1, 0);
+    double timetick_fp = dwalltime();
+    printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
+
     printf("------------------------SECUENCIAL------------------------\n");
     double timetick_s = dwalltime();
 
     printf(" ==> Leyendo \n");
     FW_Matrix data2 = create_structure(dataType, path, BS);
     printf("%s\n", FW_details_to_string(data2));
-    // print_FW(data2, 1,0, 1);
 
     printf(" ==> Procesado \n");
     double timetick_s_compute = dwalltime();
@@ -98,22 +114,8 @@ int main(int argc, char *argv[])
     double timetick_fs = dwalltime();
 
 
-    printf("------------------------PARALELO------------------------\n");
-    double timetick_p = dwalltime();
-
-    printf(" ==> Leyendo \n");
-    FW_Matrix data = create_structure(dataType, path, BS);
-    printf("%s\n", FW_details_to_string(data));
-
-
-    printf(" ==> Procesado \n");
-    double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, TN); // TODO: Adjust thread num
-    double timetick_fp_compute = dwalltime();
-
-    printf(" ==> Guardando \n");
-    save_structure(data, "./Output/", "ResultParalell.csv", CSV, 1, 0);
-    double timetick_fp = dwalltime();
+    printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
+    
 
     printf("\n------------------------ Tiempos ------------------------\n");
     
@@ -125,8 +127,8 @@ int main(int argc, char *argv[])
     printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
 
     // Free memory
-    freeFW_Matrix(&data2);
-    freeFW_Matrix(&data);
+    // freeFW_Matrix(&data2);
+    // freeFW_Matrix(&data);
 
 
     // Closes the file

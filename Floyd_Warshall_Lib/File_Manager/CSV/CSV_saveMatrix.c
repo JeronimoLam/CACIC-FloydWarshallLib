@@ -47,8 +47,8 @@ void CSV_saveMatrix(FW_Matrix FW, char *path, int dist_matrix, int path_matrix)
 static void saveIntMatrixToCSV(void *matrix, char *path, unsigned int norm_size, unsigned int size, char *extension, unsigned int BS)
 {
     int *ordered_matrix_int = reorganizeToLinear(matrix, norm_size, BS, TYPE_INT);
-    free(matrix); // Is not used anymore // TODO: Revisar si conviene liberar la memoria acá o en el main
-
+    // free(matrix); // Is not used anymore // TODO: Revisar si conviene liberar la memoria acá o en el main
+    
     // Open the file
     char fullPath[1024]; // Buffer for full path
     sprintf(fullPath, "%s_%s", path, extension);
