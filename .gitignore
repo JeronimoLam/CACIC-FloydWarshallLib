@@ -38,5 +38,7 @@ CPackSourceConfig.cmake
 *.ninja*
 *.ninja
 .ninja*
+
 Examples/Example_CSV_16384_int.csv
 Examples/Example_CSV_8192_int.csv
+Examples/8000.csv
