@@ -67,3 +67,50 @@ DataType CSV_AutoDetectDataType(FILE * file) {
     }
     return TYPE_INT;
 }
+
+// Utility function to check if a character is considered a delimiter for CSV
+int isDelimiter(char ch) {
+    return ch == ',' || ch == '\n' || ch == EOF;
+}
+
+// Function to dynamically allocate and read the next token (element) from the file
+char* readNextToken(FILE* file) {
+    size_t capacity = 10; // Initial capacity
+    size_t len = 0; // Current length of the token
+    char* token = (char*)malloc(capacity * sizeof(char));
+    if (!token) return NULL; // Allocation failed
+
+    char ch;
+    while ((ch = fgetc(file)) != EOF && !isDelimiter(ch)) {
+        // Resize token buffer if necessary
+        if (len + 1 >= capacity) {
+            capacity *= 2; // Double the capacity
+            char* newToken = (char*)realloc(token, capacity * sizeof(char));
+            if (!newToken) {
+                free(token);
+                exit(10); // Reallocation failed
+            }
+            token = newToken;
+        }
+
+        // Append the character to the token
+        token[len++] = ch;
+    }
+
+    if (len == 0 && ch == EOF) { // No more tokens
+        free(token);
+        return NULL;
+    }
+
+    // Null-terminate the token
+    token[len] = '\0';
+    return token;
+}
+
+// Converts the token to an integer, handling special cases
+int tokenToInt(char* token) {
+    if (strcmp(token, "INF") == 0 || atoi(token) == -1) {
+        return INT_MAX;
+    }
+    return atoi(token);
+}

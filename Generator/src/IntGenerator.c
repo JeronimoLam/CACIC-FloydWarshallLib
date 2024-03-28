@@ -1,6 +1,5 @@
 #include "matrix_operations.h"
 
-// TODO: Make the generator use -1
 void generarMatrizInt(int n, int ***matriz, int maxValue) {
     *matriz = (int **)malloc(n * sizeof(int *));
     if (*matriz == NULL) {
@@ -21,7 +20,7 @@ void generarMatrizInt(int n, int ***matriz, int maxValue) {
                 // Generates a random int between 0 and maxValue
                 value = (rand() % (maxValue + 1) );
                 if (value == 0)  value = -1;
-                (*matriz)[i][j] = value; // TODO Fix for float and Double
+                (*matriz)[i][j] = value;
             }
         }
     }

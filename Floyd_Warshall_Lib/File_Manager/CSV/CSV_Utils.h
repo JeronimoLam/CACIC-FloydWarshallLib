@@ -18,5 +18,8 @@ void CSV_saveMatrix(FW_Matrix,char *,  int, int);
 char *trim(char *);
 int CSV_calculateMatrixSize(FILE *);
 DataType CSV_AutoDetectDataType(FILE *);
+int isDelimiter(char);
+char * readNextToken(FILE *);
+int tokenToInt(char *);
 
 #endif // CREATE_MATRIX_H
