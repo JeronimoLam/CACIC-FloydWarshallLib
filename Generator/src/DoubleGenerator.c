@@ -2,11 +2,28 @@
 
 void generarMatrizDouble(int n, double ***matriz, double maxValue) {
     *matriz = (double **)malloc(n * sizeof(double *));
+    if (*matriz == NULL)
+    {
+        printf("No se pudo reservar memoria para la matriz.\n");
+        exit(1);
+    }
+    
     for (int i = 0; i < n; i++) {
         (*matriz)[i] = (double *)malloc(n * sizeof(double));
         for (int j = 0; j < n; j++) {
-            // Generates a random double between 0 and maxValue
-            (*matriz)[i][j] = (double)rand() / (double)(RAND_MAX) * maxValue; 
+            if (i == j)
+                (*matriz)[i][j] = 0;
+            else
+            {
+                // Generate a random float between 0 and (maxValue + 1) to include -1 in the range
+                double randomValue = (double)rand() / (double)(RAND_MAX) * (maxValue + 1);
+                // Check if the randomValue is greater than maxValue, if so, assign -1
+                // This effectively adds -1 to the range of generated values
+                if (randomValue > maxValue)
+                    (*matriz)[i][j] = -1;
+                else
+                    (*matriz)[i][j] = randomValue;
+            }
         }
     }
 }

@@ -19,8 +19,8 @@ def check_csv_matrix_and_max_row_length(csv_file_path, maxValue):
         print(f'Maximum row length: {max_row_length}, at row: {max_row_index+1}')
         
         for i in range(n):
-            for j in range(len(matrix[i])): # Adjusted to iterate based on current row's length
-                value = int(matrix[i][j])
+            for j in range(len(matrix[i])):
+                value = float(matrix[i][j])  # Parse values as float
                 
                 # Check diagonal elements are 0
                 if i == j and value != 0:
@@ -35,14 +35,15 @@ def check_csv_matrix_and_max_row_length(csv_file_path, maxValue):
     return True
 
 # Ensure there's a command-line argument provided
-if len(sys.argv) != 2:
-    print("Usage: python CheckCorrect.py <filename_without_extension>")
+if len(sys.argv) < 3:
+    print("Usage: python CheckCorrect.py <filename_without_extension> <maxValue>")
     sys.exit(1)
 
 filename = sys.argv[1]  # Get the filename without extension from the command-line argument
+maxValue = float(sys.argv[2])  # Convert maxValue argument to float
+
 # Example usage
 if __name__ == '__main__':
     csv_file_path = f'./Examples/{filename}.csv'
-    maxValue = 100 # Example maxValue used during matrix generation
     is_correct = check_csv_matrix_and_max_row_length(csv_file_path, maxValue)
     print(f'Matrix in CSV is correct: {is_correct}')
