@@ -109,6 +109,7 @@ char* readNextToken(FILE* file) {
 
 // Converts the token to an integer, handling special cases
 int tokenToInt(char* token) {
+    token = trim(token);
     if (strcmp(token, "INF") == 0 || atoi(token) == -1) {
         return INT_MAX;
     }
