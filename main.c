@@ -20,19 +20,25 @@ int main(int argc, char *argv[])
     int dataTypeFlag = 0;
     DataType dataType = UNDEFINED;
 
+    // Default values for block size and thread number
+    int blockSize = BS; // Use the default block size
+    int threadNum = TN; // Use the default thread number
+
     static struct option long_options[] = {
         {"path", required_argument, 0, 'p'},
         //{"absolute-path", required_argument, 0, 'a'},
         //{"relative-path", required_argument, 0, 'r'},
-        {"char", no_argument, 0, 'c'},
+        // {"char", no_argument, 0, 'c'},
         {"int", no_argument, 0, 'i'},
         {"float", no_argument, 0, 'f'},
         {"double", no_argument, 0, 'd'},
+        {"block-size", required_argument, 0, 'b'},
+        {"thread-num", required_argument, 0, 't'},
         {0, 0, 0, 0}};
 
     int option_index = 0;
 
-    while ((c = getopt_long(argc, argv, "p:cifd", long_options, &option_index)) != -1)
+    while ((c = getopt_long(argc, argv, "p:ifdb:t:", long_options, &option_index)) != -1)
     {
         switch (c)
         {
@@ -72,6 +78,13 @@ int main(int argc, char *argv[])
             }
             break;
 
+        case 'b':
+            blockSize = atoi(optarg);
+            break;
+        case 't':
+            threadNum = atoi(optarg);
+            break;
+
         default:
             fprintf(stderr, "Usage: %s -p (--path) path -c -i -f -d\n", argv[0]);
             exit(EXIT_FAILURE);
@@ -82,12 +95,13 @@ int main(int argc, char *argv[])
     double timetick_p = dwalltime();
 
     printf(" ==> Leyendo \n");
-    FW_Matrix data = create_structure(dataType, path, BS);
+    FW_Matrix data = create_structure(dataType, path, blockSize);
     printf("%s\n", FW_details_to_string(data));
+    printf("Thread Num: %d\n", threadNum);
 
     printf(" ==> Procesado \n");
     double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, TN); // TODO: Adjust thread num
+    compute_FW_paralell(data, threadNum); // TODO: Adjust thread num
     double timetick_fp_compute = dwalltime();
 
     printf(" ==> Guardando \n");
@@ -99,26 +113,24 @@ int main(int argc, char *argv[])
     double timetick_s = dwalltime();
 
     printf(" ==> Leyendo \n");
-    FW_Matrix data2 = create_structure(dataType, path, BS);
+    FW_Matrix data2 = create_structure(dataType, path, blockSize);
     printf("%s\n", FW_details_to_string(data2));
+    printf("Thread Num: %d\n", threadNum);
 
     printf(" ==> Procesado \n");
     double timetick_s_compute = dwalltime();
     compute_FW_sequential(data2);
     double timetick_fs_compute = dwalltime();
 
-
     printf(" ==> Guardando \n");
     save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, 1, 0);
 
     double timetick_fs = dwalltime();
 
-
     printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
-    
 
     printf("\n------------------------ Tiempos ------------------------\n");
-    
+
     // Print Times
     printf("Tiempo Libreria Entera Paralelo %f \n", timetick_fp - timetick_p);
     printf("Tiempo Libreria Entera Secuencial %f \n", timetick_fs - timetick_s);
@@ -129,7 +141,6 @@ int main(int argc, char *argv[])
     // Free memory
     // freeFW_Matrix(&data2);
     // freeFW_Matrix(&data);
-
 
     // Closes the file
     fclose(file);
