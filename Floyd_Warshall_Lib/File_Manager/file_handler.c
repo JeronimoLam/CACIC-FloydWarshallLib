@@ -108,7 +108,8 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
             FW->path = initializePathMatrix(FW);
             FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, FW->datatype);
         }
-        FW->path = initializePathMatrix(FW);
+        FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
+
         break;
     case JSON:
         FW->dist = JSON_createMatrix(*FW, file);
