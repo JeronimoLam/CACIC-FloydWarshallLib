@@ -1,0 +1,3 @@
+Test con: echo $LASTEXITCODE 
+100 - bad BS Argument
+101 - bad TN Argument

@@ -5,19 +5,19 @@
 #include "include/FW_Lib_CommonTypes.h"
 #include "include/FW_Lib_Functions.h"
 
-#define BS 2
+#define BS 128
 #define TN 16
 
 double dwalltime();
 FILE *check_file(const char *);
+int try_convert_to_int(const char *, int *);
+
 
 int main(int argc, char *argv[])
 {
-    int size;
+    int size, c, dataTypeFlag = 0, temp_bs = 0, temp_tn = 0;
     char *path;
     FILE *file;
-    int c;
-    int dataTypeFlag = 0;
     DataType dataType = UNDEFINED;
 
     // Default values for block size and thread number
@@ -79,14 +79,25 @@ int main(int argc, char *argv[])
             break;
 
         case 'b':
-            blockSize = atoi(optarg);
+            try_convert_to_int(optarg, &temp_bs);
+            if (temp_bs == 0)
+                exit(100);
             break;
         case 't':
-            threadNum = atoi(optarg);
+            try_convert_to_int(optarg, &temp_tn);
+            if (temp_tn == 0)
+                exit(101);
             break;
 
         default:
-            fprintf(stderr, "Usage: %s -p (--path) path -c -i -f -d\n", argv[0]);
+            fprintf(stderr, "Usage: \n"
+                            "-p, --path <path>              Specify the path to the input file.\n"
+                            "-i, --int                      Set the data type to integer.\n"
+                            "-f, --float                    Set the data type to float.\n"
+                            "-d, --double                   Set the data type to double.\n"
+                            "-b, --block-size <size>        Set the block size (default: %d).\n"
+                            "-t, --thread-num <number>      Set the number of threads (default: %d).\n",
+                    BS, TN);
             exit(EXIT_FAILURE);
         }
     }
@@ -108,6 +119,7 @@ int main(int argc, char *argv[])
     save_structure(data, "./Output/", "ResultParalell.csv", CSV, 1, 0);
     double timetick_fp = dwalltime();
     printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
+
 
     printf("------------------------SECUENCIAL------------------------\n");
     double timetick_s = dwalltime();
@@ -172,6 +184,25 @@ FILE *check_file(const char *filename)
         fprintf(stderr, "Error: Unable to open file.\n");
         exit(EXIT_FAILURE);
     }
+}
+
+#include <errno.h>
+
+int try_convert_to_int(const char *str, int *converted_value)
+{
+    char *end;
+    errno = 0;
+
+    long value = strtol(str, &end, 10);
+
+    // Check for errors: no digits, overflow, underflow, or extra characters
+    if (end == str || errno == ERANGE || *end != '\0' || value > INT_MAX || value < INT_MIN)
+    {
+        return 0; // Conversion failed
+    }
+
+    *converted_value = (int)value;
+    return 1; // Conversion succeeded
 }
 
 #include <sys/time.h>
