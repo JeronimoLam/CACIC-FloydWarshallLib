@@ -16,9 +16,10 @@
  * auto-detect it.
  * @param path Path to the file containing the matrix.
  * @param BS Block size for matrix division. If -1 is passed, the default block size is used.
+ * @param no_path Flag indicating whether to calculate the shortest path matrix (0) or not (1).
  * @return FW_Matrix Structure containing the matrix divided into blocks, among other relevant metadata.
  */
-FW_Matrix create_structure(DataType, char *, int);
+FW_Matrix create_structure(DataType, char *, int, int);
 
 
 /**
@@ -29,8 +30,9 @@ FW_Matrix create_structure(DataType, char *, int);
  *
  * @param FW The FW_Matrix struct containing the distance matrix and other parameters.
  * @param threads_num The number of threads to be used for parallel execution.
+ * @param no_path Flag indicating whether to calculate the shortest path matrix (0) or not (1).
  */
-void compute_FW_paralell(FW_Matrix, int);
+void compute_FW_paralell(FW_Matrix, int, int);
 
 
 
@@ -39,8 +41,9 @@ void compute_FW_paralell(FW_Matrix, int);
  * of vertices in a graph, using the distance matrix contained in 'FW'.
  *
  * @param matrix The FW_Matrix on which to perform the computation.
+ * @param no_path Flag indicating whether to calculate the shortest path matrix (0) or not (1).
  */
-void compute_FW_sequential(FW_Matrix);
+void compute_FW_sequential(FW_Matrix, int);
 
 
 /**

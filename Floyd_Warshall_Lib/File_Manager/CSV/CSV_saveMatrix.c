@@ -17,7 +17,7 @@ void CSV_saveMatrix(FW_Matrix FW, char *path, int dist_matrix, int path_matrix)
         }
         if (path_matrix)
         {
-            saveIntMatrixToCSV(FW.dist, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
+            saveIntMatrixToCSV(FW.path, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
         }
         break;
     case TYPE_FLOAT:

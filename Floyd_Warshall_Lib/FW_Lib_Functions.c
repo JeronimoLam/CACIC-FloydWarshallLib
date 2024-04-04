@@ -12,7 +12,7 @@ unsigned int nextPowerOf2(unsigned int);
 int *initializePathMatrix(FW_Matrix *G);
 
 // Lib Functions
-FW_Matrix create_structure(DataType dataType, char *path, int BS)
+FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
 {
     FW_Matrix FW;
     FILE *file = NULL;
@@ -50,17 +50,19 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS)
         FW.BS = FW_DEFAULT_BLOCK_SIZE;
     }
 
-    FW.dist = createMatrix(FW, file); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
+    createMatrixes(&FW, file, no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
 
-    FW.path = initializePathMatrix(&FW);
+
+    // FW.path = initializePathMatrix(&FW);
 
     // print path matrix
+    print_matrix(FW.dist, FW.norm_size, TYPE_INT);
     print_matrix(FW.path, FW.norm_size, TYPE_INT);
 
     return FW;
 }
 
-void compute_FW_paralell(FW_Matrix FW, int threads_num)
+void compute_FW_paralell(FW_Matrix FW, int threads_num, int no_path)
 {
     // Set Thread NUm
     if (threads_num == -1)
@@ -70,7 +72,7 @@ void compute_FW_paralell(FW_Matrix FW, int threads_num)
 
     if (FW.datatype == TYPE_INT)
     {
-        compute_FW_int_paralell(FW, threads_num);
+        compute_FW_int_paralell(FW, threads_num, no_path);
     }
     // else if(FW.datatype == TYPE_FLOAT)
     // {
@@ -87,11 +89,11 @@ void compute_FW_paralell(FW_Matrix FW, int threads_num)
     }
 }
 
-void compute_FW_sequential(FW_Matrix FW)
+void compute_FW_sequential(FW_Matrix FW, int no_path)
 {
     if (FW.datatype == TYPE_INT)
     {
-        compute_FW_int_sequential(FW);
+        compute_FW_int_sequential(FW, no_path);
     }
     // else if(FW.datatype == TYPE_FLOAT)
     // {
@@ -294,34 +296,34 @@ unsigned int nextPowerOf2(unsigned int n)
     return 1 << count;
 }
 
-int *initializePathMatrix(FW_Matrix *G)
-{
-    int *P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
-    if (!P)
-        exit(9); // Allocation failed
+// int *initializePathMatrix(FW_Matrix *G)
+// {
+//     int *P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
+//     if (!P)
+//         exit(9); // Allocation failed
 
-    for (uint64_t i = 0; i < G->norm_size; i++)
-        for (uint64_t j = 0; j < G->norm_size; j++)
-            if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
-                P[i * G->norm_size + j] = j;
-            else
-                P[i * G->norm_size + j] = -1;
+//     for (uint64_t i = 0; i < G->norm_size; i++)
+//         for (uint64_t j = 0; j < G->norm_size; j++)
+//             if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
+//                 P[i * G->norm_size + j] = j;
+//             else
+//                 P[i * G->norm_size + j] = -1;
 
-    //Debug
-    for (uint64_t i = 0; i < G->norm_size; i++)
-    {
-        for (uint64_t j = 0; j < G->norm_size; j++)
-            printf("%d ", P[i * G->norm_size + j]);
-        printf("\n");
-    }
-    printf("\n");
+//     //Debug
+//     for (uint64_t i = 0; i < G->norm_size; i++)
+//     {
+//         for (uint64_t j = 0; j < G->norm_size; j++)
+//             printf("%d ", P[i * G->norm_size + j]);
+//         printf("\n");
+//     }
+//     printf("\n");
 
-    return (int *)reorganizeToBlocks((void *)P, G->norm_size, G->BS, G->datatype);
+//     return (int *)reorganizeToBlocks((void *)P, G->norm_size, G->BS, G->datatype);
 
-    // for(uint64_t i=0; i<G->n; i++)
-    // 	for(uint64_t j=0; j<G->n; j++)
-    // 	    if(G->D[i*G->n+j] != INFINITE)
-    // 			G->P[i*G->n+j] = j;
-    // 		else
-    // 			G->P[i*G->n+j] = -1;
-}
+//     // for(uint64_t i=0; i<G->n; i++)
+//     // 	for(uint64_t j=0; j<G->n; j++)
+//     // 	    if(G->D[i*G->n+j] != INFINITE)
+//     // 			G->P[i*G->n+j] = j;
+//     // 		else
+//     // 			G->P[i*G->n+j] = -1;
+// }

@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
-void compute_FW_int_paralell(FW_Matrix FW, int threads_num);
+void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int nopath);
 
-void compute_FW_int_sequential(FW_Matrix FW);
+void compute_FW_int_sequential(FW_Matrix FW, int nopath);
 
 
 

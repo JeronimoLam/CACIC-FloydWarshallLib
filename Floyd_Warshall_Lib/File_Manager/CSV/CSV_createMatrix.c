@@ -56,8 +56,8 @@ void* createIntMatrix(FILE* file, unsigned int size, unsigned int norm_size, int
         }
     }
 
-    int * matrix2 = reorganizeToBlocks(matrix, norm_size, BS, TYPE_INT);
-    return matrix2;
+    // int * matrix2 = reorganizeToBlocks(matrix, norm_size, BS, TYPE_INT);
+    return matrix;
 }
 
 static void *createFloatMatrix(FILE *file, unsigned int size, unsigned int BS)

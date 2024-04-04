@@ -3,3 +3,5 @@ Test con: echo $LASTEXITCODE
 101 - bad TN Argument
 
 9 - allocation Failed
+
+X - None Matrix Selected to export

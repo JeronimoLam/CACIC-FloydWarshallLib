@@ -17,7 +17,7 @@ static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const 
 #define NO_PATH
 
 
-void compute_FW_int_paralell(FW_Matrix FW, int threads_num)
+void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int no_path)
 {
     uint64_t r, row_of_blocks_disp, num_of_bock_elems;
     r = FW.norm_size / FW.BS;
@@ -328,7 +328,7 @@ static inline void FW_BLOCK_SEQ(void* const graph, int BS, const uint64_t d1, co
 
 //Public
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-void compute_FW_int_sequential(FW_Matrix FW){ 
+void compute_FW_int_sequential(FW_Matrix FW, int no_path){ 
 	uint64_t i, j, k, r, b, kj, ik, kk, ij, row_of_blocks_disp, block_size, k_row_disp, k_col_disp, i_row_disp, j_col_disp;
 	int BS = FW.BS;
 	int n = FW.norm_size;
