@@ -82,11 +82,13 @@ int main(int argc, char *argv[])
             try_convert_to_int(optarg, &temp_bs);
             if (temp_bs == 0)
                 exit(100);
+            blockSize = temp_bs;
             break;
         case 't':
             try_convert_to_int(optarg, &temp_tn);
             if (temp_tn == 0)
                 exit(101);
+            threadNum = temp_tn;
             break;
 
         default:

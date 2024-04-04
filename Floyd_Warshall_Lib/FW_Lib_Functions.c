@@ -5,11 +5,11 @@
 #define FW_DEFAULT_BLOCK_SIZE 128
 #define FW_DEFAULT_THREAD_NUM 2 // TODO: Definir thread num
 
-
 // Private functions
 void print_matrix(void *, unsigned int, DataType);
 char *dataTypeToString(DataType);
 unsigned int nextPowerOf2(unsigned int);
+int *initializePathMatrix(FW_Matrix *G);
 
 // Lib Functions
 FW_Matrix create_structure(DataType dataType, char *path, int BS)
@@ -37,8 +37,8 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS)
     }
 
     // Calculation of matrix size
-    FW.size = calculateMatrixSize(FW.fileType,  file);       // Calulates rows and cols
-    FW.norm_size = nextPowerOf2(FW.size); // Calculates the max size of the matrix (nxn)
+    FW.size = calculateMatrixSize(FW.fileType, file); // Calulates rows and cols
+    FW.norm_size = nextPowerOf2(FW.size);             // Calculates the max size of the matrix (nxn)
 
     // Set Block Size
     if (BS != -1)
@@ -52,7 +52,10 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS)
 
     FW.dist = createMatrix(FW, file); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
 
-    // FW.path = createMatrix(FW, file); // TODO: implementacion de la inicializacion de la matriz de caminos
+    FW.path = initializePathMatrix(&FW);
+
+    // print path matrix
+    print_matrix(FW.path, FW.norm_size, TYPE_INT);
 
     return FW;
 }
@@ -65,7 +68,7 @@ void compute_FW_paralell(FW_Matrix FW, int threads_num)
         threads_num = FW_DEFAULT_BLOCK_SIZE;
     }
 
-    if(FW.datatype == TYPE_INT)
+    if (FW.datatype == TYPE_INT)
     {
         compute_FW_int_paralell(FW, threads_num);
     }
@@ -84,8 +87,9 @@ void compute_FW_paralell(FW_Matrix FW, int threads_num)
     }
 }
 
-void compute_FW_sequential(FW_Matrix FW){
-    if(FW.datatype == TYPE_INT)
+void compute_FW_sequential(FW_Matrix FW)
+{
+    if (FW.datatype == TYPE_INT)
     {
         compute_FW_int_sequential(FW);
     }
@@ -102,7 +106,6 @@ void compute_FW_sequential(FW_Matrix FW){
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
-
 }
 
 void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int dist_matrix, int path_matrix)
@@ -142,16 +145,19 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int
     saveMatrix(FW, fullPath, fileType, dist_matrix, path_matrix);
 }
 
-
-void freeFW_Matrix(FW_Matrix* matrix) {
-    if (matrix != NULL) {
+void freeFW_Matrix(FW_Matrix *matrix)
+{
+    if (matrix != NULL)
+    {
         // Free the dynamically allocated dist member, if it's not NULL.
-        if (matrix->dist != NULL) {
+        if (matrix->dist != NULL)
+        {
             free(matrix->dist);
             matrix->dist = NULL; // Avoid dangling pointer
         }
         // Free the dynamically allocated path member, if it's not NULL.
-        if (matrix->path != NULL) {
+        if (matrix->path != NULL)
+        {
             free(matrix->path);
             matrix->path = NULL; // Avoid dangling pointer
         }
@@ -193,7 +199,6 @@ void print_FW(FW_Matrix element, int dist, int path, int blocks)
 }
 
 // ------------------------------------------------------------------ Private Section ------------------------------------------------------------------
-
 
 // AUX Functions
 void print_matrix(void *matrix, unsigned int size, DataType dataType)
@@ -287,4 +292,36 @@ unsigned int nextPowerOf2(unsigned int n)
     }
 
     return 1 << count;
+}
+
+int *initializePathMatrix(FW_Matrix *G)
+{
+    int *P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
+    if (!P)
+        exit(9); // Allocation failed
+
+    for (uint64_t i = 0; i < G->norm_size; i++)
+        for (uint64_t j = 0; j < G->norm_size; j++)
+            if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
+                P[i * G->norm_size + j] = j;
+            else
+                P[i * G->norm_size + j] = -1;
+
+    //Debug
+    for (uint64_t i = 0; i < G->norm_size; i++)
+    {
+        for (uint64_t j = 0; j < G->norm_size; j++)
+            printf("%d ", P[i * G->norm_size + j]);
+        printf("\n");
+    }
+    printf("\n");
+
+    return (int *)reorganizeToBlocks((void *)P, G->norm_size, G->BS, G->datatype);
+
+    // for(uint64_t i=0; i<G->n; i++)
+    // 	for(uint64_t j=0; j<G->n; j++)
+    // 	    if(G->D[i*G->n+j] != INFINITE)
+    // 			G->P[i*G->n+j] = j;
+    // 		else
+    // 			G->P[i*G->n+j] = -1;
 }
