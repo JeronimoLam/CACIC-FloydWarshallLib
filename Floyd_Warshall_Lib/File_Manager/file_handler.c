@@ -143,7 +143,7 @@ int *initializePathMatrix(FW_Matrix *G)
     for (uint64_t i = 0; i < G->norm_size; i++)
         for (uint64_t j = 0; j < G->norm_size; j++)
             if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
-                P[i * G->norm_size + j] = j;
+                P[i * G->norm_size + j] = i;
             else
                 P[i * G->norm_size + j] = -1;
 

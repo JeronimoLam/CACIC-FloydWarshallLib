@@ -1,6 +1,6 @@
 import csv
 import numpy as np
-import sys  # Import the sys module
+import sys
 
 # Función para cargar una matriz desde un archivo CSV
 def cargar_matriz(archivo):
@@ -18,6 +18,8 @@ def cargar_matriz(archivo):
             matriz.append(fila_numerica)
         return np.array(matriz)
     
+
+    
 # Ensure there's a command-line argument provided
 if len(sys.argv) != 2:
     print("Usage: python CheckCorrect.py <filename_without_extension>")
@@ -25,28 +27,34 @@ if len(sys.argv) != 2:
 
 filename = sys.argv[1]  # Get the filename without extension from the command-line argument
 
-
-# Cargar las matrices
+# Cargar las matrices de distancias
 matriz1 = cargar_matriz('./Output/ResultParalell_distancias.csv')
 matriz2 = cargar_matriz('./Output/ResultSecuential_distancias.csv')
 matriz3 = cargar_matriz(f'./Examples/{filename}.csv')
 
-print(f"Paralell shape: {matriz1.shape}")
-print(f"Sequential shape: {matriz2.shape}")
-print(f"Input shape: {matriz3.shape}")
+# Cargar las matrices de caminos
+matriz_caminos1 = cargar_matriz('./Output/ResultParalell_caminos.csv')
+matriz_caminos2 = cargar_matriz('./Output/ResultSecuential_caminos.csv')
+
+print("")
+
+# Comparar las matrices de distancias
+resultado_distancias = np.array_equal(matriz1, matriz2)
+print(f"DISTANCIAS Match: {resultado_distancias}")
+
+# Comparar las matrices de caminos
+resultado_caminos = np.array_equal(matriz_caminos1, matriz_caminos2)
+print(f"CAMINOS Match: {resultado_caminos}")
+
+# Continúa con la comparación de las matrices de distancias con la matriz de entrada, como lo estabas haciendo
+
+
 if matriz1.shape != matriz3.shape: 
     print("Las matrices deben tener el mismo tamaño.")
-    exit(1)
-
-# Comparar las matrices elemento por elemento para igualdad
-resultado = np.array_equal(matriz1, matriz2)
-print(f"Sequential and parallel equals: {resultado}")
+    sys.exit(1)
 
 # Identificar elementos en matriz3 que no son mayores o iguales a los correspondientes en matriz1
 elementos_no_validos = np.where(matriz3 < matriz1)
-# elementor_no_validos es una tupla de arrays, cada uno representando las coordenadas de los elementos falsos en sus respectivas dimensiones
-
-# Verificar si todos los elementos de matriz3 son mayores o iguales a los de matriz1
 resultado = np.all(matriz3 >= matriz1)
 print(f"Valid Result: {resultado}")
 
@@ -55,3 +63,9 @@ if not resultado:
     print("Coordenadas de los elementos no válidos (donde matriz3 < matriz1):")
     for coordenada in zip(*elementos_no_validos):
         print(coordenada)
+
+
+print("")
+print(f"Paralell shape: {matriz1.shape}")
+print(f"Sequential shape: {matriz2.shape}")
+print(f"Input shape: {matriz3.shape}")
