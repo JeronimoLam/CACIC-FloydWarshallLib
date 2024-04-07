@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define MAX_INT_VALUE 100
+
 #define DEFAULT_TYPE 'i'
 #define DEFAULT_SIZE 15
 #define DEFAULT_FORMAT 'C'
@@ -137,7 +139,7 @@ int main()
     if (tipo == 'i')
     {
         int **matrizInt;
-        IntMatrixGenerator(n, &matrizInt, 100); // Asumiendo que 100 es el valor máximo para la matriz de enteros
+        IntMatrixGenerator(n, &matrizInt, MAX_INT_VALUE, porcentajeNegativos);
         if (formato == 'C' || formato == 'c')
         {
             IntMatrix2CSV(matrizInt, n, path);

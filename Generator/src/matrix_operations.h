@@ -7,7 +7,7 @@
 // Funciones para generar matrices
 
 
-void IntMatrixGenerator(int n, int ***matriz, int maxValue);
+void IntMatrixGenerator(int n, int ***matriz, int maxValue, double porcentajeNegativos);
 void DoubleMatrixGenerator(int n, double ***matriz, int parteEntera, int parteDecimal, int decimalCero, double porcentajeNegativos);
 
 // Funciones para guardar matrices en CSV

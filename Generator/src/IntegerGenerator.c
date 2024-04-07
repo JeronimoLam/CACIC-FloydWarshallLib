@@ -1,6 +1,6 @@
 #include "matrix_operations.h"
 
-void IntMatrixGenerator(int n, int ***matriz, int maxValue) {
+void IntMatrixGenerator(int n, int ***matriz, int maxValue, double porcentajeNegativos) {
     *matriz = (int **)malloc(n * sizeof(int *));
     if (*matriz == NULL) {
         printf("No se pudo reservar memoria para la matriz.\n");
@@ -17,6 +17,14 @@ void IntMatrixGenerator(int n, int ***matriz, int maxValue) {
             if (i == j)
                 (*matriz)[i][j] = 0;
             else{
+
+                // Chequeo de -1 basado en el porcentaje dado
+                if (((double)rand() / RAND_MAX) < porcentajeNegativos)
+                {
+                    (*matriz)[i][j] = -1;
+                    continue; // Continúa con el siguiente elemento de la matriz
+                }
+
                 // Generates a random int between 0 and maxValue
                 value = (rand() % (maxValue + 1) );
                 if (value == 0)  value = -1;
