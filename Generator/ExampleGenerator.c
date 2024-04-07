@@ -7,21 +7,21 @@
 #define MAX_INT_VALUE 100
 
 #define DEFAULT_TYPE 'i'
-#define DEFAULT_SIZE 15
+#define DEFAULT_SIZE 10
+#define DEFAULT_DIRECTION 1
 #define DEFAULT_FORMAT 'C'
 #define DEFAULT_CSV_PATH "./output.csv"
 #define DEFAULT_JSON_PATH "./output.json"
 #define DEFAULT_DECIMAL_ZERO 0
-#define DEFAULT_NEGATIVOS_DENSIDAD 0.2
-#define DEFAULT_PARTE_ENTERA_FLOAT 2
-#define DEFAULT_PARTE_DECIMAL_FLOAT 4
-#define DEFAULT_PARTE_ENTERA_DOUBLE 4
-#define DEFAULT_PARTE_DECIMAL_DOUBLE 12
+#define DEFAULT_NEGATIVOS_DENSIDAD 0.6
+#define DEFAULT_PARTE_ENTERA 4
+#define DEFAULT_PARTE_DECIMAL 12
 
 int main()
 {
     char tipo = DEFAULT_TYPE;
     int n = DEFAULT_SIZE;
+    int direction = DEFAULT_DIRECTION;
     char formato = DEFAULT_FORMAT;
     char path[256] = {0};
     char input[256];
@@ -51,11 +51,22 @@ int main()
         }
     } while (sscanf(input, "%d", &n) != 1 || n <= 0);
 
-    // Configuración adicional para números flotantes y dobles
-    if (tipo == 'f' || tipo == 'd')
+    // Tipo de Grafo
+    do
     {
-        parteEntera = tipo == 'f' ? DEFAULT_PARTE_ENTERA_FLOAT : DEFAULT_PARTE_ENTERA_DOUBLE;
-        parteDecimal = tipo == 'f' ? DEFAULT_PARTE_DECIMAL_FLOAT : DEFAULT_PARTE_DECIMAL_DOUBLE;
+        printf("Tipo de Grafo: (1: Dirigido | 0: No dirigido) [default: %d]: ", DEFAULT_DIRECTION);
+        fgets(input, sizeof(input), stdin);
+        if (input[0] == '\n')
+        {
+            break; // Sale del bucle ya que se eligió el valor predeterminado.
+        }
+    } while (sscanf(input, "%d", &direction) != 1 || (direction != 1 && direction != 0));
+
+    // Configuración adicional para números flotantes y dobles
+    if (tipo == 'd')
+    {
+        parteEntera = DEFAULT_PARTE_ENTERA;
+        parteDecimal = DEFAULT_PARTE_DECIMAL;
 
         do
         {
@@ -125,11 +136,13 @@ int main()
     // Imprime los valores ingresados
     printf("\nTipo de numero: %c\n", tipo);
     printf("Dimensiones de la matriz: %d\n", n);
+    printf("Tipo de Grafo: %s\n", direction == 1 ? "Dirigido" : "No dirigido");
     if (tipo == 'f' || tipo == 'd')
     {
         printf("Parte entera: %d\n", parteEntera);
         printf("Parte decimal: %d\n", parteDecimal);
-        printf("Parte decimal toda en 0: %d\n", decimalCero);
+
+        printf("Parte decimal toda en 0: %s\n", decimalCero ? "Si" : "No");
     }
     printf("Densidad de -1: %.1f\n", porcentajeNegativos);
     printf("Formato de salida: %c\n", formato);
@@ -139,7 +152,7 @@ int main()
     if (tipo == 'i')
     {
         int **matrizInt;
-        IntMatrixGenerator(n, &matrizInt, MAX_INT_VALUE, porcentajeNegativos);
+        IntMatrixGenerator(n, &matrizInt, MAX_INT_VALUE, porcentajeNegativos, direction);
         if (formato == 'C' || formato == 'c')
         {
             IntMatrix2CSV(matrizInt, n, path);
@@ -153,27 +166,10 @@ int main()
             free(matrizInt[i]);
         free(matrizInt);
     }
-    // else if (tipo == 'f')
-    // {
-    //     float **matrizFloat;
-    //     FloatMatrixGenerator(n, &matrizFloat, parteEntera, parteDecimal, decimalCero, porcentajeNegativos);
-    //     if (formato == 'C' || formato == 'c')
-    //     {
-    //         FloatMatrix2CSV(matrizFloat, n, path, parteDecimal, decimalCero);
-    //     }
-    //     else
-    //     {
-    //         FloatMatrix2JSON(matrizFloat, n, path, parteDecimal, decimalCero);
-    //     }
-    //     // Liberar memoria
-    //     for (int i = 0; i < n; i++)
-    //         free(matrizFloat[i]);
-    //     free(matrizFloat);
-    // }
     else if (tipo == 'd')
     {
         double **matrizDouble;
-        DoubleMatrixGenerator(n, &matrizDouble, parteEntera, parteDecimal, decimalCero, porcentajeNegativos);
+        DoubleMatrixGenerator(n, &matrizDouble, parteEntera, parteDecimal, decimalCero, porcentajeNegativos, direction);
         if (formato == 'C' || formato == 'c')
         {
             DoubleMatrix2CSV(matrizDouble, n, path, parteDecimal, decimalCero);

@@ -9,7 +9,7 @@
 
 void generateRandomNumber(char *number, int n);
 
-void DoubleMatrixGenerator(int n, double ***matriz, int parteEntera, int parteDecimal, int decimalCero, double porcentajeNegativos)
+void DoubleMatrixGenerator(int n, double ***matriz, int parteEntera, int parteDecimal, int decimalCero, double porcentajeNegativos, int direction)
 {
 
     if (parteEntera + (decimalCero ? 0 : parteDecimal) > 16)
@@ -38,12 +38,18 @@ void DoubleMatrixGenerator(int n, double ***matriz, int parteEntera, int parteDe
             {
                 (*matriz)[i][j] = 0.0;
             }
+            else if (!direction && i < j)
+            {
+                continue;
+            }
             else
             {
                 // Chequeo de -1 basado en el porcentaje dado
                 if (((double)rand() / RAND_MAX) < porcentajeNegativos)
                 {
                     (*matriz)[i][j] = -1.0;
+                    if (!direction)
+                        (*matriz)[j][i] = -1.0;
                     continue; // Continúa con el siguiente elemento de la matriz
                 }
 
@@ -67,7 +73,8 @@ void DoubleMatrixGenerator(int n, double ***matriz, int parteEntera, int parteDe
 
                 // Combinación de las partes para formar el número
                 (*matriz)[i][j] = parteEnteraValor + parteDecimalValor;
-
+                if (!direction)
+                    (*matriz)[j][i] = parteEnteraValor + parteDecimalValor;
             }
         }
     }
