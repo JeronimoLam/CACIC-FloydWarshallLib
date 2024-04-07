@@ -1,6 +1,8 @@
 #include "file_handler.h"
 
 int *initializePathMatrix(FW_Matrix *G);
+static void initBlockedPathGraph(FW_Matrix *G); // TODO: Borrar 1
+
 
 static FileType fileType;
 
@@ -106,6 +108,14 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
         else
         {
             FW->path = initializePathMatrix(FW);
+            // initBlockedPathGraph(FW);
+            for (uint64_t i = 0; i < FW->norm_size; i++)
+            {
+                for (uint64_t j = 0; j < FW->norm_size; j++)
+                        printf("%d ", ((int *)FW->path)[i * FW->norm_size + j]);
+                printf("\n");
+            }
+
             FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, FW->datatype);
         }
         FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
@@ -155,4 +165,33 @@ int *initializePathMatrix(FW_Matrix *G)
     // 			G->P[i*G->n+j] = j;
     // 		else
     // 			G->P[i*G->n+j] = -1;
+}
+
+static void initBlockedPathGraph(FW_Matrix *G)
+{
+    G->path = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
+    uint64_t I, J, i, j, blockSize, r, idx;
+    r = G->norm_size / G->BS;
+    blockSize = G->BS * G->BS;
+    for (I = 0; I < r; I++)
+    {
+        for (J = 0; J < r; J++)
+        {
+            for (i = 0; i < G->BS; i++)
+            {
+                for (j = 0; j < G->BS; j++)
+                {
+                    // I*n*BS = offset of the entire row of blocks number I
+                    // J*blockSize = offset of block J inside the row of blocks I
+                    // i*BS = offset of row i inside the block J of the row of blocks I
+                    // j = position inside the row i of the block J of the row of blocks I
+                    idx = I * G->norm_size * G->BS + J * blockSize + i * G->BS + j;
+                    if (*((int *)G->dist + idx) != INT_MAX)
+                        *(G->path + idx) = J * G->BS + j;
+                    else
+                        *(G->path + idx) = -1;
+                }
+            }
+        }
+    }
 }

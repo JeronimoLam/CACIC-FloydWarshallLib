@@ -2,112 +2,196 @@
 
 #include <time.h>
 #include <string.h>
-
+#include <stdlib.h>
 
 #define DEFAULT_TYPE 'i'
 #define DEFAULT_SIZE 15
 #define DEFAULT_FORMAT 'C'
 #define DEFAULT_CSV_PATH "./output.csv"
 #define DEFAULT_JSON_PATH "./output.json"
+#define DEFAULT_DECIMAL_ZERO 0
+#define DEFAULT_NEGATIVOS_DENSIDAD 0.2
+#define DEFAULT_PARTE_ENTERA_FLOAT 2
+#define DEFAULT_PARTE_DECIMAL_FLOAT 4
+#define DEFAULT_PARTE_ENTERA_DOUBLE 4
+#define DEFAULT_PARTE_DECIMAL_DOUBLE 12
 
-int main() {
+int main()
+{
     char tipo = DEFAULT_TYPE;
     int n = DEFAULT_SIZE;
     char formato = DEFAULT_FORMAT;
-    char path[256];
+    char path[256] = {0};
     char input[256];
     const char *defaultPath;
+    int parteEntera, parteDecimal, decimalCero = DEFAULT_DECIMAL_ZERO;
+    double porcentajeNegativos = DEFAULT_NEGATIVOS_DENSIDAD;
 
-    do {
-        printf("Ingrese el tipo de numero (i = int, f = float, d = double) [default: %c]: ", DEFAULT_TYPE);
+    // Tipo de números
+    do
+    {
+        printf("Ingrese el tipo de numero (i = integer, d = decimal) [default: %c]: ", DEFAULT_TYPE);
         fgets(input, sizeof(input), stdin);
-        if (input[0] != '\n') {
-            sscanf(input, " %c", &tipo);
+        if (input[0] == '\n')
+        {
+            break; // Sale del bucle ya que se eligió el valor predeterminado.
         }
-        if (tipo != 'i' && tipo != 'f' && tipo != 'd' && input[0] != '\n') {
-            printf("Opcion no valida. Por favor, intente de nuevo.\n");
-            tipo = 0; // Reset tipo to detect invalid input in the next iteration
-        }
-    } while (tipo != 'i' && tipo != 'f' && tipo != 'd');
+    } while (sscanf(input, "%c", &tipo) != 1 || (tipo != 'i' && tipo != 'd'));
 
-    do {
+    // Dimensiones de la matriz
+    do
+    {
         printf("Ingrese las dimensiones de la matriz [default: %d]: ", DEFAULT_SIZE);
         fgets(input, sizeof(input), stdin);
-        if (input[0] != '\n') {
-            if (sscanf(input, "%d", &n) != 1 || n <= 0) {
-                printf("Entrada no válida. Por favor, intente de nuevo.\n");
-                n = 0; // Reset n to detect invalid input in the next iteration
-            }
+        if (input[0] == '\n')
+        {
+            break; // Sale del bucle ya que se eligió el valor predeterminado.
         }
-    } while (n <= 0);
+    } while (sscanf(input, "%d", &n) != 1 || n <= 0);
 
-    do {
-        printf("Ingrese el formato de salida (C para CVS, J para JSON) [default: %c]: ", DEFAULT_FORMAT);
+    // Configuración adicional para números flotantes y dobles
+    if (tipo == 'f' || tipo == 'd')
+    {
+        parteEntera = tipo == 'f' ? DEFAULT_PARTE_ENTERA_FLOAT : DEFAULT_PARTE_ENTERA_DOUBLE;
+        parteDecimal = tipo == 'f' ? DEFAULT_PARTE_DECIMAL_FLOAT : DEFAULT_PARTE_DECIMAL_DOUBLE;
+
+        do
+        {
+            printf("Ingrese la parte entera [default: %d]: ", parteEntera);
+            fgets(input, sizeof(input), stdin);
+            if (input[0] == '\n')
+                break; // Presionó Enter, usar valor predeterminado
+
+        } while (sscanf(input, "%d", &parteEntera) != 1);
+
+        do
+        {
+            printf("Ingrese la parte decimal [default: %d]: ", parteDecimal);
+            fgets(input, sizeof(input), stdin);
+            if (input[0] == '\n')
+                break; // Presionó Enter, usar valor predeterminado
+
+        } while (sscanf(input, "%d", &parteDecimal) != 1);
+
+        do
+        {
+            printf("Parte decimal toda en 0? (1: Yes | 0: No) [default: %d]: ", DEFAULT_DECIMAL_ZERO);
+            fgets(input, sizeof(input), stdin);
+            if (input[0] == '\n')
+                break; // Presionó Enter, usar valor predeterminado
+
+        } while (sscanf(input, "%d", &decimalCero) != 1 || (decimalCero != 1 && decimalCero != 0));
+    }
+
+    // Densidad de -1
+    do
+    {
+        printf("Ingrese la densidad de -1 [default: %.1f]: ", DEFAULT_NEGATIVOS_DENSIDAD);
         fgets(input, sizeof(input), stdin);
-        if (input[0] != '\n') {
-            sscanf(input, " %c", &formato);
-        }
-        defaultPath = (formato == 'J' || formato == 'j') ? DEFAULT_JSON_PATH : DEFAULT_CSV_PATH;
-        if (formato != 'C' && formato != 'J' && formato != 'c' && formato != 'j' && input[0] != '\n') {
-            printf("Opcion no valida. Por favor, intente de nuevo.\n");
-            formato = 0; // Reset formato to detect invalid input in the next iteration
-        }
-    } while (formato != 'C' && formato != 'J' && formato != 'c' && formato != 'j');
+        if (input[0] == '\n')
+            break; // Sale del bucle ya que se eligió el valor predeterminado.
 
+    } while (sscanf(input, "%lf", &porcentajeNegativos) != 1);
+
+    // Formato de salida
+    do
+    {
+        printf("Ingrese el formato de salida (C para CSV, J para JSON) [default: %c]: ", DEFAULT_FORMAT);
+        fgets(input, sizeof(input), stdin);
+        if (input[0] == '\n')
+        {
+            break;
+        }
+        else if (sscanf(input, "%c", &formato) == 1 && (formato == 'C' || formato == 'c' || formato == 'J' || formato == 'j'))
+        {
+            break; // Sale del bucle si se ingresa una opción válida.
+        }
+    } while (1);
+
+    defaultPath = (formato == 'J' || formato == 'j') ? DEFAULT_JSON_PATH : DEFAULT_CSV_PATH;
+
+    // Path del archivo de salida
     printf("Ingrese el path del archivo de salida [default: %s]: ", defaultPath);
     fgets(input, sizeof(input), stdin);
-    if (input[0] != '\n') {
-        sscanf(input, "%s", path);
-    } else {
-        // Ensure default path is used if Enter is pressed
+    if (sscanf(input, "%s", path) != 1)
+    {
         strcpy(path, defaultPath);
     }
 
     srand(time(NULL)); // Inicialización del generador de números aleatorios
 
-    switch (tipo) {
-        case 'i': {
-            int **matrizInt;
-            generarMatrizInt(n, &matrizInt, 100);
-            if (formato == 'C' || formato == 'c') {
-                guardarMatrizCSVInt(matrizInt, n, path);
-            } else {
-                guardarMatrizJSONInt(matrizInt, n, path);
-            }
-            for (int i = 0; i < n; i++) free(matrizInt[i]);
-            free(matrizInt);
-            break;
+    // Imprime los valores ingresados
+    printf("\nTipo de numero: %c\n", tipo);
+    printf("Dimensiones de la matriz: %d\n", n);
+    if (tipo == 'f' || tipo == 'd')
+    {
+        printf("Parte entera: %d\n", parteEntera);
+        printf("Parte decimal: %d\n", parteDecimal);
+        printf("Parte decimal toda en 0: %d\n", decimalCero);
+    }
+    printf("Densidad de -1: %.1f\n", porcentajeNegativos);
+    printf("Formato de salida: %c\n", formato);
+    printf("Path del archivo de salida: %s\n\n", path);
+
+    //  Generar la matriz y guardarla en el archivo
+    if (tipo == 'i')
+    {
+        int **matrizInt;
+        IntMatrixGenerator(n, &matrizInt, 100); // Asumiendo que 100 es el valor máximo para la matriz de enteros
+        if (formato == 'C' || formato == 'c')
+        {
+            IntMatrix2CSV(matrizInt, n, path);
         }
-        case 'f': {
-            float **matrizFloat;
-            generarMatrizFloat(n, &matrizFloat, 100.0);
-            if (formato == 'C' || formato == 'c') {
-                guardarMatrizCSVFloat(matrizFloat, n, path);
-            } else {
-                guardarMatrizJSONFloat(matrizFloat, n, path);
-            }
-            for (int i = 0; i < n; i++) free(matrizFloat[i]);
-            free(matrizFloat);
-            break;
+        else
+        {
+            IntMatrix2JSON(matrizInt, n, path);
         }
-        case 'd': {
-            double **matrizDouble;
-            generarMatrizDouble(n, &matrizDouble, 100.0);
-            if (formato == 'C' || formato == 'c') {
-                guardarMatrizCSVDouble(matrizDouble, n, path);
-            } else {
-                guardarMatrizJSONDouble(matrizDouble, n, path);
-            }
-            for (int i = 0; i < n; i++) free(matrizDouble[i]);
-            free(matrizDouble);
-            break;
+        // Liberar memoria
+        for (int i = 0; i < n; i++)
+            free(matrizInt[i]);
+        free(matrizInt);
+    }
+    // else if (tipo == 'f')
+    // {
+    //     float **matrizFloat;
+    //     FloatMatrixGenerator(n, &matrizFloat, parteEntera, parteDecimal, decimalCero, porcentajeNegativos);
+    //     if (formato == 'C' || formato == 'c')
+    //     {
+    //         FloatMatrix2CSV(matrizFloat, n, path, parteDecimal, decimalCero);
+    //     }
+    //     else
+    //     {
+    //         FloatMatrix2JSON(matrizFloat, n, path, parteDecimal, decimalCero);
+    //     }
+    //     // Liberar memoria
+    //     for (int i = 0; i < n; i++)
+    //         free(matrizFloat[i]);
+    //     free(matrizFloat);
+    // }
+    else if (tipo == 'd')
+    {
+        double **matrizDouble;
+        DoubleMatrixGenerator(n, &matrizDouble, parteEntera, parteDecimal, decimalCero, porcentajeNegativos);
+        if (formato == 'C' || formato == 'c')
+        {
+            DoubleMatrix2CSV(matrizDouble, n, path, parteDecimal, decimalCero);
         }
-        default:
-            printf("Tipo de número no reconocido.\n");
-            return 1;
+        else
+        {
+            DoubleMatrix2JSON(matrizDouble, n, path, parteDecimal, decimalCero);
+        }
+        // Liberar memoria
+        for (int i = 0; i < n; i++)
+            free(matrizDouble[i]);
+        free(matrizDouble);
+    }
+    else
+    {
+        printf("Tipo de número no reconocido.\n");
+        return 1;
     }
 
-    printf("Archivo generado con exito.\n\n");
+    printf("Archivo generado con exito en '%s'.\n\n", path);
 
     return 0;
 }
