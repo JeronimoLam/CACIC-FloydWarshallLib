@@ -13,7 +13,6 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
 static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
-#define NO_PATH
 
 void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int no_path)
 {
@@ -186,11 +185,6 @@ static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const 
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
-                    // #ifndef NO_PATH
-                    //                     path[i_disp_d1 + j] = base + k;
-                    // #else
-                    //                     tmp1[j] = tmp2[j];
-                    // #endif
                 }
             }
             i_disp = (i + 1) * BS;
@@ -212,11 +206,6 @@ static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const 
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
-                    // #ifndef NO_PATH
-                    //                     path[i_disp_d1 + j] = base + k;
-                    // #else
-                    //                     tmp1[j] = tmp2[j];
-                    // #endif
                 }
             }
         }
@@ -259,11 +248,6 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
-                    // #ifndef NO_PATH
-                    //                     path[i_disp_d1 + j] = base + k;
-                    // #else
-                    //                     tmp1[j] = tmp2[j];
-                    // #endif
                 }
             }
             i_disp = (i + 1) * BS;
@@ -285,11 +269,6 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
-                    // #ifndef NO_PATH
-                    //                     path[i_disp_d1 + j] = base + k;
-                    // #else
-                    //                     tmp1[j] = tmp2[j];
-                    // #endif
                 }
             }
         }
@@ -300,45 +279,7 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
 
 static inline void FW_BLOCK_SEQ(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
 
-// Private
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK_SEQ(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
-{
-
-    int *graph_int = (int *)graph; // Segun Datatype
-
-    uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
-    uint64_t dij, dik, dkj, sum;
-
-    for (k = 0; k < BS; k++)
-    {
-        k_disp = k * BS;
-        k_disp_d3 = k_disp + d3;
-        for (i = 0; i < BS; i++)
-        {
-            i_disp = i * BS;
-            i_disp_d1 = i_disp + d1;
-            dik = graph_int[i_disp + d2 + k];
-            for (j = 0; j < BS; j++)
-            {
-                dij = graph_int[i_disp_d1 + j];
-                dkj = graph_int[k_disp_d3 + j];
-                sum = dik + dkj;
-                if (sum < dij)
-                {
-                    graph_int[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
-                    {
-                        path[i_disp_d1 + j] = base + k;
-                    }
-                }
-            }
-        }
-    }
-}
-
 // Public
-#pragma GCC diagnostic ignored "-Wunused-parameter"
 void compute_FW_int_sequential(FW_Matrix FW, int no_path)
 {
     uint64_t i, j, k, r, b, kj, ik, kk, ij, row_of_blocks_disp, block_size, k_row_disp, k_col_disp, i_row_disp, j_col_disp;
@@ -392,6 +333,43 @@ void compute_FW_int_sequential(FW_Matrix FW, int no_path)
                 kj = k_row_disp + j_col_disp;
                 ij = i_row_disp + j_col_disp;
                 FW_BLOCK_SEQ(FW.dist, BS, ij, ik, kj, FW.path, b, no_path);
+            }
+        }
+    }
+}
+
+// Private
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+static inline void FW_BLOCK_SEQ(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+{
+
+    int *graph_int = (int *)graph; // Segun Datatype
+
+    uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
+    uint64_t dij, dik, dkj, sum;
+
+    for (k = 0; k < BS; k++)
+    {
+        k_disp = k * BS;
+        k_disp_d3 = k_disp + d3;
+        for (i = 0; i < BS; i++)
+        {
+            i_disp = i * BS;
+            i_disp_d1 = i_disp + d1;
+            dik = graph_int[i_disp + d2 + k];
+            for (j = 0; j < BS; j++)
+            {
+                dij = graph_int[i_disp_d1 + j];
+                dkj = graph_int[k_disp_d3 + j];
+                sum = dik + dkj;
+                if (sum < dij)
+                {
+                    graph_int[i_disp_d1 + j] = sum;
+                    if (no_path == 0)
+                    {
+                        path[i_disp_d1 + j] = base + k;
+                    }
+                }
             }
         }
     }

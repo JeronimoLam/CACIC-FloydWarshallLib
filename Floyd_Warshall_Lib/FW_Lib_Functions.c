@@ -55,7 +55,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
 
     // print path matrix
     // print_matrix(FW.dist, FW.norm_size, FW.datatype);
-    // print_matrix(FW.path, FW.norm_size, TYPE_INT);
+     print_matrix(FW.path, FW.norm_size, TYPE_INT);
 
     return FW;
 }
@@ -177,7 +177,7 @@ void freeFW_Matrix(FW_Matrix *matrix)
 char *FW_details_to_string(FW_Matrix element)
 {
     char *result = malloc(1024);
-    sprintf(result, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\n", element.size, element.norm_size, element.BS, dataTypeToString(element.datatype));
+    sprintf(result, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d\n", element.size, element.norm_size, element.BS, dataTypeToString(element.datatype), element.decimal_length);
 
     return result;
 }

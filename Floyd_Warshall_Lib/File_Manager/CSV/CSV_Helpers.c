@@ -1,6 +1,5 @@
 #include "CSV_Utils.h"
 
-
 char *trim(char *str);
 int isDelimiter(char ch);
 
@@ -132,13 +131,20 @@ char *readNextToken(FILE *file)
     token[len] = '\0';
 
     // Calculo la cantidad de lugares decimales
-    char *dotPosition = strchr(token, '.');
-    if (dotPosition != NULL)
+    char *dotPosition;
+
+    if (token)
     {
-        unsigned int decimalLength = strlen(dotPosition + 1);
-        if (decimalLength > maxDecimalLength)
+        token = trim(token);
+        char *dotPosition = strchr(token, '.');
+        if (dotPosition != NULL)
         {
-            maxDecimalLength = decimalLength;
+            unsigned int decimalLength = strlen(dotPosition + 1);
+
+            if (decimalLength > maxDecimalLength)
+            {
+                maxDecimalLength = decimalLength;
+            }
         }
     }
     return token;
@@ -153,7 +159,6 @@ unsigned int CSV_getMaxDecimalLength()
 // Converts the token to an integer, handling special cases
 int tokenToInt(char *token)
 {
-    token = trim(token);
     if (strcmp(token, "INF") == 0 || atoi(token) == -1)
     {
         return INT_MAX;
@@ -164,7 +169,6 @@ int tokenToInt(char *token)
 // Nueva función que convierte el token a float
 float tokenToFloat(char *token)
 {
-    token = trim(token);
     if (strcmp(token, "INF") == 0 || atof(token) == -1.0)
     {
         return FLT_MAX;
@@ -175,7 +179,6 @@ float tokenToFloat(char *token)
 // Convierte el token a double
 double tokenToDouble(char *token)
 {
-    token = trim(token);
     if (strcmp(token, "INF") == 0 || atof(token) == -1.0)
     {
         return DBL_MAX;

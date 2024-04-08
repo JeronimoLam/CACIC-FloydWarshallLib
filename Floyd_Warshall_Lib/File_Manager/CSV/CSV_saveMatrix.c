@@ -33,7 +33,7 @@ void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned 
     }
     if (print_path)
     {
-        saveIntMatrixToCSV(&FW, FW.dist, path, "path.csv", disconnected_str);
+        saveIntMatrixToCSV(&FW, FW.path, path, "path.csv", disconnected_str);
     }
 }
 static void saveIntMatrixToCSV(FW_Matrix *FW, int *matrix, char *path, char *extension, unsigned int disconnected_str)
