@@ -105,12 +105,14 @@ int main(int argc, char *argv[])
 
     // Arguments Init
 
-    save_attr_t save_attr;
-    initSaveAttr(&save_attr);
+    FW_attr_t attr;
+    init_FW_attr(&attr);
     // save_attr.text_in_output = 0;
-    save_attr.print_path_matrix = 1;
+    attr.handle_path_matrix = 1;
+    attr.thread_num = threadNum;
+    printf("Arguments:");
+    print_FW_attr(&attr);
 
-    
     printf("------------------------PARALELO------------------------\n");
     double timetick_p = dwalltime();
 
@@ -122,14 +124,13 @@ int main(int argc, char *argv[])
 
     printf(" ==> Procesado \n");
     double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, threadNum, 0); // TODO: Adjust thread num
+    compute_FW_paralell(data, &attr); // TODO: Adjust thread num
     double timetick_fp_compute = dwalltime();
 
     // Save
     printf(" ==> Guardando \n");
-    
-    
-    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &save_attr);
+
+    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
 
     double timetick_fp = dwalltime();
     printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
@@ -144,11 +145,11 @@ int main(int argc, char *argv[])
 
     printf(" ==> Procesado \n");
     double timetick_s_compute = dwalltime();
-    compute_FW_sequential(data2, 0);
+    compute_FW_sequential(data2, &attr);
     double timetick_fs_compute = dwalltime();
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &save_attr);
+    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
 
     double timetick_fs = dwalltime();
 

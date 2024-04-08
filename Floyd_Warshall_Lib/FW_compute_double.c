@@ -9,12 +9,12 @@
 
 //------------------------------------------------------------------------- Paralell Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
 
-static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
-static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
+static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int handle_path) __attribute__((always_inline));
+static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int handle_path) __attribute__((always_inline));
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
 
-void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
+void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int handle_path)
 {
     uint64_t r, row_of_blocks_disp, num_of_bock_elems;
     r = FW.norm_size / FW.BS;
@@ -46,7 +46,7 @@ void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
 
     // Modificación: shared(pendientes, cv, mutex)
 
-#pragma omp parallel shared(S, no_path) default(none) firstprivate(r, BS, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
+#pragma omp parallel shared(S, handle_path) default(none) firstprivate(r, BS, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
     {
         uint64_t i, j, k, b, kj, ik, kk, ij, k_row_disp, k_col_disp, i_row_disp, j_col_disp, w;
 
@@ -64,7 +64,7 @@ void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
 
             // Phase 1
             kk = k_row_disp + k_col_disp;
-            FW_BLOCK_PARALLEL(D, BS, kk, kk, kk, P, b, no_path);
+            FW_BLOCK_PARALLEL(D, BS, kk, kk, kk, P, b, handle_path);
 
 // Phase 2 y 3
 #pragma omp for schedule(dynamic) nowait
@@ -77,7 +77,7 @@ void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
                     if (j == k)
                         continue;
                     kj = k_row_disp + j * num_of_bock_elems;
-                    FW_BLOCK(D, BS, kj, kk, kj, P, b, no_path);
+                    FW_BLOCK(D, BS, kj, kk, kj, P, b, handle_path);
 
                     // -------------- BLOQUE AGREGADO -------------------
 
@@ -99,7 +99,7 @@ void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
                     if (i == k)
                         continue;
                     ik = i * row_of_blocks_disp + k_col_disp;
-                    FW_BLOCK(D, BS, ik, ik, kk, P, b, no_path);
+                    FW_BLOCK(D, BS, ik, ik, kk, P, b, handle_path);
 
                     // -------------- BLOQUE AGREGADO -------------------
 
@@ -138,7 +138,7 @@ void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
                     j_col_disp = j * num_of_bock_elems;
                     kj = k_row_disp + j_col_disp;
                     ij = i_row_disp + j_col_disp;
-                    FW_BLOCK(D, BS, ij, ik, kj, P, b, no_path);
+                    FW_BLOCK(D, BS, ij, ik, kj, P, b, handle_path);
                 }
             }
         }
@@ -151,7 +151,7 @@ void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int no_path)
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int handle_path)
 {
     // Casteo de graph a double
     // double *graph_int = (double *)graph; // Segun Datatype
@@ -180,7 +180,7 @@ static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, cons
                 if (unlikely(sum < dij))
                 {
                     graph[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
+                    if (handle_path)
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
@@ -201,7 +201,7 @@ static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, cons
                 if (unlikely(sum < dij))
                 {
                     graph[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
+                    if (handle_path)
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
@@ -212,7 +212,7 @@ static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, cons
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int handle_path)
 {
     // Casteo de graph a int
     // int *graph_int = (int *)graph; // Segun Datatype
@@ -243,7 +243,7 @@ static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t
                 if (unlikely(sum < dij))
                 {
                     graph[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
+                    if (handle_path)
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
@@ -264,7 +264,7 @@ static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t
                 if (unlikely(sum < dij))
                 {
                     graph[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
+                    if (handle_path)
                     {
                         path[i_disp_d1 + j] = base + k;
                     }
@@ -276,10 +276,10 @@ static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t
 
 // ------------------------------------------------------------------ Sequentiall Floyd-Warshall Algorithm Implementation ------------------------------------------------------------------------------------------------
 
-static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
+static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int handle_path) __attribute__((always_inline));
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-void compute_FW_double_sequential(FW_Matrix FW, int no_path)
+void compute_FW_double_sequential(FW_Matrix FW, int handle_path)
 {
     uint64_t i, j, k, r, b, kj, ik, kk, ij, row_of_blocks_disp, block_size, k_row_disp, k_col_disp, i_row_disp, j_col_disp;
     int BS = FW.BS;
@@ -297,7 +297,7 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
 
         // Phase 1
         kk = k_row_disp + k_col_disp;
-        FW_BLOCK_SEQ((double *)FW.dist, BS, kk, kk, kk, FW.path, b, no_path);
+        FW_BLOCK_SEQ((double *)FW.dist, BS, kk, kk, kk, FW.path, b, handle_path);
 
         // Phase 2
         for (j = 0; j < r; j++)
@@ -305,7 +305,7 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
             if (j == k)
                 continue;
             kj = k_row_disp + j * block_size;
-            FW_BLOCK_SEQ((double *)FW.dist, BS, kj, kk, kj, FW.path, b, no_path);
+            FW_BLOCK_SEQ((double *)FW.dist, BS, kj, kk, kj, FW.path, b, handle_path);
         }
 
         // Phase 3
@@ -314,7 +314,7 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
             if (i == k)
                 continue;
             ik = i * row_of_blocks_disp + k_col_disp;
-            FW_BLOCK_SEQ((double *)FW.dist, BS, ik, ik, kk, FW.path, b, no_path);
+            FW_BLOCK_SEQ((double *)FW.dist, BS, ik, ik, kk, FW.path, b, handle_path);
         }
 
         // Phase 4
@@ -331,14 +331,14 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
                 j_col_disp = j * block_size;
                 kj = k_row_disp + j_col_disp;
                 ij = i_row_disp + j_col_disp;
-                FW_BLOCK_SEQ((double *)FW.dist, BS, ij, ik, kj, FW.path, b, no_path);
+                FW_BLOCK_SEQ((double *)FW.dist, BS, ij, ik, kj, FW.path, b, handle_path);
             }
         }
     }
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int handle_path)
 {
     // int *graph_int = (int *)graph; // Segun Datatype
 
@@ -362,7 +362,7 @@ static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, 
                 if (sum < dij)
                 {
                     graph[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
+                    if (handle_path)
                     {
                         path[i_disp_d1 + j] = base + k;
                     }

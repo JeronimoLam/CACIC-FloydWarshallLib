@@ -32,7 +32,7 @@ FW_Matrix create_structure(DataType, char *, int, int);
  * @param threads_num The number of threads to be used for parallel execution.
  * @param no_path Flag indicating whether to calculate the shortest path matrix (0) or not (1).
  */
-void compute_FW_paralell(FW_Matrix, int, int);
+void compute_FW_paralell(FW_Matrix, FW_attr_t *);
 
 
 
@@ -43,7 +43,7 @@ void compute_FW_paralell(FW_Matrix, int, int);
  * @param matrix The FW_Matrix on which to perform the computation.
  * @param no_path Flag indicating whether to calculate the shortest path matrix (0) or not (1).
  */
-void compute_FW_sequential(FW_Matrix, int);
+void compute_FW_sequential(FW_Matrix, FW_attr_t *);
 
 
 /**
@@ -61,7 +61,7 @@ void compute_FW_sequential(FW_Matrix, int);
  * @param path_matrix Indicates whether the shortest path matrix should be exported (1) or not (0).
  * @note If both dist_matrix and path_matrix are set to 0, the function will not perform any action.
  */
-void save_structure(FW_Matrix, char*, char*, FileType, save_attr_t *);
+void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 
 
 /**
@@ -96,8 +96,9 @@ void print_FW(FW_Matrix element, int dist, int path, int blocks);
 void freeFW_Matrix(FW_Matrix* matrix);
 
 
-save_attr_t newSaveAttr();
-void initSaveAttr(save_attr_t *);
+FW_attr_t new_FW_attr();
+void init_FW_attr(FW_attr_t *);
+void print_FW_attr(FW_attr_t *);
 
 
 
