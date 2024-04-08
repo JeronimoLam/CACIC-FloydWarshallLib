@@ -4,6 +4,7 @@
 
 #define FW_DEFAULT_BLOCK_SIZE 128
 #define FW_DEFAULT_THREAD_NUM 2 // TODO: Definir thread num
+#define FW_DEFAULT_OUTPUT_FORMAT 1 // Imprime INF en lugar de -1 por defecto
 
 // Private functions
 void print_matrix(void *, unsigned int, DataType);
@@ -52,67 +53,73 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
 
     createMatrixes(&FW, file, no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
 
-
-    // FW.path = initializePathMatrix(&FW);
-
     // print path matrix
-    print_matrix(FW.dist, FW.norm_size, TYPE_INT);
-    print_matrix(FW.path, FW.norm_size, TYPE_INT);
+    // print_matrix(FW.dist, FW.norm_size, FW.datatype);
+    // print_matrix(FW.path, FW.norm_size, TYPE_INT);
 
     return FW;
 }
 
 void compute_FW_paralell(FW_Matrix FW, int threads_num, int no_path)
 {
-    // Set Thread NUm
+    // Set Thread Num
     if (threads_num == -1)
     {
         threads_num = FW_DEFAULT_BLOCK_SIZE;
     }
 
-    if (FW.datatype == TYPE_INT)
+    switch (FW.datatype)
     {
+    case TYPE_INT:
         compute_FW_int_paralell(FW, threads_num, no_path);
-    }
-    // else if(FW.datatype == TYPE_FLOAT)
-    // {
-    //     compute_FW_float(FW);
-    // }
-    // else if(FW.datatype == TYPE_DOUBLE)
-    // {
-    //     compute_FW_double(FW);
-    // }
-    else
-    {
+        break;
+    case TYPE_FLOAT:
+        compute_FW_float_paralell(FW, threads_num, no_path);
+        break;
+    case TYPE_DOUBLE:
+        compute_FW_double_paralell(FW, threads_num, no_path);
+        break;
+
+    default:
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
+
 }
 
 void compute_FW_sequential(FW_Matrix FW, int no_path)
 {
-    if (FW.datatype == TYPE_INT)
+    switch (FW.datatype)
     {
+    case TYPE_INT:
         compute_FW_int_sequential(FW, no_path);
-    }
-    // else if(FW.datatype == TYPE_FLOAT)
-    // {
-    //     compute_FW_float(FW);
-    // }
-    // else if(FW.datatype == TYPE_DOUBLE)
-    // {
-    //     compute_FW_double(FW);
-    // }
-    else
-    {
+        break;
+    case TYPE_FLOAT:
+        compute_FW_float_sequential(FW, no_path);
+        break;
+    case TYPE_DOUBLE:
+        compute_FW_double_sequential(FW, no_path);
+        break;
+
+    default:
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
 }
 
-void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int dist_matrix, int path_matrix)
+void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, save_attr_t * attr)
 {
-    if (dist_matrix == 0 & path_matrix == 0)
+    save_attr_t localAttr;
+
+    if (attr == NULL) {
+        // attr es NULL, usa valores predeterminados
+        localAttr = newSaveAttr();
+    } else {
+        // attr no es NULL, usa los valores proporcionados
+        localAttr = *attr;
+    }
+
+    if (localAttr.print_distance_matrix == 0 & localAttr.print_path_matrix == 0)
     {
         printf("Select a matrix to export\n");
         return;
@@ -144,7 +151,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, int
     sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
     // printf("Full Path: %s\n", fullPath);
 
-    saveMatrix(FW, fullPath, fileType, dist_matrix, path_matrix);
+    saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.print_path_matrix, localAttr.text_in_output);
 }
 
 void freeFW_Matrix(FW_Matrix *matrix)
@@ -200,6 +207,25 @@ void print_FW(FW_Matrix element, int dist, int path, int blocks)
     printf("\n");
 }
 
+
+//----------------------------------------------- ATTR Init -----------------------------------------
+save_attr_t newSaveAttr()
+{
+    save_attr_t attr;
+    attr.text_in_output = FW_DEFAULT_OUTPUT_FORMAT;
+    attr.print_distance_matrix = 1;
+    attr.print_path_matrix = 0;
+
+    return attr;
+}
+
+void initSaveAttr(save_attr_t * attr)
+{
+    attr->text_in_output = FW_DEFAULT_OUTPUT_FORMAT;
+    attr->print_distance_matrix = 1;
+    attr->print_path_matrix = 0;
+}
+
 // ------------------------------------------------------------------ Private Section ------------------------------------------------------------------
 
 // AUX Functions
@@ -223,7 +249,8 @@ void print_matrix(void *matrix, unsigned int size, DataType dataType)
         {
             for (j = 0; j < size; j++)
             {
-                printf("%f ", ((float *)matrix)[i * size + j]);
+                float value = ((float *)matrix)[i * size + j];
+                printf("%f ", value);
             }
             printf("\n");
         }
@@ -233,17 +260,8 @@ void print_matrix(void *matrix, unsigned int size, DataType dataType)
         {
             for (j = 0; j < size; j++)
             {
-                printf("%lf ", ((double *)matrix)[i * size + j]);
-            }
-            printf("\n");
-        }
-        break;
-    case TYPE_CHAR:
-        for (i = 0; i < size; i++)
-        {
-            for (j = 0; j < size; j++)
-            {
-                printf("%c ", ((char *)matrix)[i * size + j]);
+                double value = ((double *)matrix)[i * size + j];
+                printf("%lf ", value);
             }
             printf("\n");
         }

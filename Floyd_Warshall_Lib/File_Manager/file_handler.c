@@ -3,7 +3,6 @@
 int *initializePathMatrix(FW_Matrix *G);
 static void initBlockedPathGraph(FW_Matrix *G); // TODO: Borrar 1
 
-
 static FileType fileType;
 
 FILE *getFile(const char *filename)
@@ -101,6 +100,7 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
     {
     case CSV:
         FW->dist = CSV_createMatrix(*FW, file);
+        FW->decimal_length = CSV_getMaxDecimalLength();
         if (no_path)
         {
             FW->path = NULL;
@@ -108,16 +108,19 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
         else
         {
             FW->path = initializePathMatrix(FW);
-            // initBlockedPathGraph(FW);
-            for (uint64_t i = 0; i < FW->norm_size; i++)
-            {
-                for (uint64_t j = 0; j < FW->norm_size; j++)
-                        printf("%d ", ((int *)FW->path)[i * FW->norm_size + j]);
-                printf("\n");
-            }
+
+            // printf("Path Matrix\n");
+            // for (uint64_t i = 0; i < FW->norm_size; i++)
+            // {
+            //     for (uint64_t j = 0; j < FW->norm_size; j++)
+            //         printf("%d ", ((int *)FW->path)[i * FW->norm_size + j]);
+            //     printf("\n");
+            // }
+            // printf("\n");
 
             FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, FW->datatype);
         }
+
         FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
 
         break;
@@ -128,14 +131,14 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
     }
 }
 
-void saveMatrix(FW_Matrix FW, char *path, FileType ft, int dist_matrix, int path_matrix)
+void saveMatrix(FW_Matrix FW, char *path, FileType ft, unsigned int dist_matrix, unsigned int path_matrix, unsigned int disconnected_str)
 {
     switch (fileType)
     {
     case CSV:
-        return CSV_saveMatrix(FW, path, dist_matrix, path_matrix);
+        return CSV_saveMatrix(FW, path, dist_matrix, path_matrix, disconnected_str);
     case JSON:
-        return JSON_saveMatrix(FW, path, dist_matrix, path_matrix);
+        return JSON_saveMatrix(FW, path, dist_matrix, path_matrix, disconnected_str);
     default:
         printf("Error: Invalid file type.\n");
         break;
@@ -146,25 +149,55 @@ void saveMatrix(FW_Matrix FW, char *path, FileType ft, int dist_matrix, int path
 
 int *initializePathMatrix(FW_Matrix *G)
 {
-    int *P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
-    if (!P)
-        exit(9); // Allocation failed
+    int *P;
 
-    for (uint64_t i = 0; i < G->norm_size; i++)
-        for (uint64_t j = 0; j < G->norm_size; j++)
-            if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
-                P[i * G->norm_size + j] = i;
-            else
-                P[i * G->norm_size + j] = -1;
+    switch (G->datatype)
+    {
+    case TYPE_INT:
+        // Allocate memory for the path matrix
+        P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
+        if (!P)
+            exit(9); // Allocation failed
+
+        // Initialize the path matrix
+        for (uint64_t i = 0; i < G->norm_size; i++)
+            for (uint64_t j = 0; j < G->norm_size; j++)
+                if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
+                    P[i * G->norm_size + j] = i;
+                else
+                    P[i * G->norm_size + j] = -1;
+        break;
+    case TYPE_FLOAT:
+        // Allocate memory for the path matrix
+        P = (int *)malloc(G->norm_size * G->norm_size * sizeof(float));
+        if (!P)
+            exit(9); // Allocation failed
+
+        // Initialize the path matrix
+        for (uint64_t i = 0; i < G->norm_size; i++)
+            for (uint64_t j = 0; j < G->norm_size; j++)
+                if (((float *)G->dist)[i * G->norm_size + j] != FLT_MAX)
+                    P[i * G->norm_size + j] = i;
+                else
+                    P[i * G->norm_size + j] = -1.0;
+        break;
+    case TYPE_DOUBLE:
+        // Allocate memory for the path matrix
+        P = (int *)malloc(G->norm_size * G->norm_size * sizeof(double));
+        if (!P)
+            exit(9); // Allocation failed
+
+        // Initialize the path matrix
+        for (uint64_t i = 0; i < G->norm_size; i++)
+            for (uint64_t j = 0; j < G->norm_size; j++)
+                if (((double *)G->dist)[i * G->norm_size + j] != DBL_MAX)
+                    P[i * G->norm_size + j] = i;
+                else
+                    P[i * G->norm_size + j] = -1.0;
+        break;
+    }
 
     return P;
-
-    // for(uint64_t i=0; i<G->n; i++)
-    // 	for(uint64_t j=0; j<G->n; j++)
-    // 	    if(G->D[i*G->n+j] != INFINITE)
-    // 			G->P[i*G->n+j] = j;
-    // 		else
-    // 			G->P[i*G->n+j] = -1;
 }
 
 static void initBlockedPathGraph(FW_Matrix *G)

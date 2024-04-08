@@ -10,8 +10,13 @@
 #include <stdint.h>
 
 void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int nopath);
-
 void compute_FW_int_sequential(FW_Matrix FW, int nopath);
+
+void compute_FW_float_paralell(FW_Matrix FW, int threads_num, int nopath);
+void compute_FW_float_sequential(FW_Matrix FW, int nopath);
+
+void compute_FW_double_paralell(FW_Matrix FW, int threads_num, int nopath);
+void compute_FW_double_sequential(FW_Matrix FW, int nopath);
 
 
 

@@ -15,7 +15,7 @@
     int calculateMatrixSize(FileType, FILE *);
 
     void createMatrixes(FW_Matrix *, FILE*, int);
-    void saveMatrix(FW_Matrix, char*, FileType, int, int);
+    void saveMatrix(FW_Matrix, char*, FileType, unsigned int, unsigned int, unsigned int);
 
     DataType AutoDetectDataType(FileType, FILE*);
 

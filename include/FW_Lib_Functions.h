@@ -61,7 +61,7 @@ void compute_FW_sequential(FW_Matrix, int);
  * @param path_matrix Indicates whether the shortest path matrix should be exported (1) or not (0).
  * @note If both dist_matrix and path_matrix are set to 0, the function will not perform any action.
  */
-void save_structure(FW_Matrix, char*, char*, FileType, int, int);
+void save_structure(FW_Matrix, char*, char*, FileType, save_attr_t *);
 
 
 /**
@@ -94,6 +94,11 @@ void print_FW(FW_Matrix element, int dist, int path, int blocks);
  * @param matrix A pointer to the FW_Matrix structure to be freed.
  */
 void freeFW_Matrix(FW_Matrix* matrix);
+
+
+save_attr_t newSaveAttr();
+void initSaveAttr(save_attr_t *);
+
 
 
 

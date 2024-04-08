@@ -22,10 +22,29 @@ typedef struct {
     void * dist;
     int * path;
     FileType fileType;
+    unsigned int decimal_length;
     DataType datatype;
     unsigned int size;
     unsigned int norm_size;
     unsigned int BS;
 } FW_Matrix;
+
+
+typedef struct {
+    void * dist;
+    int * path;
+    FileType fileType;
+    unsigned int decimal_length;
+    DataType datatype;
+    unsigned int size;
+    unsigned int norm_size;
+    unsigned int BS;
+} load_attr_t;
+
+typedef struct {
+    unsigned int text_in_output;
+    unsigned int print_distance_matrix;
+    unsigned int print_path_matrix;
+} save_attr_t;
 
 #endif //FW_LIB_COMMON_TYPES_H

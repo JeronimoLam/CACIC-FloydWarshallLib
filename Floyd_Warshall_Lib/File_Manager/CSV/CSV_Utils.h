@@ -13,13 +13,17 @@
 #include "../Block_Operations/blocks.h"
 
 void * CSV_createMatrix(FW_Matrix, FILE*);
-void CSV_saveMatrix(FW_Matrix,char *,  int, int);
+void CSV_saveMatrix(FW_Matrix, char *path, unsigned int, unsigned int, unsigned int);
 
-char *trim(char *);
+unsigned int CSV_getMaxDecimalLength();
+
 int CSV_calculateMatrixSize(FILE *);
 DataType CSV_AutoDetectDataType(FILE *);
-int isDelimiter(char);
+
 char * readNextToken(FILE *);
+
 int tokenToInt(char *);
+float tokenToFloat(char *);
+double tokenToDouble(char *);
 
 #endif // CREATE_MATRIX_H

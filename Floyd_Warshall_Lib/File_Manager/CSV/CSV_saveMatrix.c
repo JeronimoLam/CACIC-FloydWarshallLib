@@ -1,57 +1,50 @@
 #include <stdio.h>
 #include "CSV_Utils.h"
 
-static void saveIntMatrixToCSV(void *, char *, unsigned int, unsigned int, char *, unsigned int);
-static void saveFloatMatrixToCSV(void *, char *, unsigned int, unsigned int, char *, unsigned int);
-static void saveDoubleMatrixToCSV(void *, char *, unsigned int, unsigned int, char *, unsigned int);
+static void saveIntMatrixToCSV(FW_Matrix *, int *, char *, char *, unsigned int);
+static void saveFloatMatrixToCSV(FW_Matrix *, char *, char *, unsigned int);
+static void saveDoubleMatrixToCSV(FW_Matrix *, char *, char *, unsigned int);
 
-void CSV_saveMatrix(FW_Matrix FW, char *path, int dist_matrix, int path_matrix)
+void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int print_path, unsigned int disconnected_str)
 {
     switch (FW.datatype)
     {
     case TYPE_INT:
 
-        if (dist_matrix)
+        if (print_dist)
         {
-            saveIntMatrixToCSV(FW.dist, path, FW.norm_size, FW.size, "distancias.csv", FW.BS);
-        }
-        if (path_matrix)
-        {
-            saveIntMatrixToCSV(FW.path, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
+            saveIntMatrixToCSV(&FW, (int *)FW.dist, path, "distances.csv", disconnected_str);
         }
         break;
     case TYPE_FLOAT:
-        if (dist_matrix)
+        if (print_dist)
         {
-            saveFloatMatrixToCSV(FW.dist, path, FW.norm_size, FW.size, "distancias.csv", FW.BS);
-        }
-        if (path_matrix)
-        {
-            saveFloatMatrixToCSV(FW.path, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
+            saveFloatMatrixToCSV(&FW, path, "distances.csv", disconnected_str);
         }
         break;
     case TYPE_DOUBLE:
-        if (dist_matrix)
+        if (print_dist)
         {
-            saveDoubleMatrixToCSV(FW.dist, path, FW.norm_size, FW.size, "distancias.csv", FW.BS);
-        }
-        if (path_matrix)
-        {
-            saveDoubleMatrixToCSV(FW.path, path, FW.norm_size, FW.size, "caminos.csv", FW.BS);
+            saveDoubleMatrixToCSV(&FW, path, "distances.csv", disconnected_str);
         }
         break;
     default:
         return;
     }
+    if (print_path)
+    {
+        saveIntMatrixToCSV(&FW, FW.dist, path, "path.csv", disconnected_str);
+    }
 }
-static void saveIntMatrixToCSV(void *matrix, char *path, unsigned int norm_size, unsigned int size, char *extension, unsigned int BS)
+static void saveIntMatrixToCSV(FW_Matrix *FW, int *matrix, char *path, char *extension, unsigned int disconnected_str)
 {
-    int *ordered_matrix_int = reorganizeToLinear(matrix, norm_size, BS, TYPE_INT);
+    int *ordered_matrix_int = reorganizeToLinear(matrix, FW->norm_size, FW->BS, TYPE_INT);
     // free(matrix); // Is not used anymore // TODO: Revisar si conviene liberar la memoria acá o en el main
-    
-    // Open the file
-    char fullPath[1024]; // Buffer for full path
+
+    // Abrir el archivo
+    char fullPath[1024]; // Buffer para la ruta completa
     sprintf(fullPath, "%s_%s", path, extension);
+
     // printf("%s\n", fullPath);
 
     FILE *file = fopen(fullPath, "w");
@@ -62,20 +55,20 @@ static void saveIntMatrixToCSV(void *matrix, char *path, unsigned int norm_size,
     }
 
     // Write the matrix to the file
-    for (int row = 0; row < size; ++row)
+    for (int row = 0; row < FW->size; ++row)
     {
-        for (int col = 0; col < size; ++col)
+        for (int col = 0; col < FW->size; ++col)
         {
-            int value = ordered_matrix_int[row * norm_size + col];
-            if (value == INT_MAX)
+            int value = ordered_matrix_int[row * FW->norm_size + col];
+            if (value == INT_MAX && disconnected_str)
             {
                 fprintf(file, "INF");
             }
             else
             {
-                fprintf(file, "%d", value);
+                fprintf(file, "%d", value == INT_MAX ? -1 : value);
             }
-            if (col < size - 1)
+            if (col < FW->size - 1)
             {
                 fprintf(file, ",");
             }
@@ -85,38 +78,38 @@ static void saveIntMatrixToCSV(void *matrix, char *path, unsigned int norm_size,
     fclose(file);
 }
 
-static void saveFloatMatrixToCSV(void *matrix, char *path, unsigned int norm_size, unsigned int size, char *extension, unsigned int BS)
+static void saveFloatMatrixToCSV(FW_Matrix *FW, char *path, char *extension, unsigned int disconnected_str)
 {
+    // Ajustar para obtener una matriz de floats reorganizada
+    float *ordered_matrix_float = reorganizeToLinear(FW->dist, FW->norm_size, FW->BS, TYPE_FLOAT);
 
-    float *ordered_matrix_float = reorganizeToLinear(matrix, norm_size, BS, TYPE_FLOAT);
-    free(matrix); // Is not used anymore
+    // Abrir el archivo
+    char fullPath[1024]; // Buffer para la ruta completa
+    sprintf(fullPath, "%s_%s", path, extension);
 
-    // Open the file
-    char fullPath[1024];                         // Buffer for full path
-    sprintf(fullPath, "%s_%s", path, extension); // Concatenate path and filename
-
-    FILE *file = fopen(fullPath, "w"); // Use the full path here
+    FILE *file = fopen(fullPath, "w");
     if (file == NULL)
     {
         printf("Could not open file for saving.\n");
         return;
     }
 
-    // Reorder the matrix from blocks to rows to be saved
-    for (int row = 0; row < size; ++row)
+    // Escribir la matriz en el archivo
+    for (unsigned int row = 0; row < FW->size; ++row)
     {
-        for (int col = 0; col < size; ++col)
+        for (unsigned int col = 0; col < FW->size; ++col)
         {
-            float value = ordered_matrix_float[row * norm_size + col];
-            if (value == FLT_MAX)
+            float value = ordered_matrix_float[row * FW->norm_size + col];
+            if (value == FLT_MAX && disconnected_str)
             {
                 fprintf(file, "INF");
             }
             else
             {
-                fprintf(file, "%.4f", ordered_matrix_float[row * norm_size + col]); // You can adjust the number of decimals
+                fprintf(file, "%.*f", FW->decimal_length, value == FLT_MAX ? -1.0 : value);
             }
-            if (col < size - 1)
+
+            if (col < FW->size - 1)
             {
                 fprintf(file, ",");
             }
@@ -126,38 +119,38 @@ static void saveFloatMatrixToCSV(void *matrix, char *path, unsigned int norm_siz
     fclose(file);
 }
 
-static void saveDoubleMatrixToCSV(void *matrix, char *path, unsigned int norm_size, unsigned int size, char *extension, unsigned int BS)
+static void saveDoubleMatrixToCSV(FW_Matrix *FW, char *path, char *extension, unsigned int disconnected_str)
 {
-    double *ordered_matrix_double = reorganizeToLinear(matrix, norm_size, BS, TYPE_INT);
 
-    free(matrix); // Is not used anymore
+    // Ajustar para obtener una matriz de doubles reorganizada
+    double *ordered_matrix_double = reorganizeToLinear(FW->dist, FW->norm_size, FW->BS, TYPE_DOUBLE);
 
-    // Open the file
-    char fullPath[1024];                         // Buffer for full path
-    sprintf(fullPath, "%s_%s", path, extension); // Concatenate path and filename
-    printf("%s\n", fullPath);
-    FILE *file = fopen(fullPath, "w"); // Use the full path here
+    // Abrir el archivo
+    char fullPath[1024]; // Buffer para la ruta completa
+    sprintf(fullPath, "%s_%s", path, extension);
+
+    FILE *file = fopen(fullPath, "w");
     if (file == NULL)
     {
         printf("Could not open file for saving.\n");
         return;
     }
 
-    // Write the matrix to the file
-    for (int row = 0; row < size; ++row)
+    // Escribir la matriz en el archivo
+    for (unsigned int row = 0; row < FW->size; ++row)
     {
-        for (int col = 0; col < size; ++col)
+        for (unsigned int col = 0; col < FW->size; ++col)
         {
-            double value = ordered_matrix_double[row * norm_size + col];
-            if (value == DBL_MAX)
+            double value = ordered_matrix_double[row * FW->norm_size + col];
+            if (value == DBL_MAX && disconnected_str)
             {
                 fprintf(file, "INF");
             }
             else
             {
-                fprintf(file, "%.10f", ordered_matrix_double[row * norm_size + col]); // You can adjust the number of decimals
+                fprintf(file, "%.*lf", FW->decimal_length, value == DBL_MAX ? -1.0 : value);
             }
-            if (col < size - 1)
+            if (col < FW->size - 1)
             {
                 fprintf(file, ",");
             }
