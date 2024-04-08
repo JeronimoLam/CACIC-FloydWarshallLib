@@ -105,10 +105,10 @@ int main(int argc, char *argv[])
 
     // Arguments Init
 
-    save_attr_t save_attr;
-    initSaveAttr(&save_attr);
+    FW_attr_t save_attr;
+    init_FW_attr(&save_attr);
     // save_attr.text_in_output = 0;
-    save_attr.print_path_matrix = 1;
+    save_attr.handle_path_matrix = 1;
 
     
     printf("------------------------PARALELO------------------------\n");

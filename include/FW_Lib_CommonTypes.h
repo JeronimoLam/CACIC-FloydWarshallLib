@@ -44,7 +44,8 @@ typedef struct {
 typedef struct {
     unsigned int text_in_output;
     unsigned int print_distance_matrix;
-    unsigned int print_path_matrix;
-} save_attr_t;
+    unsigned int handle_path_matrix;
+    unsigned int thread_num;
+} FW_attr_t;
 
 #endif //FW_LIB_COMMON_TYPES_H

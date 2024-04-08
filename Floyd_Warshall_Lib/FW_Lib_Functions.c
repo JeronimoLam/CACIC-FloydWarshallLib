@@ -2,9 +2,11 @@
 #include "File_Manager/file_handler.h"
 #include "FW_compute.h"
 
-#define FW_DEFAULT_BLOCK_SIZE 128
-#define FW_DEFAULT_THREAD_NUM 2 // TODO: Definir thread num
-#define FW_DEFAULT_OUTPUT_FORMAT 1 // Imprime INF en lugar de -1 por defecto
+#define DEFAULT_BLOCK_SIZE 128
+#define DEFAULT_THREAD_NUM 2            // TODO: Definir thread num
+#define DEFAULT_OUTPUT_FORMAT 1         // Imprime INF en lugar de -1 por defecto
+#define DEFAULT_PRINT_DIST_MATRIX 1     // Imprime la matriz de distancia por defecto
+#define DEFAULT_HANDLE_PATH_MATRIX 0    // No imprime ni procesa la matriz de caminos por defecto
 
 // Private functions
 void print_matrix(void *, unsigned int, DataType);
@@ -48,7 +50,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
     }
     else
     {
-        FW.BS = FW_DEFAULT_BLOCK_SIZE;
+        FW.BS = DEFAULT_BLOCK_SIZE;
     }
 
     createMatrixes(&FW, file, no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
@@ -65,7 +67,7 @@ void compute_FW_paralell(FW_Matrix FW, int threads_num, int no_path)
     // Set Thread Num
     if (threads_num == -1)
     {
-        threads_num = FW_DEFAULT_BLOCK_SIZE;
+        threads_num = DEFAULT_BLOCK_SIZE;
     }
 
     switch (FW.datatype)
@@ -107,19 +109,19 @@ void compute_FW_sequential(FW_Matrix FW, int no_path)
     }
 }
 
-void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, save_attr_t * attr)
+void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_attr_t * attr)
 {
-    save_attr_t localAttr;
+    FW_attr_t localAttr;
 
     if (attr == NULL) {
         // attr es NULL, usa valores predeterminados
-        localAttr = newSaveAttr();
+        localAttr = new_FW_attr();
     } else {
         // attr no es NULL, usa los valores proporcionados
         localAttr = *attr;
     }
 
-    if (localAttr.print_distance_matrix == 0 & localAttr.print_path_matrix == 0)
+    if (localAttr.print_distance_matrix == 0 & localAttr.handle_path_matrix == 0)
     {
         printf("Select a matrix to export\n");
         return;
@@ -151,7 +153,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, sav
     sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
     // printf("Full Path: %s\n", fullPath);
 
-    saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.print_path_matrix, localAttr.text_in_output);
+    saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.handle_path_matrix, localAttr.text_in_output);
 }
 
 void freeFW_Matrix(FW_Matrix *matrix)
@@ -209,21 +211,24 @@ void print_FW(FW_Matrix element, int dist, int path, int blocks)
 
 
 //----------------------------------------------- ATTR Init -----------------------------------------
-save_attr_t newSaveAttr()
+FW_attr_t new_FW_attr()
 {
-    save_attr_t attr;
-    attr.text_in_output = FW_DEFAULT_OUTPUT_FORMAT;
-    attr.print_distance_matrix = 1;
-    attr.print_path_matrix = 0;
+    FW_attr_t attr;
+    attr.text_in_output = DEFAULT_OUTPUT_FORMAT;
+    attr.print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
+    attr.handle_path_matrix = DEFAULT_HANDLE_PATH_MATRIX;
+    attr.thread_num = DEFAULT_THREAD_NUM;
+
 
     return attr;
 }
 
-void initSaveAttr(save_attr_t * attr)
+void init_FW_attr(FW_attr_t * attr)
 {
-    attr->text_in_output = FW_DEFAULT_OUTPUT_FORMAT;
-    attr->print_distance_matrix = 1;
-    attr->print_path_matrix = 0;
+    attr->text_in_output = DEFAULT_OUTPUT_FORMAT;
+    attr->print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
+    attr->handle_path_matrix= DEFAULT_HANDLE_PATH_MATRIX;
+    attr->thread_num = DEFAULT_THREAD_NUM;
 }
 
 // ------------------------------------------------------------------ Private Section ------------------------------------------------------------------
