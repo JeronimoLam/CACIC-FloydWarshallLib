@@ -105,50 +105,53 @@ int main(int argc, char *argv[])
 
     // Arguments Init
 
-    FW_attr_t save_attr;
-    init_FW_attr(&save_attr);
-    // save_attr.text_in_output = 0;
-    save_attr.handle_path_matrix = 1;
-
+    FW_attr_t attr;
+    init_FW_attr(&attr);
+    // attr.text_in_output = 0;
+    attr.no_path = 0;
+    attr.thread_num = threadNum;
     
     printf("------------------------PARALELO------------------------\n");
     double timetick_p = dwalltime();
 
     // Read
     printf(" ==> Leyendo \n");
-    FW_Matrix data = create_structure(dataType, path, blockSize, 0);
+    FW_Matrix data = create_structure(dataType, path, blockSize, &attr);
     printf("%s\n", FW_details_to_string(data));
     printf("Thread Num: %d\n", threadNum);
 
     printf(" ==> Procesado \n");
     double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, threadNum, 0); // TODO: Adjust thread num
+    compute_FW_paralell(data, &attr); // TODO: Adjust thread num
     double timetick_fp_compute = dwalltime();
 
     // Save
     printf(" ==> Guardando \n");
     
     
-    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &save_attr);
+    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
 
     double timetick_fp = dwalltime();
     printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
+
+
+
 
     printf("------------------------SECUENCIAL------------------------\n");
     double timetick_s = dwalltime();
 
     printf(" ==> Leyendo \n");
-    FW_Matrix data2 = create_structure(dataType, path, blockSize, 0);
+    FW_Matrix data2 = create_structure(dataType, path, blockSize, &attr);
     printf("%s\n", FW_details_to_string(data2));
     printf("Thread Num: %d\n", threadNum);
 
     printf(" ==> Procesado \n");
     double timetick_s_compute = dwalltime();
-    compute_FW_sequential(data2, 0);
+    compute_FW_sequential(data2, &attr);
     double timetick_fs_compute = dwalltime();
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &save_attr);
+    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
 
     double timetick_fs = dwalltime();
 

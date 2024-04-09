@@ -5,7 +5,7 @@ static void saveIntMatrixToCSV(FW_Matrix *, int *, char *, char *, unsigned int)
 static void saveFloatMatrixToCSV(FW_Matrix *, char *, char *, unsigned int);
 static void saveDoubleMatrixToCSV(FW_Matrix *, char *, char *, unsigned int);
 
-void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int print_path, unsigned int disconnected_str)
+void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
 {
     switch (FW.datatype)
     {
@@ -31,7 +31,7 @@ void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned 
     default:
         return;
     }
-    if (print_path)
+    if (!no_path)
     {
         saveIntMatrixToCSV(&FW, FW.path, path, "path.csv", disconnected_str);
     }

@@ -118,7 +118,7 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
             // }
             // printf("\n");
 
-            FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, FW->datatype);
+            FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
         }
 
         FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
@@ -131,14 +131,14 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
     }
 }
 
-void saveMatrix(FW_Matrix FW, char *path, FileType ft, unsigned int dist_matrix, unsigned int path_matrix, unsigned int disconnected_str)
+void saveMatrix(FW_Matrix FW, char *path, FileType ft, unsigned int dist_matrix, unsigned int no_path, unsigned int disconnected_str)
 {
     switch (fileType)
     {
     case CSV:
-        return CSV_saveMatrix(FW, path, dist_matrix, path_matrix, disconnected_str);
+        return CSV_saveMatrix(FW, path, dist_matrix, no_path, disconnected_str);
     case JSON:
-        return JSON_saveMatrix(FW, path, dist_matrix, path_matrix, disconnected_str);
+        return JSON_saveMatrix(FW, path, dist_matrix, no_path, disconnected_str);
     default:
         printf("Error: Invalid file type.\n");
         break;

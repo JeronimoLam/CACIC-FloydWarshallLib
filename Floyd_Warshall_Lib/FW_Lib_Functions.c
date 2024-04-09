@@ -6,7 +6,7 @@
 #define DEFAULT_THREAD_NUM 2            // TODO: Definir thread num
 #define DEFAULT_OUTPUT_FORMAT 1         // Imprime INF en lugar de -1 por defecto
 #define DEFAULT_PRINT_DIST_MATRIX 1     // Imprime la matriz de distancia por defecto
-#define DEFAULT_HANDLE_PATH_MATRIX 0    // No imprime ni procesa la matriz de caminos por defecto
+#define DEFAULT_NO_PATH 1               // No imprime ni procesa la matriz de caminos por defecto
 
 // Private functions
 void print_matrix(void *, unsigned int, DataType);
@@ -15,8 +15,18 @@ unsigned int nextPowerOf2(unsigned int);
 int *initializePathMatrix(FW_Matrix *G);
 
 // Lib Functions
-FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
+FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *attr)
 {
+    FW_attr_t local_attr;
+    if (attr == NULL)
+    {
+        local_attr = new_FW_attr();
+    }
+    else
+    {
+        local_attr = *attr;
+    }
+
     FW_Matrix FW;
     FILE *file = NULL;
 
@@ -53,7 +63,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
         FW.BS = DEFAULT_BLOCK_SIZE;
     }
 
-    createMatrixes(&FW, file, no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
+    createMatrixes(&FW, file, local_attr.no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
 
     // print path matrix
     // print_matrix(FW.dist, FW.norm_size, FW.datatype);
@@ -62,24 +72,35 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, int no_path)
     return FW;
 }
 
-void compute_FW_paralell(FW_Matrix FW, int threads_num, int no_path)
+void compute_FW_paralell(FW_Matrix FW, FW_attr_t * attr)
 {
-    // Set Thread Num
-    if (threads_num == -1)
+    
+    FW_attr_t local_attr;
+    if (attr == NULL)
     {
-        threads_num = DEFAULT_BLOCK_SIZE;
+        local_attr = new_FW_attr();
     }
+    else
+    {
+        local_attr = *attr;
+    }
+
+    // Set Thread Num
+    // if (threads_num == -1)
+    // {
+    //     threads_num = DEFAULT_BLOCK_SIZE;
+    // }
 
     switch (FW.datatype)
     {
     case TYPE_INT:
-        compute_FW_int_paralell(FW, threads_num, no_path);
+        compute_FW_int_paralell(FW, local_attr.thread_num, local_attr.no_path);
         break;
     case TYPE_FLOAT:
-        compute_FW_float_paralell(FW, threads_num, no_path);
+        compute_FW_float_paralell(FW, local_attr.thread_num, local_attr.no_path);
         break;
     case TYPE_DOUBLE:
-        compute_FW_double_paralell(FW, threads_num, no_path);
+        compute_FW_double_paralell(FW, local_attr.thread_num, local_attr.no_path);
         break;
 
     default:
@@ -89,18 +110,28 @@ void compute_FW_paralell(FW_Matrix FW, int threads_num, int no_path)
 
 }
 
-void compute_FW_sequential(FW_Matrix FW, int no_path)
+void compute_FW_sequential(FW_Matrix FW, FW_attr_t * attr)
 {
+    FW_attr_t local_attr;
+    if (attr == NULL)
+    {
+        local_attr = new_FW_attr();
+    }
+    else
+    {
+        local_attr = *attr;
+    }
+
     switch (FW.datatype)
     {
     case TYPE_INT:
-        compute_FW_int_sequential(FW, no_path);
+        compute_FW_int_sequential(FW, local_attr.no_path);
         break;
     case TYPE_FLOAT:
-        compute_FW_float_sequential(FW, no_path);
+        compute_FW_float_sequential(FW, local_attr.no_path);
         break;
     case TYPE_DOUBLE:
-        compute_FW_double_sequential(FW, no_path);
+        compute_FW_double_sequential(FW, local_attr.no_path);
         break;
 
     default:
@@ -121,7 +152,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
         localAttr = *attr;
     }
 
-    if (localAttr.print_distance_matrix == 0 & localAttr.handle_path_matrix == 0)
+    if (localAttr.print_distance_matrix == 0 & localAttr.no_path == 1)
     {
         printf("Select a matrix to export\n");
         return;
@@ -153,7 +184,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
     sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
     // printf("Full Path: %s\n", fullPath);
 
-    saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.handle_path_matrix, localAttr.text_in_output);
+    saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.no_path, localAttr.text_in_output);
 }
 
 void freeFW_Matrix(FW_Matrix *matrix)
@@ -216,7 +247,7 @@ FW_attr_t new_FW_attr()
     FW_attr_t attr;
     attr.text_in_output = DEFAULT_OUTPUT_FORMAT;
     attr.print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
-    attr.handle_path_matrix = DEFAULT_HANDLE_PATH_MATRIX;
+    attr.no_path = DEFAULT_NO_PATH;
     attr.thread_num = DEFAULT_THREAD_NUM;
 
 
@@ -227,7 +258,7 @@ void init_FW_attr(FW_attr_t * attr)
 {
     attr->text_in_output = DEFAULT_OUTPUT_FORMAT;
     attr->print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
-    attr->handle_path_matrix= DEFAULT_HANDLE_PATH_MATRIX;
+    attr->no_path= DEFAULT_NO_PATH;
     attr->thread_num = DEFAULT_THREAD_NUM;
 }
 
