@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
                 return -1;
             }
             break;
-        case 'c':
         case 'i':
         case 'f':
         case 'd':
@@ -62,9 +61,6 @@ int main(int argc, char *argv[])
 
             switch (c)
             {
-            case 'c':
-                dataType = TYPE_CHAR;
-                break;
             case 'i':
                 dataType = TYPE_INT;
                 break;
