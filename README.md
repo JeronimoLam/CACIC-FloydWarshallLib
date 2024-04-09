@@ -3,12 +3,16 @@ Optimizacion del algoritmo Floyd-Warshall
 
 
 **Tipos de datos**
+
 Se crearon diversos tipos y enums para contener diversa informacion en 1 mismo tipo de dato.
+
 ***Enums***
+
 1. DataType: define el tipo de dato de la matriz [TYPE_INT, TYPE_FLOAT, TYPE_DOUBLE, UNDEFIED]
 2. FileType: define el tipo de archivo de entrada [CSV, JSON]
 
 ***Structs***
+
 1. FW_Matrix: Contiene la matriz de distancias, de caminos y los datos necesarios para el correcto funcionamiento y output del algoritmo. Los datos que contiene son:
 - Matriz de Distancias (dist)
 - Matriz de caminos (path)
