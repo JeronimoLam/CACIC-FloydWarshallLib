@@ -62,9 +62,6 @@ int main(int argc, char *argv[])
 
             switch (c)
             {
-            case 'c':
-                dataType = TYPE_CHAR;
-                break;
             case 'i':
                 dataType = TYPE_INT;
                 break;

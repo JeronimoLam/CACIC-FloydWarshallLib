@@ -2,13 +2,13 @@
 Optimizacion del algoritmo Floyd-Warshall
 
 
-*Tipos de datos*
+**Tipos de datos**
 Se crearon diversos tipos y enums para contener diversa informacion en 1 mismo tipo de dato.
-**Enums**
+***Enums***
 1. DataType: define el tipo de dato de la matriz [TYPE_INT, TYPE_FLOAT, TYPE_DOUBLE, UNDEFIED]
 2. FileType: define el tipo de archivo de entrada [CSV, JSON]
 
-**Structs**
+***Structs***
 1. FW_Matrix: Contiene la matriz de distancias, de caminos y los datos necesarios para el correcto funcionamiento y output del algoritmo. Los datos que contiene son:
 - Matriz de Distancias (dist)
 - Matriz de caminos (path)
@@ -24,7 +24,7 @@ Se crearon diversos tipos y enums para contener diversa informacion en 1 mismo t
 - no_path: determina si se inicializa, procesa e imprime la matriz de caminos. [Default: 0 (no)]
 - thread_num: Define la cantidad de threads para el computo paralelo del algoritmo [Default: 16]
 
-*Input de datos*
+**Input de datos**
 
 1. La librería lee archivos CSV con numeros enteros y numeros decimales
 2. Se automatizó la deteccion del tipo de dato en caso que no sea especificado por el usuario (en caso de numeros decimales, se toman automaticamente como double)
@@ -33,7 +33,7 @@ Se crearon diversos tipos y enums para contener diversa informacion en 1 mismo t
 5. Los datos de entrada son normalizados a la siguiente potencia de 2 para su correcto funcionamiento rellenando los vacios con valores maximos como INT_MAX, FLT_MAX y DBL_MAX
 6. Con el tipo FW_attr_t se puede enviar si crear la matriz de caminos o no.
 
-*Procesamiento de Datos*
+**Procesamiento de Datos**
 
 Atencion: El correcto procesamiento de los datos esta sujeto a la representacion de los mismos en lso distintos tipos de datos.
 
@@ -46,13 +46,13 @@ Atencion: El correcto procesamiento de los datos esta sujeto a la representacion
 6. Con el tipo FW_attr_t se puede enviar la cantidad de threads y si se procesa o no la matriz de caminos.
 
 
-*Output de Datos*
+**Output de Datos**
 
 1. Para float y double, se automatizo el calculo de la cantidad de decimales impresos para usar la misma cantidad que el archivo de entrada
 2. Se puede seleccionar si se quiere que el archivo de salida escriba -1 o "INF" para los nodos que no tienen conexion.
 
 
-*Generador*
+**Generador**
 
 Se creo un generador de datos de prueba. Para todas las opciones se ageraron defaults para acelerar el proceso de creacion de matrices. Los mismos estan implementados con macros que pueden ser modificados al momento de compilacion del generador. Las opciones que dispone son las siguientes:
 
@@ -66,10 +66,10 @@ Se creo un generador de datos de prueba. Para todas las opciones se ageraron def
 8. Formato de salida: CSV o JSON
 9. Path de salida
 
-*Examples*
+**Examples**
 Se creo una carpta conejemplos para probar la libreria.
 
-*Main*
+**Main**
 Se creo un main que prueba la libreria. Recibe diversos argumentos de entrada:
 ```
 "Usage: \n"
@@ -81,7 +81,7 @@ Se creo un main que prueba la libreria. Recibe diversos argumentos de entrada:
                             "-t, --thread-num <number>      Set the number of threads (default: %d).\n",
 ```
 
-*Archivos Adicionales*
+**Archivos Adicionales**
 
 2. Se crearon archivos .bat y .sh para automatizar la compilacion de la libreria sin tener que ejecutar los comandos manualmente
 3. Se crearon archivos en python para chequear tanto el creador como el resultado de la libreria
