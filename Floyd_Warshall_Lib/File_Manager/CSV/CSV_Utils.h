@@ -11,19 +11,18 @@
 
 #include "../../../include/FW_Lib_CommonTypes.h"
 #include "../Block_Operations/blocks.h"
+#include "../Common/common_functions.h"
 
 void * CSV_createMatrix(FW_Matrix, FILE*);
 void CSV_saveMatrix(FW_Matrix, char *path, unsigned int, unsigned int, unsigned int);
 
-unsigned int CSV_getMaxDecimalLength();
+// unsigned int CSV_getMaxDecimalLength();
 
 int CSV_calculateMatrixSize(FILE *);
 DataType CSV_AutoDetectDataType(FILE *);
 
 char * readNextToken(FILE *);
 
-int tokenToInt(char *);
-float tokenToFloat(char *);
-double tokenToDouble(char *);
+
 
 #endif // CREATE_MATRIX_H

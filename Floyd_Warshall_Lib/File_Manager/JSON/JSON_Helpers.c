@@ -4,76 +4,99 @@
 #include <stdlib.h>
 #include <string.h>
 
-int JSON_calculateMatrixSize(FILE *file) {
-    
-    // Implement Function
-}
 
-DataType JSON_AutoDetectDataType(FILE * file) {
-    char ch;
-    int quoteFound = 0; // Bandera para detectar una comilla doble
-    char buffer[20]; // Buffer para almacenar los caracteres después de la comilla doble
-    int bufferIndex = 0; // Índice para el buffer
-    const char *key = "\"Tipo\": \""; // La clave que estamos buscando
-    char next10Chars[11]; // Buffer para almacenar los siguientes 10 caracteres
-    int next10Index = 0; // Índice para el buffer de los siguientes 10 caracteres
+int JSON_calculateMatrixSize(FILE *file)
+{
+    int size = 0;
+    char line[100]; //JSONs attribute is before the 100th position
 
-    if (file == NULL) {
-        printf("Archivo no válido.\n");
-        return;
-    }
-
-    while ((ch = fgetc(file)) != EOF && next10Index < 10) {
-        // Si se encontró una comilla doble, comenzar a llenar el buffer
-        if (quoteFound) {
-            buffer[bufferIndex++] = ch;
-
-            // Verificar la coincidencia si llenamos el buffer hasta la longitud de la clave
-            if (bufferIndex == strlen(key) || bufferIndex == sizeof(buffer) - 1) {
-                buffer[bufferIndex] = '\0'; // Asegurar que el buffer es una cadena válida
-
-                if (strcmp(buffer, key) == 0) {
-                    // Si encontramos la clave, reseteamos la bandera y el índice para comenzar a almacenar los siguientes 10 caracteres
-                    quoteFound = 0;
-                    bufferIndex = 0;
-                    continue;
-                } else {
-                    // Si no es una coincidencia, reiniciar la búsqueda
-                    quoteFound = 0;
-                    bufferIndex = 0;
+    // Read the file line by line
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        // Check if the line contains the "size" field
+        if (strstr(line, "\"size\"") != NULL)
+        {
+            // Find the position of the colon
+            char *colon = strchr(line, ':');
+            if (colon != NULL)
+            {
+                // Find the position of the comma after the colon
+                char *comma = strchr(colon, ',');
+                if (comma != NULL)
+                {
+                    // Convert the string between the colon and the comma to an integer
+                    size = atoi(colon + 1);
                 }
             }
-        }
-
-        if (ch == '\"' && !quoteFound) {
-            quoteFound = 1; // Establecer la bandera al encontrar una comilla doble
-            bufferIndex = 0; // Resetear el índice del buffer
-            memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer
-            continue; // Pasar al siguiente carácter
-        }
-
-        // Si hemos pasado la clave, comenzamos a almacenar los siguientes 10 caracteres
-        if (!quoteFound && bufferIndex == 0 && next10Index < 10) {
-            next10Chars[next10Index++] = ch;
+            break; // Stop reading the file after finding the "size" field
         }
     }
 
-    next10Chars[next10Index] = '\0'; // Asegurar que la cadena esté terminada correctamente
+    return size;
+}
 
-    if (next10Index > 0) {
-        printf("Los siguientes 10 caracteres después de la clave son: %s\n", next10Chars);
-    } else {
-        printf("La clave no fue encontrada o no había suficientes caracteres después de ella.\n");
-    } // Rebobinar el archivo al inicio
+DataType JSON_AutoDetectDataType(FILE *file)
+{
+    DataType dataType = UNDEFINED;
+    char *type = NULL;
+    char line[100]; //JSONs attribute is before the 100th position
 
-    // if (strcmp(type, "int") == 0) {
-    //     return TYPE_INT;
-    // } else if (strcmp(type, "float") == 0) {
-    //     return TYPE_FLOAT;
-    // } else if (strcmp(type, "double") == 0) {
-    //     return TYPE_DOUBLE;
-    // } else {
-    //     return UNDEFINED;
-    // }
-    return UNDEFINED;
+    // Read the file line by line
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        // Check if the line contains the "Tipo" field
+        if (strstr(line, "\"type\"") != NULL)
+        {
+            // Find the position of the colon
+            char *colon = strchr(line, ':');
+            if (colon != NULL)
+            {
+                // Find the position of the opening quote after the colon
+                char *quote = strchr(colon, '\"');
+                if (quote != NULL)
+                {
+                    // Find the position of the closing quote after the opening quote
+                    char *closingQuote = strchr(quote + 1, '\"');
+                    if (closingQuote != NULL)
+                    {
+                        // Calculate the length of the type string
+                        size_t length = closingQuote - quote - 1;
+                        // Allocate memory for the type string
+                        type = malloc(length + 1);
+                        if (type != NULL)
+                        {
+                            // Copy the type string into the allocated memory
+                            strncpy(type, quote + 1, length);
+                            type[length] = '\0'; // Null-terminate the string
+                        }
+                    }
+                }
+            }
+            break; // Stop reading the file after finding the "Tipo" field
+        }
+    }
+    
+    type = trim(type);
+
+    //Retorna el correcto DataType segun type
+    if (type != NULL)
+    {
+        if (strcmp(type, "int") == 0)
+        {
+            dataType = TYPE_INT;
+        }
+        else if (strcmp(type, "float") == 0)
+        {
+            dataType = TYPE_FLOAT;
+        }
+        else if (strcmp(type, "double") == 0)
+        {
+            dataType = TYPE_DOUBLE;
+        }
+
+    }
+
+    free(type); // Free the allocated memory for the type string
+
+    return dataType;
 }

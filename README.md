@@ -86,4 +86,6 @@ Se creo un main que prueba la libreria. Recibe diversos argumentos de entrada:
 2. Se crearon archivos .bat y .sh para automatizar la compilacion de la libreria sin tener que ejecutar los comandos manualmente
 3. Se crearon archivos en python para chequear tanto el creador como el resultado de la libreria
 
+*JSON*
+ Se admiten archivos JSON en la entrada. EL tamaño de la matriz y el tipo de dato utilizado debe ser especificado en 1 atributo del JSON
 

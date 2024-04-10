@@ -100,7 +100,7 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
     {
     case CSV:
         FW->dist = CSV_createMatrix(*FW, file);
-        FW->decimal_length = CSV_getMaxDecimalLength();
+        FW->decimal_length = getMaxDecimalLength();
         if (no_path)
         {
             FW->path = NULL;

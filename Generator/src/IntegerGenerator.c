@@ -81,9 +81,9 @@ void IntMatrix2JSON(int **matriz, int n, const char *path)
     }
 
     fprintf(file, "{\n");
-    fprintf(file, "  \"tipo\": \"int\",\n");
-    fprintf(file, "  \"dimension\": %d,\n", n);
-    fprintf(file, "  \"matriz\": [\n");
+    fprintf(file, "  \"type\": \"int\",\n");
+    fprintf(file, "  \"size\": %d,\n", n);
+    fprintf(file, "  \"matrix\": [\n");
 
     for (int i = 0; i < n; i++)
     {

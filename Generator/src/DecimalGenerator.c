@@ -121,9 +121,9 @@ void DoubleMatrix2JSON(double **matriz, int n, const char *path, int parteDecima
     sprintf(formatString, "%%.%dlf", parteDecimal);
 
     fprintf(file, "{\n");
-    fprintf(file, "  \"tipo\": \"double\",\n");
-    fprintf(file, "  \"dimension\": %d,\n", n);
-    fprintf(file, "  \"matriz\": [\n");
+    fprintf(file, "  \"type\": \"double\",\n");
+    fprintf(file, "  \"size\": %d,\n", n);
+    fprintf(file, "  \"matrix\": [\n");
 
     for (int i = 0; i < n; i++)
     {

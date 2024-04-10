@@ -2,29 +2,27 @@
 
 #include "CSV_Utils.h"
 
-void *createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size);
-void *createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size);
-
-static void *createDoubleMatrix(FILE *, unsigned int, unsigned int);
-// static void *createCharMatrix(FILE *, unsigned int, unsigned int);
+void * CSV_createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size);
+void * CSV_createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size);
+void * CSV_createDoubleMatrix(FILE *, unsigned int, unsigned int);
 
 void *CSV_createMatrix(FW_Matrix FW, FILE *file)
 {
     switch (FW.datatype)
     {
     case TYPE_INT:
-        return createIntMatrix(file, FW.size, FW.norm_size);
+        return CSV_createIntMatrix(file, FW.size, FW.norm_size);
     case TYPE_FLOAT:
-        return createFloatMatrix(file, FW.size, FW.norm_size);
+        return CSV_createFloatMatrix(file, FW.size, FW.norm_size);
     case TYPE_DOUBLE:
-        return createDoubleMatrix(file, FW.size, FW.norm_size);
+        return CSV_createDoubleMatrix(file, FW.size, FW.norm_size);
 
     default:
         return NULL;
     }
 }
 
-void *createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size)
+void * CSV_createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
     rewind(file); // Ensure we start reading from the beginning of the file
 
@@ -65,7 +63,7 @@ void *createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size)
     return matrix;
 }
 
-void *createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size)
+void * CSV_createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
     rewind(file); // Asegúrate de comenzar la lectura desde el inicio del archivo
 
@@ -108,7 +106,7 @@ void *createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size)
 }
 
 // Modificada para trabajar con doubles
-void *createDoubleMatrix(FILE *file, unsigned int size, unsigned int norm_size)
+void * CSV_createDoubleMatrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
     rewind(file); // Asegúrate de comenzar la lectura desde el inicio del archivo
 
