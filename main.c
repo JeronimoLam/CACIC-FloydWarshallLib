@@ -100,70 +100,54 @@ int main(int argc, char *argv[])
 
     FW_attr_t attr;
     init_FW_attr(&attr);
-    // attr.text_in_output = 0;
     attr.no_path = 0;
     attr.thread_num = threadNum;
     
     printf("------------------------PARALELO------------------------\n");
-    double timetick_p = dwalltime();
 
     // Read
     printf(" ==> Leyendo \n");
     FW_Matrix data = create_structure(dataType, path, blockSize, &attr);
     // printf("%s\n", FW_details_to_string(&data, &attr));
-    // print_FW_matrixes(&data, "all", 0);
 
     printf(" ==> Procesado \n");
-    double timetick_p_compute = dwalltime();
     compute_FW_paralell(data, &attr); // TODO: Adjust thread num
-    double timetick_fp_compute = dwalltime();
 
     // Save
     printf(" ==> Guardando \n");
-    
     save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
 
-    double timetick_fp = dwalltime();
 
-    printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
-
-
+    double paralell_algorithm_time = get_FW_processing_time();
+    double paralell_total_time = get_FW_processing_time();
 
 
     printf("------------------------SECUENCIAL------------------------\n");
-    double timetick_s = dwalltime();
 
     printf(" ==> Leyendo \n");
     FW_Matrix data2 = create_structure(dataType, path, blockSize, &attr);
-    printf("%s\n", FW_details_to_string(&data2, NULL));
+    // printf("%s\n", FW_details_to_string(&data2, NULL));
 
     printf(" ==> Procesado \n");
-    double timetick_s_compute = dwalltime();
     compute_FW_sequential(data2, &attr);
-    double timetick_fs_compute = dwalltime();
 
     printf(" ==> Guardando \n");
     save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
 
-    double timetick_fs = dwalltime();
+    double sequential_algorithm_time = get_FW_processing_time();
+    double sequential_total_time = get_FW_processing_time();
 
-    printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
-
-    printf("\n------------------------ Tiempos ------------------------\n");
+    printf("------------------------ Tiempos ------------------------\n");
 
     // Print Times
-    printf("Tiempo Libreria Entera Paralelo %f \n", timetick_fp - timetick_p);
-    printf("Tiempo Libreria Entera Secuencial %f \n", timetick_fs - timetick_s);
+    printf("Tiempo algoritmo Paralelo %lf \n", paralell_algorithm_time);
+    printf("Tiempo algoritmo Secuencial %lf \n", sequential_algorithm_time);
 
-    printf("Tiempo Computo Paralelo %f \n", timetick_fp_compute - timetick_p_compute);
-    printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
+    printf("Tiempo Libreria Entera Paralelo %lf \n", paralell_total_time);
+    printf("Tiempo Libreria Entera Secuencial %lf \n\n", sequential_total_time);
 
     // Free memory
-    // freeFW_Matrix(&data2);
-    // freeFW_Matrix(&data);
 
-    // Closes the file
-    fclose(file);
 
     return 0;
 }
@@ -189,7 +173,7 @@ FILE *check_file(const char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Error: Unable to open file.\n");
+        // fprintf(stderr, "Error: Unable to open file.\n");
         exit(EXIT_FAILURE);
     }
 }
@@ -213,14 +197,4 @@ int try_convert_to_int(const char *str, int *converted_value)
     return 1; // Conversion succeeded
 }
 
-#include <sys/time.h>
 
-double dwalltime()
-{
-    double sec;
-    struct timeval tv;
-
-    gettimeofday(&tv, NULL);
-    sec = tv.tv_sec + tv.tv_usec / 1000000.0;
-    return sec;
-}

@@ -1,12 +1,14 @@
 #include "JSON_Utils.h"
 
-#define INF_STRING "\"INF\"" 
+#define INF_STRING "\"INF\""
 
-void create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, const char *extension, unsigned int disconnected_str);
+void static create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, const char *extension, unsigned int disconnected_str);
 
-void print_JSON_Header(FILE *file, const char *type, unsigned int size);
-void print_JSON_Footer(FILE *file);
-void print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int disconnected_str, void *ordered_matrix);
+void static print_JSON_Header(FILE *file, const char *type, unsigned int size);
+void static print_JSON_Footer(FILE *file);
+void static print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int disconnected_str, void *ordered_matrix);
+
+static char *dt_to_str(DataType dt);
 
 void JSON_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
 {
@@ -20,13 +22,14 @@ void JSON_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned
     }
 }
 
-void create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, const char *extension, unsigned int disconnected_str)
+// ----------------------------- Private ----------------
+void static create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, const char *extension, unsigned int disconnected_str)
 {
     void *ordered_matrix = reorganizeToLinear((void *)matrix, FW->norm_size, FW->BS, dt);
 
-    FILE * file = open_result_file(path, extension);
+    FILE *file = open_result_file(path, extension);
 
-    print_JSON_Header(file, "int", FW->size);
+    print_JSON_Header(file, dt_to_str(dt), FW->size);
 
     print_JSON_body(FW, dt, file, disconnected_str, ordered_matrix);
 
@@ -35,7 +38,7 @@ void create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, cons
     fclose(file);
 }
 
-void print_JSON_Header(FILE *file, const char *type, unsigned int size)
+void static print_JSON_Header(FILE *file, const char *type, unsigned int size)
 {
     fprintf(file, "{\n");
     fprintf(file, "  \"type\": \"%s\",\n", type);
@@ -43,13 +46,13 @@ void print_JSON_Header(FILE *file, const char *type, unsigned int size)
     fprintf(file, "  \"matrix\": [\n");
 }
 
-void print_JSON_Footer(FILE *file)
+void static print_JSON_Footer(FILE *file)
 {
     fprintf(file, "\n  ]\n");
     fprintf(file, "}\n");
 }
 
-void print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int disconnected_str, void *ordered_matrix)
+void static print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int disconnected_str, void *ordered_matrix)
 {
     for (int row = 0; row < FW->size; row++)
     {
@@ -83,3 +86,22 @@ void print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int discon
     }
 }
 
+// Convierte un DataType a un string
+static char *dt_to_str(DataType dt)
+{
+    char *result = malloc(30); // allocate enough memory for the prefix and the datatype string
+    switch (dt)
+    {
+    case TYPE_INT:
+        result = "int";
+        break;
+    case TYPE_FLOAT:
+        result = "float";
+
+        break;
+    case TYPE_DOUBLE:
+        result = "double";
+        break;
+    }
+    return result;
+}

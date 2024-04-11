@@ -15,6 +15,6 @@ void DoubleMatrix2CSV(double **matriz, int n, const char *path, int parteDecimal
 
 // Funciones para guardar matrices en JSON
 void IntMatrix2JSON(int **matriz, int n, const char *path);
-void DoubleMatrix2JSON(double **matriz, int n, const char *path, int parteDecimal, int decimalCero);
+void DoubleMatrix2JSON(double **matriz, int n, const char *path, int parteDecimal, int decimalCero, int is_float);
 
 #endif // MATRIX_OPERATIONS_H

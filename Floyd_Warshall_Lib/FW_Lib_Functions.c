@@ -8,15 +8,24 @@
 #define DEFAULT_PRINT_DIST_MATRIX 1 // Imprime la matriz de distancia por defecto
 #define DEFAULT_NO_PATH 1           // No imprime ni procesa la matriz de caminos por defecto
 
+// Global Times
+
+static double FW_creation_time = 0;
+static double FW_processing_time = 0;
+static double FW_save_time = 0;
+
 // Private functions
-void print_matrix(void *, unsigned int, DataType);
-char *dataTypeToString(DataType);
-unsigned int nextPowerOf2(unsigned int);
-int *initializePathMatrix(FW_Matrix *G);
+static double dwalltime();
+static void print_matrix(void *, unsigned int, DataType);
+static char *dataTypeToString(DataType);
+static unsigned int nextPowerOf2(unsigned int);
 
 // Lib Functions
+
 FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *attr)
 {
+    double timetick_start = dwalltime();
+
     FW_attr_t local_attr;
     if (attr == NULL)
     {
@@ -65,15 +74,14 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
 
     createMatrixes(&FW, file, local_attr.no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
 
-    // print path matrix
-    // print_matrix(FW.dist, FW.norm_size, FW.datatype);
-    print_matrix(FW.path, FW.norm_size, TYPE_INT);
-
+    fclose(file);
+    FW_creation_time = dwalltime() - timetick_start;
     return FW;
 }
 
 void compute_FW_paralell(FW_Matrix FW, FW_attr_t *attr)
 {
+    double timetick_start = dwalltime();
 
     FW_attr_t local_attr;
     if (attr == NULL)
@@ -107,10 +115,14 @@ void compute_FW_paralell(FW_Matrix FW, FW_attr_t *attr)
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
+
+    FW_processing_time = dwalltime() - timetick_start;
 }
 
 void compute_FW_sequential(FW_Matrix FW, FW_attr_t *attr)
 {
+    double timetick_start = dwalltime();
+
     FW_attr_t local_attr;
     if (attr == NULL)
     {
@@ -137,10 +149,14 @@ void compute_FW_sequential(FW_Matrix FW, FW_attr_t *attr)
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
+
+    FW_processing_time = dwalltime() - timetick_start;
 }
 
 void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_attr_t *attr)
 {
+    double timetick_start = dwalltime();
+
     FW_attr_t localAttr;
 
     if (attr == NULL)
@@ -187,6 +203,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
     // printf("Full Path: %s\n", fullPath);
 
     saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.no_path, localAttr.text_in_output);
+    FW_save_time = dwalltime() - timetick_start;
 }
 
 void freeFW_Matrix(FW_Matrix *matrix)
@@ -210,21 +227,23 @@ void freeFW_Matrix(FW_Matrix *matrix)
 
 char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
 {
-    char *result_martix = "";
-    char *result_attr = "";
+    char *result_martix = malloc(1024);
+    char *result_attr = malloc(1024);
+    result_martix[0] = '\0';
+    result_attr[0] = '\0';
     if (element != NULL)
-        sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d\n", element->size, element->norm_size, element->BS, dataTypeToString(element->datatype), element->decimal_length);
+        sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d", element->size, element->norm_size, element->BS, dataTypeToString(element->datatype), element->decimal_length);
     if (attr != NULL)
         sprintf(result_attr, "Thread Num: %d\nNo Path: %s\nPrint distance matrix: %s\nText in output: %s", attr->thread_num, attr->no_path ? "True" : "False", attr->print_distance_matrix ? "True" : "False", attr->text_in_output ? "INF" : "-1");
     if (element != NULL && attr != NULL)
     {
-        sprintf(result_martix, "%s\n%s", result_martix, result_attr);
+        sprintf(result_martix, "%s\n\n%s", result_martix, result_attr);
         return result_martix;
     }
     return strcat(result_martix, result_attr);
 }
 
-void print_FW_matrixes(FW_Matrix * element, char * print, int blocks)
+void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
 {
 
     if (strstr(print, "all") || strstr(print, "dist"))
@@ -233,13 +252,11 @@ void print_FW_matrixes(FW_Matrix * element, char * print, int blocks)
         {
             printf("Distance Matrix Loaded in blocks\n");
             print_matrix(element->dist, element->norm_size, element->datatype);
-            printf("\n");
         }
         if (!blocks)
         {
             printf("Distance Matrix Loaded Normal\n"); // TODO: Check implementation of this
             print_matrix(reorganizeToLinear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
-            printf("\n");
         }
     }
     if (strstr(print, "all") || strstr(print, "path"))
@@ -254,13 +271,12 @@ void print_FW_matrixes(FW_Matrix * element, char * print, int blocks)
         {
             printf("Path Matrix Loaded Normal\n"); // TODO: Check implementation of this
             print_matrix(reorganizeToLinear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
-            printf("\n");
         }
     }
-    printf("\n");
 }
 
-//----------------------------------------------- ATTR Init -----------------------------------------
+//----------------------------------------------- Attr -----------------------------------------
+
 FW_attr_t new_FW_attr()
 {
     FW_attr_t attr;
@@ -272,18 +288,52 @@ FW_attr_t new_FW_attr()
     return attr;
 }
 
+
 void init_FW_attr(FW_attr_t *attr)
 {
+    // Initialize the attributes of the FW_attr_t object
     attr->text_in_output = DEFAULT_OUTPUT_FORMAT;
     attr->print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
     attr->no_path = DEFAULT_NO_PATH;
     attr->thread_num = DEFAULT_THREAD_NUM;
 }
 
+
+// Getters for global times
+
+double get_FW_creation_time()
+{
+    return FW_creation_time;
+}
+
+double get_FW_processing_time()
+{
+    return FW_processing_time;
+}
+
+double get_FW_save_time()
+{
+    return FW_save_time;
+}
+
+double get_FW_total_time()
+{
+    return FW_creation_time + FW_processing_time + FW_save_time;
+}
+
 // ------------------------------------------------------------------ Private Section ------------------------------------------------------------------
 
-// AUX Functions
-void print_matrix(void *matrix, unsigned int size, DataType dataType)
+static double dwalltime()
+{
+    double sec;
+    struct timeval tv;
+
+    gettimeofday(&tv, NULL);
+    sec = tv.tv_sec + tv.tv_usec / 1000000.0;
+    return sec;
+}
+
+static void print_matrix(void *matrix, unsigned int size, DataType dataType)
 {
     int i, j;
     switch (dataType)
@@ -327,7 +377,7 @@ void print_matrix(void *matrix, unsigned int size, DataType dataType)
     printf("\n");
 }
 
-char *dataTypeToString(DataType dt)
+static char *dataTypeToString(DataType dt)
 {
     char *result = malloc(30); // allocate enough memory for the prefix and the datatype string
     switch (dt)
@@ -336,8 +386,7 @@ char *dataTypeToString(DataType dt)
         result = "INT";
         break;
     case TYPE_FLOAT:
-        result = "INT";
-
+        result = "FLOAT";
         break;
     case TYPE_DOUBLE:
         result = "DOUBLE";
@@ -349,7 +398,7 @@ char *dataTypeToString(DataType dt)
     return result;
 }
 
-unsigned int nextPowerOf2(unsigned int n)
+static unsigned int nextPowerOf2(unsigned int n)
 {
     unsigned count = 0;
 

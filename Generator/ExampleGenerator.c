@@ -13,6 +13,7 @@
 #define DEFAULT_CSV_PATH "./output.csv"
 #define DEFAULT_JSON_PATH "./output.json"
 #define DEFAULT_DECIMAL_ZERO 0
+#define DEFAULT_IS_FLOAT 0
 #define DEFAULT_NEGATIVOS_DENSIDAD 0.6
 #define DEFAULT_PARTE_ENTERA 4
 #define DEFAULT_PARTE_DECIMAL 12
@@ -20,6 +21,7 @@
 int main()
 {
     char tipo = DEFAULT_TYPE;
+    int is_float = DEFAULT_IS_FLOAT;
     int n = DEFAULT_SIZE;
     int direction = DEFAULT_DIRECTION;
     char formato = DEFAULT_FORMAT;
@@ -39,6 +41,20 @@ int main()
             break; // Sale del bucle ya que se eligió el valor predeterminado.
         }
     } while (sscanf(input, "%c", &tipo) != 1 || (tipo != 'i' && tipo != 'd'));
+
+    if (tipo == 'd')
+    {
+        // Tipo de números
+        do
+        {
+            printf("1 = float | 0 = double: [default: %d]: ", DEFAULT_IS_FLOAT);
+            fgets(input, sizeof(input), stdin);
+            if (input[0] == '\n')
+            {
+                break; // Sale del bucle ya que se eligió el valor predeterminado.
+            }
+        } while (sscanf(input, "%d", &is_float) != 1 || (is_float != 1 && is_float != 0));
+    }
 
     // Dimensiones de la matriz
     do
@@ -176,7 +192,7 @@ int main()
         }
         else
         {
-            DoubleMatrix2JSON(matrizDouble, n, path, parteDecimal, decimalCero);
+            DoubleMatrix2JSON(matrizDouble, n, path, parteDecimal, decimalCero, is_float);
         }
         // Liberar memoria
         for (int i = 0; i < n; i++)

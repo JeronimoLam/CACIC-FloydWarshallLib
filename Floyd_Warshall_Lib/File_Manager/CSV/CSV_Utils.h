@@ -9,7 +9,6 @@
 void * CSV_createMatrix(FW_Matrix, FILE*);
 void CSV_saveMatrix(FW_Matrix, char *path, unsigned int, unsigned int, unsigned int);
 
-// unsigned int CSV_getMaxDecimalLength();
 
 int CSV_calculateMatrixSize(FILE *);
 DataType CSV_AutoDetectDataType(FILE *);

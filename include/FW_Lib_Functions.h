@@ -1,11 +1,20 @@
 #ifndef FW_LIB_FUNCTIONS_H
 #define FW_LIB_FUNCTIONS_H
 
+#include <sys/time.h>
+
 #include "FW_Lib_CommonTypes.h"
 
-
+/**
+ * Creates a FW_Matrix structure from a file. It automatically detects the data type if not specified. 
+ *
+ * @param dataType The data type of the matrix elements. UNDEFINED for autodetection.
+ * @param path The path to the file containing the matrix data.
+ * @param BS The block size for matrix operations.
+ * @param attr Pointer to FW_attr_t structure containing additional attributes.
+ * @return The created FW_Matrix structure with the matrix loaded.
+ */
 FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
-
 
 /**
  * @brief Performs the Floyd-Warshall algorithm calculation on the provided matrix.
@@ -19,8 +28,6 @@ FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
  */
 void compute_FW_paralell(FW_Matrix, FW_attr_t *);
 
-
-
 /**
  * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs
  * of vertices in a graph, using the distance matrix contained in 'FW'.
@@ -29,7 +36,6 @@ void compute_FW_paralell(FW_Matrix, FW_attr_t *);
  * @param no_path Flag indicating whether to calculate the shortest path matrix (0) or not (1).
  */
 void compute_FW_sequential(FW_Matrix, FW_attr_t *);
-
 
 /**
  * @brief Saves the distance matrix or the shortest path matrix to a file.
@@ -47,7 +53,6 @@ void compute_FW_sequential(FW_Matrix, FW_attr_t *);
  * @note If both dist_matrix and path_matrix are set to 0, the function will not perform any action.
  */
 void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
-
 
 /**
  * Converts the details of a FW_Matrix element and FW_attr_t attributes into a string representation.
@@ -67,7 +72,6 @@ char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
  */
 void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
 
-
 /**
  * @brief Frees the memory allocated for the FW_Matrix structure.
  * 
@@ -76,11 +80,51 @@ void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
  * 
  * @param matrix A pointer to the FW_Matrix structure to be freed.
  */
-void freeFW_Matrix(FW_Matrix* matrix);
+void freeFW_Matrix(FW_Matrix* matrix); //TODO: ver esto
 
+// Attribute functions
 
+/**
+ * Creates a new FW_attr_t object with default attribute values.
+ *
+ * @return The newly created FW_attr_t object.
+ */
 FW_attr_t new_FW_attr();
+
+/**
+ * Initializes a FW_attr_t object with default attribute values.
+ *
+ * @param attr A pointer to the FW_attr_t object to be initialized.
+ */
 void init_FW_attr(FW_attr_t *);
+
+/**
+ * Returns the creation time of the FW_Matrix structure.
+ *
+ * @return The creation time in seconds.
+ */
+double get_FW_creation_time();
+
+/**
+ * Returns the processing time of the Floyd-Warshall algorithm.
+ *
+ * @return The processing time in seconds.
+ */
+double get_FW_processing_time();
+
+/**
+ * Returns the save to file time of the FW_Matrix structure.
+ *
+ * @return The save time in seconds.
+ */
+double get_FW_save_time();
+
+/**
+ * Returns the total time taken by the Floyd Warshall Library.
+ *
+ * @return The total time taken by the Floyd Warshall Library.
+ */
+double get_FW_total_time();
 
 
 
