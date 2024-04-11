@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
                 return -1;
             }
             break;
+        case 'c':
         case 'i':
         case 'f':
         case 'd':
@@ -61,6 +62,9 @@ int main(int argc, char *argv[])
 
             switch (c)
             {
+            case 'c':
+                dataType = TYPE_CHAR;
+                break;
             case 'i':
                 dataType = TYPE_INT;
                 break;
@@ -118,7 +122,7 @@ int main(int argc, char *argv[])
 
     printf(" ==> Procesado \n");
     double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, &attr);
+    compute_FW_paralell(data, &attr); // TODO: Adjust thread num
     double timetick_fp_compute = dwalltime();
 
     // Save
@@ -147,7 +151,7 @@ int main(int argc, char *argv[])
     double timetick_fs_compute = dwalltime();
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", JSON, &attr);
+    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
 
     double timetick_fs = dwalltime();
 
