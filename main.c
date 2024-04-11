@@ -25,9 +25,6 @@ int main(int argc, char *argv[])
 
     static struct option long_options[] = {
         {"path", required_argument, 0, 'p'},
-        //{"absolute-path", required_argument, 0, 'a'},
-        //{"relative-path", required_argument, 0, 'r'},
-        // {"char", no_argument, 0, 'c'},
         {"int", no_argument, 0, 'i'},
         {"float", no_argument, 0, 'f'},
         {"double", no_argument, 0, 'd'},
@@ -49,7 +46,6 @@ int main(int argc, char *argv[])
                 return -1;
             }
             break;
-        case 'c':
         case 'i':
         case 'f':
         case 'd':
@@ -62,9 +58,6 @@ int main(int argc, char *argv[])
 
             switch (c)
             {
-            case 'c':
-                dataType = TYPE_CHAR;
-                break;
             case 'i':
                 dataType = TYPE_INT;
                 break;
