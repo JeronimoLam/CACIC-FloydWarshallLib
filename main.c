@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 
     printf(" ==> Procesado \n");
     double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, &attr); // TODO: Adjust thread num
+    compute_FW_paralell(data, &attr);
     double timetick_fp_compute = dwalltime();
 
     // Save

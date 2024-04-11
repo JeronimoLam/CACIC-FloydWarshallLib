@@ -1,7 +1,10 @@
 #ifndef FW_LIB_COMMON_TYPES_H
 #define FW_LIB_COMMON_TYPES_H
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <limits.h>
+#include <float.h>
 
 #define INFINITE SHRT_MAX
 

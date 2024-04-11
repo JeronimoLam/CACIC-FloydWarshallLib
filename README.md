@@ -16,13 +16,13 @@ Se crearon diversos tipos y enums para contener diversa informacion en 1 mismo t
 - Longitud decimal (decimal_length): Cantidad de posiciones decimales. Se utiliza al momento de imprimir la correcta construccion.
 - Tamaño de la matriz (size): tamaño de la matriz original
 - Tamaño de la matriz normalizada (norm_size): tamaño de la matriz redondeado a la siguiente potencia de 2 
-- Tamaño de Bloque (BS): Define el tamaño de bloque utilizado para almacenar las matrices
+- Tamaño de Bloque (BS): Define el tamaño de bloque utilizado para almacenar las matrices [Default: 128]
 
 2. FW_attr_t: Contiene definiciones para configuraciones adicionales de las librerias. Para cargar los defaults, se debe inicializar llamando a las funciones new_FW_attr o init_FW_attr. Los valores default pueden modificarse cambiando las macros del archivo FW_Lib_Functions.c:
 - text_in_output: Define si al imprimir la matriz, se utiliza el string "INF" o ekl valor -1 para indicar nodos que esten desconectados. [Default: 1 ("INF")]
 - print_distance_matrix: Define si se desea imprimir la matriz de distancias al llamar a la funcion output [Default: 1 (si)]
 - no_path: determina si se inicializa, procesa e imprime la matriz de caminos. [Default: 0 (no)]
-- thread_num: Define la cantidad de threads para el computo paralelo del algoritmo [Default: 16]
+- thread_num: Define la cantidad de threads para el computo paralelo del algoritmo [Default: 4]
 
 *Input de datos*
 

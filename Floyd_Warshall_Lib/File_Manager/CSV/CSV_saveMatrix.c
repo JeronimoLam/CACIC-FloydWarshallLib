@@ -1,46 +1,28 @@
 #include <stdio.h>
 #include "CSV_Utils.h"
 
-static void saveIntMatrixToCSV(FW_Matrix *, int *, char *, char *, unsigned int);
-static void saveFloatMatrixToCSV(FW_Matrix *, char *, char *, unsigned int);
-static void saveDoubleMatrixToCSV(FW_Matrix *, char *, char *, unsigned int);
+#define INF_STRING "INF" 
+
+void create_CSV(FW_Matrix *FW, DataType dt, void *matrix, const char *path, const char *extension, unsigned int disconnected_str);
 
 void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
 {
-    switch (FW.datatype)
-    {
-    case TYPE_INT:
 
-        if (print_dist)
-        {
-            saveIntMatrixToCSV(&FW, (int *)FW.dist, path, "distances.csv", disconnected_str);
-        }
-        break;
-    case TYPE_FLOAT:
-        if (print_dist)
-        {
-            saveFloatMatrixToCSV(&FW, path, "distances.csv", disconnected_str);
-        }
-        break;
-    case TYPE_DOUBLE:
-        if (print_dist)
-        {
-            saveDoubleMatrixToCSV(&FW, path, "distances.csv", disconnected_str);
-        }
-        break;
-    default:
-        return;
+    if (print_dist)
+    {
+        create_CSV(&FW, FW.datatype, (int *)FW.dist, path, "distances.csv", disconnected_str);
     }
+
     if (!no_path)
     {
-        saveIntMatrixToCSV(&FW, FW.path, path, "path.csv", disconnected_str);
+        create_CSV(&FW, TYPE_INT,FW.path, path, "path.csv", disconnected_str);
     }
 }
 
-static void saveIntMatrixToCSV(FW_Matrix *FW, int *matrix, char *path, char *extension, unsigned int disconnected_str)
+void create_CSV(FW_Matrix *FW, DataType dt, void *matrix, const char *path, const char *extension, unsigned int disconnected_str)
 {
-    int *ordered_matrix_int = reorganizeToLinear(matrix, FW->norm_size, FW->BS, TYPE_INT);
-    // free(matrix); // Is not used anymore // TODO: Revisar si conviene liberar la memoria acá o en el main
+
+    void *ordered_matrix = reorganizeToLinear(matrix, FW->norm_size, FW->BS, dt);
 
     // Abrir el archivo
     FILE *file = open_result_file(path, extension);
@@ -50,80 +32,20 @@ static void saveIntMatrixToCSV(FW_Matrix *FW, int *matrix, char *path, char *ext
     {
         for (int col = 0; col < FW->size; ++col)
         {
-            int value = ordered_matrix_int[row * FW->norm_size + col];
-            if (value == INT_MAX && disconnected_str)
+            switch (dt)
             {
-                fprintf(file, "INF");
-            }
-            else
-            {
-                fprintf(file, "%d", value == INT_MAX ? -1 : value);
-            }
-            if (col < FW->size - 1)
-            {
-                fprintf(file, ",");
-            }
-        }
-        fprintf(file, "\n");
-    }
-    fclose(file);
-}
+            case TYPE_INT:
+                print_int_matrix_to_file(FW, file, (int *)ordered_matrix, row, col, disconnected_str, INF_STRING);
+                break;
+            case TYPE_FLOAT:
+                print_float_matrix_to_file(FW, file, (float *)ordered_matrix, row, col, disconnected_str, INF_STRING);
+                break;
+            case TYPE_DOUBLE:
+                print_double_matrix_to_file(FW, file, (double *)ordered_matrix, row, col, disconnected_str, INF_STRING);
+                break;
 
-static void saveFloatMatrixToCSV(FW_Matrix *FW, char *path, char *extension, unsigned int disconnected_str)
-{
-    // Ajustar para obtener una matriz de floats reorganizada
-    float *ordered_matrix_float = reorganizeToLinear(FW->dist, FW->norm_size, FW->BS, TYPE_FLOAT);
-
-    // Abrir el archivo
-    FILE *file = open_result_file(path, extension);
-
-    // Escribir la matriz en el archivo
-    for (unsigned int row = 0; row < FW->size; ++row)
-    {
-        for (unsigned int col = 0; col < FW->size; ++col)
-        {
-            float value = ordered_matrix_float[row * FW->norm_size + col];
-            if (value == FLT_MAX && disconnected_str)
-            {
-                fprintf(file, "INF");
-            }
-            else
-            {
-                fprintf(file, "%.*f", FW->decimal_length, value == FLT_MAX ? -1.0 : value);
-            }
-
-            if (col < FW->size - 1)
-            {
-                fprintf(file, ",");
-            }
-        }
-        fprintf(file, "\n");
-    }
-    fclose(file);
-}
-
-static void saveDoubleMatrixToCSV(FW_Matrix *FW, char *path, char *extension, unsigned int disconnected_str)
-{
-
-    // Ajustar para obtener una matriz de doubles reorganizada
-    double *ordered_matrix_double = reorganizeToLinear(FW->dist, FW->norm_size, FW->BS, TYPE_DOUBLE);
-
-    // Abrir el archivo
-    FILE *file = open_result_file(path, extension);
-
-    // Escribir la matriz en el archivo
-    for (unsigned int row = 0; row < FW->size; ++row)
-    {
-        for (unsigned int col = 0; col < FW->size; ++col)
-        {
-            double value = ordered_matrix_double[row * FW->norm_size + col];
-            if (value == DBL_MAX && disconnected_str)
-            {
-                fprintf(file, "INF");
-            }
-            else
-            {
-                fprintf(file, "%.*lf", FW->decimal_length, value == DBL_MAX ? -1.0 : value);
+            default:
+                break;
             }
             if (col < FW->size - 1)
             {

@@ -5,8 +5,6 @@
 
 #include <omp.h>
 #include <semaphore.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdint.h>
 
 void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int no_path);

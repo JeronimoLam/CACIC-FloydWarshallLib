@@ -1,11 +1,4 @@
 #include "FW_compute.h"
-#include "../include/FW_Lib_CommonTypes.h"
-
-#include <omp.h>
-#include <semaphore.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
 
 //------------------------------------------------------------------------- Paralell Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
 

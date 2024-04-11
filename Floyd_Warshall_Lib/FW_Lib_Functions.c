@@ -3,7 +3,7 @@
 #include "FW_compute.h"
 
 #define DEFAULT_BLOCK_SIZE 128
-#define DEFAULT_THREAD_NUM 2            // TODO: Definir thread num
+#define DEFAULT_THREAD_NUM 4            
 #define DEFAULT_OUTPUT_FORMAT 1         // Imprime INF en lugar de -1 por defecto
 #define DEFAULT_PRINT_DIST_MATRIX 1     // Imprime la matriz de distancia por defecto
 #define DEFAULT_NO_PATH 1               // No imprime ni procesa la matriz de caminos por defecto

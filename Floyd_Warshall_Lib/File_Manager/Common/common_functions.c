@@ -1,8 +1,16 @@
 #include "common_functions.h"
 
+// Sets the maximum decimal length.
+void setMaxDecimalLength(unsigned int length);
+
+// Updates the maximum decimal length.
 void update_maxDecimalLength(char *);
 
+// Checks if a character is a delimiter.
+int isDelimiter(char ch);
 
+
+// This variable stores the maximum decimal length.
 static unsigned int maxDecimalLength = 0;
 
 unsigned int getMaxDecimalLength()
@@ -15,7 +23,7 @@ void setMaxDecimalLength(unsigned int length)
     maxDecimalLength = length;
 }
 
-// Trims the string
+
 char *trim(char *str)
 {
     char *end;
@@ -39,14 +47,6 @@ char *trim(char *str)
 }
 
 
-// Utility function to check if a character is considered a delimiter for CSV
-int isDelimiter(char ch)
-{
-    return ch == ',' || ch == '\n' || ch == EOF || ch == ']';
-}
-
-
-// Converts the token to an integer, handling special cases
 int tokenToInt(char *token)
 {
     if (strstr(token, "INF") != NULL || atoi(token) == -1)
@@ -56,7 +56,6 @@ int tokenToInt(char *token)
     return atoi(token);
 }
 
-// Nueva función que convierte el token a float
 float tokenToFloat(char *token)
 {
     if (strstr(token, "INF") != NULL || atof(token) == -1.0)
@@ -66,7 +65,6 @@ float tokenToFloat(char *token)
     return atof(token);
 }
 
-// Convierte el token a double
 double tokenToDouble(char *token)
 {
     if (strstr(token, "INF") != NULL || atof(token) == -1.0)
@@ -76,7 +74,6 @@ double tokenToDouble(char *token)
     return atof(token);
 }
 
-// Function to dynamically allocate and read the next token (element) from the file
 char *readNextToken(FILE *file)
 {
     size_t capacity = 10; // Initial capacity
@@ -125,19 +122,50 @@ char *readNextToken(FILE *file)
     return token;
 }
 
-void update_maxDecimalLength(char *token)
-{
-    char *dotPosition = strchr(token, '.');
-    if (dotPosition != NULL)
-    {
-        unsigned int decimalLength = strlen(dotPosition + 1);
 
-        if (decimalLength > maxDecimalLength)
-        {
-            maxDecimalLength = decimalLength;
-        }
+void print_int_matrix_to_file(FW_Matrix *FW, FILE *file, int *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char * string)
+{
+    int value = matrix[row * FW->norm_size + col];
+
+    if (value == INT_MAX && disconnected_str)
+    {
+        fprintf(file, string);
+    }
+    else
+    {
+        fprintf(file, "%d", value == INT_MAX ? -1 : value);
     }
 }
+
+void print_float_matrix_to_file(FW_Matrix * FW, FILE *file, float *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char * string)
+{
+    float value = matrix[row * FW->norm_size + col];
+
+    if (value == FLT_MAX && disconnected_str)
+    {
+        fprintf(file, string);
+    }
+    else
+    {
+        fprintf(file, "%.*f", FW->decimal_length, value == FLT_MAX ? -1.0 : value);
+    }
+}
+
+void print_double_matrix_to_file(FW_Matrix * FW, FILE * file, double *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char * string)
+{
+    double value = matrix[row * FW->norm_size + col];
+
+    if (value == DBL_MAX && disconnected_str)
+    {
+        fprintf(file, string);
+    }
+    else
+    {
+        fprintf(file, "%.*lf", FW->decimal_length, value == DBL_MAX ? -1.0 : value);
+
+    }
+}
+
 
 FILE *open_result_file(const char *path, const char *extension)
 {
@@ -152,4 +180,27 @@ FILE *open_result_file(const char *path, const char *extension)
     }
 
     return file;
+}
+
+
+// Private functions -----------------------------------------------------------
+
+
+void update_maxDecimalLength(char *token)
+{
+    char *dotPosition = strchr(token, '.');
+    if (dotPosition != NULL)
+    {
+        unsigned int decimalLength = strlen(dotPosition + 1);
+
+        if (decimalLength > maxDecimalLength)
+        {
+            maxDecimalLength = decimalLength;
+        }
+    }
+}
+
+int isDelimiter(char ch)
+{
+    return ch == ',' || ch == '\n' || ch == EOF || ch == ']';
 }

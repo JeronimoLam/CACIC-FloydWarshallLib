@@ -1,8 +1,6 @@
 #ifndef FW_LIB_FUNCTIONS_H
 #define FW_LIB_FUNCTIONS_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "FW_Lib_CommonTypes.h"
 
 

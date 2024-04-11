@@ -1,10 +1,7 @@
 #ifndef BLOCKS_H
 #define BLOCKS_H
 
-#include <stdlib.h>
-
 #include "../../../include/FW_Lib_CommonTypes.h"
-
 
 /**
  * Reorganizes a matrix into a block format.
