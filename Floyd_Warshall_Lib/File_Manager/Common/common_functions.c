@@ -1,5 +1,6 @@
 #include "common_functions.h"
 
+void update_maxDecimalLength(char *);
 
 
 static unsigned int maxDecimalLength = 0;
@@ -41,14 +42,14 @@ char *trim(char *str)
 // Utility function to check if a character is considered a delimiter for CSV
 int isDelimiter(char ch)
 {
-    return ch == ',' || ch == '\n' || ch == EOF;
+    return ch == ',' || ch == '\n' || ch == EOF || ch == ']';
 }
 
 
 // Converts the token to an integer, handling special cases
 int tokenToInt(char *token)
 {
-    if (strcmp(token, "INF") == 0 || atoi(token) == -1)
+    if (strstr(token, "INF") != NULL || atoi(token) == -1)
     {
         return INT_MAX;
     }
@@ -58,7 +59,7 @@ int tokenToInt(char *token)
 // Nueva función que convierte el token a float
 float tokenToFloat(char *token)
 {
-    if (strcmp(token, "INF") == 0 || atof(token) == -1.0)
+    if (strstr(token, "INF") != NULL || atof(token) == -1.0)
     {
         return FLT_MAX;
     }
@@ -68,7 +69,7 @@ float tokenToFloat(char *token)
 // Convierte el token a double
 double tokenToDouble(char *token)
 {
-    if (strcmp(token, "INF") == 0 || atof(token) == -1.0)
+    if (strstr(token, "INF") != NULL || atof(token) == -1.0)
     {
         return DBL_MAX;
     }
@@ -119,16 +120,36 @@ char *readNextToken(FILE *file)
     if (token)
     {
         token = trim(token);
-        char *dotPosition = strchr(token, '.');
-        if (dotPosition != NULL)
-        {
-            unsigned int decimalLength = strlen(dotPosition + 1);
-
-            if (decimalLength > maxDecimalLength)
-            {
-                maxDecimalLength = decimalLength;
-            }
-        }
+        update_maxDecimalLength(token);
     }
     return token;
+}
+
+void update_maxDecimalLength(char *token)
+{
+    char *dotPosition = strchr(token, '.');
+    if (dotPosition != NULL)
+    {
+        unsigned int decimalLength = strlen(dotPosition + 1);
+
+        if (decimalLength > maxDecimalLength)
+        {
+            maxDecimalLength = decimalLength;
+        }
+    }
+}
+
+FILE *open_result_file(const char *path, const char *extension)
+{
+    char fullPath[1024]; // Buffer para la ruta completa
+    sprintf(fullPath, "%s_%s", path, extension);
+
+    FILE *file = fopen(fullPath, "w");
+    if (file == NULL)
+    {
+        printf("No se pudo abrir el archivo para escribir el JSON.\n");
+        exit(1);
+    }
+
+    return file;
 }

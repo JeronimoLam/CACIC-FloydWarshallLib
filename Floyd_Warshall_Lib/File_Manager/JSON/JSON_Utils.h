@@ -12,7 +12,7 @@
 
 
 
-int *JSON_createMatrix(FW_Matrix, FILE *);
+void * JSON_createMatrix(FW_Matrix, FILE *);
 void JSON_saveMatrix(FW_Matrix, char *, unsigned int, unsigned int, unsigned int);
 
 

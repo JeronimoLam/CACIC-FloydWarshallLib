@@ -126,7 +126,17 @@ void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
         break;
     case JSON:
         FW->dist = JSON_createMatrix(*FW, file);
-        FW->path = initializePathMatrix(FW);
+        FW->decimal_length = getMaxDecimalLength();
+        if (no_path){
+            FW->path = NULL;
+        }
+        else
+        {
+            FW->path = initializePathMatrix(FW);
+            FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
+
+        }
+        FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
         break;
     }
 }

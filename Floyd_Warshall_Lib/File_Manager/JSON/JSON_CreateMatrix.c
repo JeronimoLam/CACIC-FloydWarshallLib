@@ -1,56 +1,130 @@
 #include "JSON_Utils.h"
 
 void *JSON_createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size);
+void *JSON_createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size);
+void *JSON_createDoubleMatrix(FILE *file, unsigned int size, unsigned int norm_size);
 
-//TODO: Implement Function for all types of data
-int *JSON_createMatrix(FW_Matrix FW, FILE * file) {
-    // Implement Function
-    return NULL;
+void *JSON_createMatrix(FW_Matrix FW, FILE *file)
+{
+    switch (FW.datatype)
+    {
+    case TYPE_INT:
+        return JSON_createIntMatrix(file, FW.size, FW.norm_size);
+    case TYPE_FLOAT:
+        return JSON_createFloatMatrix(file, FW.size, FW.norm_size);
+    case TYPE_DOUBLE:
+        return JSON_createDoubleMatrix(file, FW.size, FW.norm_size);
+
+    default:
+        return NULL;
+    }
 }
 
-// Implementa la funcion que lee la matriz desde el JSON caracter por caracter.
-// Ejemplo {
-//              "type": "int",
-//              "size": 3,
-//              "matrix": [[1,2,3],
-//                          [4,5,6],
-//                          [7,8,9]]
-//        } 
-void *JSON_createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size) {
+void *JSON_createIntMatrix(FILE *file, unsigned int size, unsigned int norm_size)
+{
     char c;
     int *matrix = malloc(norm_size * norm_size * sizeof(int));
     int row = 0, col = 0;
-    int matrix_start = 0;
-    
-    // Buscar el inicio de la matriz
-    while ((c = fgetc(file)) != EOF) {
-        if (c == '[') {
-            matrix_start = ftell(file);
-            break;
-        }
-    }
-    
-    // Regresar al inicio de la matriz
-    fseek(file, matrix_start, SEEK_SET);
-    
-    // Leer caracter por caracter y construir la matriz
-    while ((c = fgetc(file)) != EOF) {
-        if (c == '[') {
-            col = 0;
-        } else if (c == ']') {
-            row++;
-            if (row == size) {
-                break;
+    char *token;
+
+    rewind(file);
+
+    while ((c = fgetc(file)) != EOF && c != '['); // Matrix start
+
+    for (int i = 0; i < size; i++){
+        while ((c = fgetc(file)) != EOF && c != '['); // Column start
+        for (int j = 0; j < size; j++){
+            token = readNextToken(file);
+            if (token)
+            {
+                matrix[i * norm_size + j] = tokenToInt(token);
             }
-        } else if (c == ',' || c == ' ') {
-            continue;
-        } else if (c >= '0' && c <= '9') {
-            matrix[row * norm_size + col] = c - '0';
-            col++;
+        }
+        for (int j = size; j < norm_size; j++){
+            matrix[i * norm_size + j] = INT_MAX;
         }
     }
-    
-    // TODO: Hacer algo con la matriz
-    
-    return NULL;
+
+    for (int i = size; i < norm_size; i++)
+    {
+        for (int j = 0; j < norm_size; j++)
+        {
+            matrix[i * norm_size + j] = INT_MAX;
+        }
+    }
+
+    return (void *)matrix;
+}
+
+void *JSON_createFloatMatrix(FILE *file, unsigned int size, unsigned int norm_size)
+{
+    char c;
+    float *matrix = malloc(norm_size * norm_size * sizeof(int));
+    int row = 0, col = 0;
+    char *token;
+
+    rewind(file);
+
+    while ((c = fgetc(file)) != EOF && c != '['); // Matrix start
+
+    for (int i = 0; i < size; i++){
+        while ((c = fgetc(file)) != EOF && c != '['); // Column start
+        for (int j = 0; j < size; j++){
+            token = readNextToken(file);
+            if (token)
+            {
+                matrix[i * norm_size + j] = tokenToFloat(token);
+            }
+        }
+        for (int j = size; j < norm_size; j++){
+            matrix[i * norm_size + j] = FLT_MAX;
+        }
+    }
+
+    for (int i = size; i < norm_size; i++)
+    {
+        for (int j = 0; j < norm_size; j++)
+        {
+            matrix[i * norm_size + j] = FLT_MAX;
+        }
+    }
+
+    return (void *)matrix;
+}
+
+
+void *JSON_createDoubleMatrix(FILE *file, unsigned int size, unsigned int norm_size)
+{
+    char c;
+    double *matrix = malloc(norm_size * norm_size * sizeof(int));
+    int row = 0, col = 0;
+    char *token;
+
+    rewind(file);
+
+    while ((c = fgetc(file)) != EOF && c != '['); // Matrix start
+
+    for (int i = 0; i < size; i++){
+        while ((c = fgetc(file)) != EOF && c != '['); // Column start
+        for (int j = 0; j < size; j++){
+            token = readNextToken(file);
+            if (token)
+            {
+                matrix[i * norm_size + j] = tokenToDouble(token);
+            }
+        }
+        for (int j = size; j < norm_size; j++){
+            matrix[i * norm_size + j] = DBL_MAX;
+        }
+    }
+
+    for (int i = size; i < norm_size; i++)
+    {
+        for (int j = 0; j < norm_size; j++)
+        {
+            matrix[i * norm_size + j] = DBL_MAX;
+        }
+    }
+
+    return (void *)matrix;
 }

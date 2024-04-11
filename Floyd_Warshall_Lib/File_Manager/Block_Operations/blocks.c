@@ -87,7 +87,7 @@ void *reorganizeToLinear(void *blockMatrix, unsigned int size, unsigned int BS, 
 
     if (originalMatrix == NULL)
     {
-        return NULL;
+        exit(1); // Memory allocation failed
     }
 
     // Copy data from the block format back to the original linear format

@@ -88,4 +88,5 @@ Se creo un main que prueba la libreria. Recibe diversos argumentos de entrada:
 
 *JSON*
  Se admiten archivos JSON en la entrada. EL tamaño de la matriz y el tipo de dato utilizado debe ser especificado en 1 atributo del JSON
+ La lectura de las matrices en los archivos se realizo CARACTER A CARACTER para no saturar buffers 
 

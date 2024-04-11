@@ -36,23 +36,14 @@ void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned 
         saveIntMatrixToCSV(&FW, FW.path, path, "path.csv", disconnected_str);
     }
 }
+
 static void saveIntMatrixToCSV(FW_Matrix *FW, int *matrix, char *path, char *extension, unsigned int disconnected_str)
 {
     int *ordered_matrix_int = reorganizeToLinear(matrix, FW->norm_size, FW->BS, TYPE_INT);
     // free(matrix); // Is not used anymore // TODO: Revisar si conviene liberar la memoria acá o en el main
 
     // Abrir el archivo
-    char fullPath[1024]; // Buffer para la ruta completa
-    sprintf(fullPath, "%s_%s", path, extension);
-
-    // printf("%s\n", fullPath);
-
-    FILE *file = fopen(fullPath, "w");
-    if (file == NULL)
-    {
-        printf("Could not open file for saving.\n");
-        return;
-    }
+    FILE *file = open_result_file(path, extension);
 
     // Write the matrix to the file
     for (int row = 0; row < FW->size; ++row)
@@ -84,15 +75,7 @@ static void saveFloatMatrixToCSV(FW_Matrix *FW, char *path, char *extension, uns
     float *ordered_matrix_float = reorganizeToLinear(FW->dist, FW->norm_size, FW->BS, TYPE_FLOAT);
 
     // Abrir el archivo
-    char fullPath[1024]; // Buffer para la ruta completa
-    sprintf(fullPath, "%s_%s", path, extension);
-
-    FILE *file = fopen(fullPath, "w");
-    if (file == NULL)
-    {
-        printf("Could not open file for saving.\n");
-        return;
-    }
+    FILE *file = open_result_file(path, extension);
 
     // Escribir la matriz en el archivo
     for (unsigned int row = 0; row < FW->size; ++row)
@@ -126,15 +109,7 @@ static void saveDoubleMatrixToCSV(FW_Matrix *FW, char *path, char *extension, un
     double *ordered_matrix_double = reorganizeToLinear(FW->dist, FW->norm_size, FW->BS, TYPE_DOUBLE);
 
     // Abrir el archivo
-    char fullPath[1024]; // Buffer para la ruta completa
-    sprintf(fullPath, "%s_%s", path, extension);
-
-    FILE *file = fopen(fullPath, "w");
-    if (file == NULL)
-    {
-        printf("Could not open file for saving.\n");
-        return;
-    }
+    FILE *file = open_result_file(path, extension);
 
     // Escribir la matriz en el archivo
     for (unsigned int row = 0; row < FW->size; ++row)

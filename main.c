@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
     double timetick_fs_compute = dwalltime();
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
+    save_structure(data2, "./Output/", "ResultSecuential.csv", JSON, &attr);
 
     double timetick_fs = dwalltime();
 
