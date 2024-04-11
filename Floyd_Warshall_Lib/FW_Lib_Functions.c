@@ -206,21 +206,21 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
     FW_save_time = dwalltime() - timetick_start;
 }
 
-void freeFW_Matrix(FW_Matrix *matrix)
+void freeFW_Matrix(FW_Matrix *FW)
 {
-    if (matrix != NULL)
+    if (FW != NULL)
     {
         // Free the dynamically allocated dist member, if it's not NULL.
-        if (matrix->dist != NULL)
+        if (FW->dist != NULL)
         {
-            free(matrix->dist);
-            matrix->dist = NULL; // Avoid dangling pointer
+            free(FW->dist);
+            FW->dist = NULL; // Avoid dangling pointer
         }
         // Free the dynamically allocated path member, if it's not NULL.
-        if (matrix->path != NULL)
+        if (FW->path != NULL)
         {
-            free(matrix->path);
-            matrix->path = NULL; // Avoid dangling pointer
+            free(FW->path);
+            FW->path = NULL; // Avoid dangling pointer
         }
     }
 }

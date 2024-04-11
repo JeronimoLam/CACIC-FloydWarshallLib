@@ -117,6 +117,7 @@ int main(int argc, char *argv[])
     printf(" ==> Guardando \n");
     save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
 
+    freeFW_Matrix(&data); // Free memory
 
     double paralell_algorithm_time = get_FW_processing_time();
     double paralell_total_time = get_FW_processing_time();
@@ -134,6 +135,8 @@ int main(int argc, char *argv[])
     printf(" ==> Guardando \n");
     save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
 
+    freeFW_Matrix(&data2); // Free memory
+
     double sequential_algorithm_time = get_FW_processing_time();
     double sequential_total_time = get_FW_processing_time();
 
@@ -145,9 +148,6 @@ int main(int argc, char *argv[])
 
     printf("Tiempo Libreria Entera Paralelo %lf \n", paralell_total_time);
     printf("Tiempo Libreria Entera Secuencial %lf \n\n", sequential_total_time);
-
-    // Free memory
-
 
     return 0;
 }
