@@ -3,10 +3,10 @@
 #include "FW_compute.h"
 
 #define DEFAULT_BLOCK_SIZE 128
-#define DEFAULT_THREAD_NUM 4            
-#define DEFAULT_OUTPUT_FORMAT 1         // Imprime INF en lugar de -1 por defecto
-#define DEFAULT_PRINT_DIST_MATRIX 1     // Imprime la matriz de distancia por defecto
-#define DEFAULT_NO_PATH 1               // No imprime ni procesa la matriz de caminos por defecto
+#define DEFAULT_THREAD_NUM 4
+#define DEFAULT_OUTPUT_FORMAT 1     // Imprime INF en lugar de -1 por defecto
+#define DEFAULT_PRINT_DIST_MATRIX 1 // Imprime la matriz de distancia por defecto
+#define DEFAULT_NO_PATH 1           // No imprime ni procesa la matriz de caminos por defecto
 
 // Private functions
 void print_matrix(void *, unsigned int, DataType);
@@ -67,14 +67,14 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
 
     // print path matrix
     // print_matrix(FW.dist, FW.norm_size, FW.datatype);
-     print_matrix(FW.path, FW.norm_size, TYPE_INT);
+    print_matrix(FW.path, FW.norm_size, TYPE_INT);
 
     return FW;
 }
 
-void compute_FW_paralell(FW_Matrix FW, FW_attr_t * attr)
+void compute_FW_paralell(FW_Matrix FW, FW_attr_t *attr)
 {
-    
+
     FW_attr_t local_attr;
     if (attr == NULL)
     {
@@ -107,10 +107,9 @@ void compute_FW_paralell(FW_Matrix FW, FW_attr_t * attr)
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
-
 }
 
-void compute_FW_sequential(FW_Matrix FW, FW_attr_t * attr)
+void compute_FW_sequential(FW_Matrix FW, FW_attr_t *attr)
 {
     FW_attr_t local_attr;
     if (attr == NULL)
@@ -140,14 +139,17 @@ void compute_FW_sequential(FW_Matrix FW, FW_attr_t * attr)
     }
 }
 
-void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_attr_t * attr)
+void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_attr_t *attr)
 {
     FW_attr_t localAttr;
 
-    if (attr == NULL) {
+    if (attr == NULL)
+    {
         // attr es NULL, usa valores predeterminados
         localAttr = new_FW_attr();
-    } else {
+    }
+    else
+    {
         // attr no es NULL, usa los valores proporcionados
         localAttr = *attr;
     }
@@ -206,40 +208,57 @@ void freeFW_Matrix(FW_Matrix *matrix)
     }
 }
 
-// Revisar cual de las 2 queda si FW_details_to_string o print_FW o  las 2
-char *FW_details_to_string(FW_Matrix element)
+char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
 {
-    char *result = malloc(1024);
-    sprintf(result, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d\n", element.size, element.norm_size, element.BS, dataTypeToString(element.datatype), element.decimal_length);
-
-    return result;
+    char *result_martix = "";
+    char *result_attr = "";
+    if (element != NULL)
+        sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d\n", element->size, element->norm_size, element->BS, dataTypeToString(element->datatype), element->decimal_length);
+    if (attr != NULL)
+        sprintf(result_attr, "Thread Num: %d\nNo Path: %s\nPrint distance matrix: %s\nText in output: %s", attr->thread_num, attr->no_path ? "True" : "False", attr->print_distance_matrix ? "True" : "False", attr->text_in_output ? "INF" : "-1");
+    if (element != NULL && attr != NULL)
+    {
+        sprintf(result_martix, "%s\n%s", result_martix, result_attr);
+        return result_martix;
+    }
+    return strcat(result_martix, result_attr);
 }
 
-void print_FW(FW_Matrix element, int dist, int path, int blocks)
+void print_FW_matrixes(FW_Matrix * element, char * print, int blocks)
 {
-    printf("\nMatrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\n\n", element.size, element.norm_size, element.BS, dataTypeToString(element.datatype));
-    if (dist == 1)
+
+    if (strstr(print, "all") || strstr(print, "dist"))
     {
-        if (blocks == 1 || blocks == -1)
+        if (blocks)
         {
             printf("Distance Matrix Loaded in blocks\n");
-            print_matrix(element.dist, element.norm_size, element.datatype);
+            print_matrix(element->dist, element->norm_size, element->datatype);
+            printf("\n");
         }
-        if ((blocks == 0 || blocks == -1))
+        if (!blocks)
         {
             printf("Distance Matrix Loaded Normal\n"); // TODO: Check implementation of this
-
-            print_matrix(element.dist, element.norm_size, element.datatype);
+            print_matrix(reorganizeToLinear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
+            printf("\n");
         }
     }
-    if (path == 1)
+    if (strstr(print, "all") || strstr(print, "path"))
     {
-        printf("Path Matrix\n");
-        print_matrix(element.path, element.norm_size, TYPE_INT);
+        if (blocks)
+        {
+            printf("Path Matrix Loaded in blocks\n");
+            print_matrix(element->path, element->norm_size, TYPE_INT);
+            printf("\n");
+        }
+        if (!blocks)
+        {
+            printf("Path Matrix Loaded Normal\n"); // TODO: Check implementation of this
+            print_matrix(reorganizeToLinear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
+            printf("\n");
+        }
     }
     printf("\n");
 }
-
 
 //----------------------------------------------- ATTR Init -----------------------------------------
 FW_attr_t new_FW_attr()
@@ -250,15 +269,14 @@ FW_attr_t new_FW_attr()
     attr.no_path = DEFAULT_NO_PATH;
     attr.thread_num = DEFAULT_THREAD_NUM;
 
-
     return attr;
 }
 
-void init_FW_attr(FW_attr_t * attr)
+void init_FW_attr(FW_attr_t *attr)
 {
     attr->text_in_output = DEFAULT_OUTPUT_FORMAT;
     attr->print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
-    attr->no_path= DEFAULT_NO_PATH;
+    attr->no_path = DEFAULT_NO_PATH;
     attr->thread_num = DEFAULT_THREAD_NUM;
 }
 
@@ -349,35 +367,3 @@ unsigned int nextPowerOf2(unsigned int n)
 
     return 1 << count;
 }
-
-// int *initializePathMatrix(FW_Matrix *G)
-// {
-//     int *P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
-//     if (!P)
-//         exit(9); // Allocation failed
-
-//     for (uint64_t i = 0; i < G->norm_size; i++)
-//         for (uint64_t j = 0; j < G->norm_size; j++)
-//             if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
-//                 P[i * G->norm_size + j] = j;
-//             else
-//                 P[i * G->norm_size + j] = -1;
-
-//     //Debug
-//     for (uint64_t i = 0; i < G->norm_size; i++)
-//     {
-//         for (uint64_t j = 0; j < G->norm_size; j++)
-//             printf("%d ", P[i * G->norm_size + j]);
-//         printf("\n");
-//     }
-//     printf("\n");
-
-//     return (int *)reorganizeToBlocks((void *)P, G->norm_size, G->BS, G->datatype);
-
-//     // for(uint64_t i=0; i<G->n; i++)
-//     // 	for(uint64_t j=0; j<G->n; j++)
-//     // 	    if(G->D[i*G->n+j] != INFINITE)
-//     // 			G->P[i*G->n+j] = j;
-//     // 		else
-//     // 			G->P[i*G->n+j] = -1;
-// }

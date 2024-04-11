@@ -50,15 +50,13 @@ void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 
 
 /**
- * Prints the details of a FW_Matrix element and optionally the distance and path matrices.
+ * Converts the details of a FW_Matrix element and FW_attr_t attributes into a string representation.
  *
- * @param element The FW_Matrix element to print.
- * @param dist    A flag indicating whether to print the distance matrix (1) or not (0).
- * @param path    A flag indicating whether to print the path matrix (1) or not (0).
- *
- * @return A string containing the details of the FW_Matrix element.
+ * @param element The FW_Matrix element containing the matrix details.
+ * @param attr The FW_attr_t attributes containing additional information.
+ * @return A string representation of the matrix details and attributes.
  */
-char *  FW_details_to_string(FW_Matrix element);
+char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
 
 /**
  * Prints the FW_Matrix element along with its properties and optionally the distance and path matrices.
@@ -67,7 +65,7 @@ char *  FW_details_to_string(FW_Matrix element);
  * @param dist Flag indicating whether to print the distance matrix (1) or not (0).
  * @param path Flag indicating whether to print the path matrix (1) or not (0).
  */
-void print_FW(FW_Matrix element, int dist, int path, int blocks);
+void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
 
 
 /**

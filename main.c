@@ -110,8 +110,8 @@ int main(int argc, char *argv[])
     // Read
     printf(" ==> Leyendo \n");
     FW_Matrix data = create_structure(dataType, path, blockSize, &attr);
-    printf("%s\n", FW_details_to_string(data));
-    printf("Thread Num: %d\n", threadNum);
+    // printf("%s\n", FW_details_to_string(&data, &attr));
+    // print_FW_matrixes(&data, "all", 0);
 
     printf(" ==> Procesado \n");
     double timetick_p_compute = dwalltime();
@@ -121,10 +121,10 @@ int main(int argc, char *argv[])
     // Save
     printf(" ==> Guardando \n");
     
-    
     save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
 
     double timetick_fp = dwalltime();
+
     printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
 
 
@@ -135,8 +135,7 @@ int main(int argc, char *argv[])
 
     printf(" ==> Leyendo \n");
     FW_Matrix data2 = create_structure(dataType, path, blockSize, &attr);
-    printf("%s\n", FW_details_to_string(data2));
-    printf("Thread Num: %d\n", threadNum);
+    printf("%s\n", FW_details_to_string(&data2, NULL));
 
     printf(" ==> Procesado \n");
     double timetick_s_compute = dwalltime();
