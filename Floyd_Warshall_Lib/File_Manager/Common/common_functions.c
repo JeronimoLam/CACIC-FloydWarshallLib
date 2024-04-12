@@ -1,28 +1,26 @@
 #include "common_functions.h"
 
 // Sets the maximum decimal length.
-void setMaxDecimalLength(unsigned int length);
+void set_max_decimal_length(unsigned int length);
 
 // Updates the maximum decimal length.
-void update_maxDecimalLength(char *);
+void update_max_decimal_length(char *);
 
 // Checks if a character is a delimiter.
 int isDelimiter(char ch);
 
-
 // This variable stores the maximum decimal length.
-static unsigned int maxDecimalLength = 0;
+static unsigned int max_decimal_length = 0;
 
-unsigned int getMaxDecimalLength()
+unsigned int get_max_decimal_length()
 {
-    return maxDecimalLength;
+    return max_decimal_length;
 }
 
-void setMaxDecimalLength(unsigned int length)
+void set_max_decimal_length(unsigned int length)
 {
-    maxDecimalLength = length;
+    max_decimal_length = length;
 }
-
 
 char *trim(char *str)
 {
@@ -45,7 +43,6 @@ char *trim(char *str)
 
     return str;
 }
-
 
 int tokenToInt(char *token)
 {
@@ -74,13 +71,16 @@ double tokenToDouble(char *token)
     return atof(token);
 }
 
-char *readNextToken(FILE *file)
+char *read_next_token(FILE *file)
 {
     size_t capacity = 10; // Initial capacity
     size_t len = 0;       // Current length of the token
     char *token = (char *)malloc(capacity * sizeof(char));
     if (!token)
-        return NULL; // Allocation failed
+    {
+        fprintf(stderr, "Error: Allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED); // Allocation failed
+    }
 
     char ch;
     while ((ch = fgetc(file)) != EOF && !isDelimiter(ch))
@@ -112,18 +112,17 @@ char *readNextToken(FILE *file)
     token[len] = '\0';
 
     // Calculo la cantidad de lugares decimales
-    char *dotPosition;
+    char *dot_position;
 
     if (token)
     {
         token = trim(token);
-        update_maxDecimalLength(token);
+        update_max_decimal_length(token);
     }
     return token;
 }
 
-
-void print_int_matrix_to_file(FW_Matrix *FW, FILE *file, int *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char * string)
+void print_int_matrix_to_file(FW_Matrix *FW, FILE *file, int *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char *string)
 {
     int value = matrix[row * FW->norm_size + col];
 
@@ -137,7 +136,7 @@ void print_int_matrix_to_file(FW_Matrix *FW, FILE *file, int *matrix, unsigned i
     }
 }
 
-void print_float_matrix_to_file(FW_Matrix * FW, FILE *file, float *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char * string)
+void print_float_matrix_to_file(FW_Matrix *FW, FILE *file, float *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char *string)
 {
     float value = matrix[row * FW->norm_size + col];
 
@@ -151,7 +150,7 @@ void print_float_matrix_to_file(FW_Matrix * FW, FILE *file, float *matrix, unsig
     }
 }
 
-void print_double_matrix_to_file(FW_Matrix * FW, FILE * file, double *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char * string)
+void print_double_matrix_to_file(FW_Matrix *FW, FILE *file, double *matrix, unsigned int row, unsigned int col, unsigned int disconnected_str, char *string)
 {
     double value = matrix[row * FW->norm_size + col];
 
@@ -162,17 +161,15 @@ void print_double_matrix_to_file(FW_Matrix * FW, FILE * file, double *matrix, un
     else
     {
         fprintf(file, "%.*lf", FW->decimal_length, value == DBL_MAX ? -1.0 : value);
-
     }
 }
 
-
 FILE *open_result_file(const char *path, const char *extension)
 {
-    char fullPath[1024]; // Buffer para la ruta completa
-    sprintf(fullPath, "%s_%s", path, extension);
+    char full_path[1024]; // Buffer para la ruta completa
+    sprintf(full_path, "%s_%s", path, extension);
 
-    FILE *file = fopen(fullPath, "w");
+    FILE *file = fopen(full_path, "w");
     if (file == NULL)
     {
         printf("No se pudo abrir el archivo para escribir el JSON.\n");
@@ -182,20 +179,18 @@ FILE *open_result_file(const char *path, const char *extension)
     return file;
 }
 
-
 // Private functions -----------------------------------------------------------
 
-
-void update_maxDecimalLength(char *token)
+void update_max_decimal_length(char *token)
 {
-    char *dotPosition = strchr(token, '.');
-    if (dotPosition != NULL)
+    char *dot_position = strchr(token, '.');
+    if (dot_position != NULL)
     {
-        unsigned int decimalLength = strlen(dotPosition + 1);
+        unsigned int decimal_length = strlen(dot_position + 1);
 
-        if (decimalLength > maxDecimalLength)
+        if (decimal_length > max_decimal_length)
         {
-            maxDecimalLength = decimalLength;
+            max_decimal_length = decimal_length;
         }
     }
 }

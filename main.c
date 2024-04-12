@@ -7,6 +7,8 @@
 
 #define BS 128
 #define TN 16
+#define BAD_BS_ARGUMENT 100
+#define BAD_TN_ARGUMENT 101
 
 double dwalltime();
 FILE *check_file(const char *);
@@ -14,14 +16,14 @@ int try_convert_to_int(const char *, int *);
 
 int main(int argc, char *argv[])
 {
-    int size, c, dataTypeFlag = 0, temp_bs = 0, temp_tn = 0;
+    int size, c, dataType_flag = 0, temp_options = 0;
     char *path;
     FILE *file;
     DataType dataType = UNDEFINED;
 
     // Default values for block size and thread number
-    int blockSize = BS; // Use the default block size
-    int threadNum = TN; // Use the default thread number
+    int block_size = BS; // Use the default block size
+    int thread_num = TN; // Use the default thread number
 
     static struct option long_options[] = {
         {"path", required_argument, 0, 'p'},
@@ -49,12 +51,12 @@ int main(int argc, char *argv[])
         case 'i':
         case 'f':
         case 'd':
-            if (dataTypeFlag)
+            if (dataType_flag)
             {
                 fprintf(stderr, "Error: only one data type argument can be used at a time.\n");
                 exit(EXIT_FAILURE);
             }
-            dataTypeFlag = 1;
+            dataType_flag = 1;
 
             switch (c)
             {
@@ -71,16 +73,18 @@ int main(int argc, char *argv[])
             break;
 
         case 'b':
-            try_convert_to_int(optarg, &temp_bs);
-            if (temp_bs == 0)
-                exit(100);
-            blockSize = temp_bs;
+            try_convert_to_int(optarg, &temp_options);
+            if (temp_options == 0)
+                exit(BAD_BS_ARGUMENT);
+            block_size = temp_options;
+            temp_options = 0;
             break;
         case 't':
-            try_convert_to_int(optarg, &temp_tn);
-            if (temp_tn == 0)
-                exit(101);
-            threadNum = temp_tn;
+            try_convert_to_int(optarg, &temp_options);
+            if (temp_options == 0)
+                exit(BAD_TN_ARGUMENT);
+            thread_num = temp_options;
+            temp_options = 0;
             break;
 
         default:
@@ -97,45 +101,41 @@ int main(int argc, char *argv[])
     }
 
     // Arguments Init
-
     FW_attr_t attr;
     init_FW_attr(&attr);
     attr.no_path = 0;
-    attr.thread_num = threadNum;
-    
+    attr.thread_num = thread_num;
+
     printf("------------------------PARALELO------------------------\n");
 
-    // Read
     printf(" ==> Leyendo \n");
-    FW_Matrix data = create_structure(dataType, path, blockSize, &attr);
+    FW_Matrix data = create_structure(dataType, path, block_size, &attr); // Read
     // printf("%s\n", FW_details_to_string(&data, &attr));
 
     printf(" ==> Procesado \n");
-    compute_FW_paralell(data, &attr); // TODO: Adjust thread num
+    compute_FW_paralell(data, &attr); // Process
 
-    // Save
     printf(" ==> Guardando \n");
-    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
+    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr); // Save
 
-    freeFW_Matrix(&data); // Free memory
+    free_FW_Matrix(&data); // Free memory
 
     double paralell_algorithm_time = get_FW_processing_time();
     double paralell_total_time = get_FW_processing_time();
 
-
     printf("------------------------SECUENCIAL------------------------\n");
 
     printf(" ==> Leyendo \n");
-    FW_Matrix data2 = create_structure(dataType, path, blockSize, &attr);
+    FW_Matrix data2 = create_structure(dataType, path, block_size, &attr); // Read
     // printf("%s\n", FW_details_to_string(&data2, NULL));
 
     printf(" ==> Procesado \n");
-    compute_FW_sequential(data2, &attr);
+    compute_FW_sequential(data2, &attr); // Process
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
+    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr); // Save
 
-    freeFW_Matrix(&data2); // Free memory
+    free_FW_Matrix(&data2); // Free memory
 
     double sequential_algorithm_time = get_FW_processing_time();
     double sequential_total_time = get_FW_processing_time();
@@ -196,5 +196,3 @@ int try_convert_to_int(const char *str, int *converted_value)
     *converted_value = (int)value;
     return 1; // Conversion succeeded
 }
-
-

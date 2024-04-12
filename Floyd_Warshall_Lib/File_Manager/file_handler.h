@@ -8,15 +8,15 @@
 #include "./Block_Operations/blocks.h"
 
     FILE* getFile(const char*);
-    void setFileType(FileType);
-    FileType getFileType();
+    void set_fileType(FileType);
+    FileType get_fileType();
     char *fileTypeToString();
 
-    int calculateMatrixSize(FileType, FILE *);
+    int calculate_matrix_size(FileType, FILE *);
 
-    void createMatrixes(FW_Matrix *, FILE*, int);
-    void saveMatrix(FW_Matrix, char*, FileType, unsigned int, unsigned int, unsigned int);
+    void create_matrixes_from_file(FW_Matrix *, FILE*, int);
+    void save_matrix_to_file(FW_Matrix, char*, FileType, unsigned int, unsigned int, unsigned int);
 
-    DataType AutoDetectDataType(FileType, FILE*);
+    DataType auto_detect_dataType(FileType, FILE*);
 
 #endif //FILE_HANDLER_H

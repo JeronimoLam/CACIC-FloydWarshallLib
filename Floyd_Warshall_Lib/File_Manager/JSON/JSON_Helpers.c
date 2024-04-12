@@ -4,11 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-int JSON_calculateMatrixSize(FILE *file)
+int JSON_calculate_matrix_size(FILE *file)
 {
     int size = 0;
-    char line[100]; //JSONs attribute is before the 100th position
+    char line[100]; // JSONs attribute is before the 100th position
 
     // Read the file line by line
     while (fgets(line, sizeof(line), file) != NULL)
@@ -35,11 +34,11 @@ int JSON_calculateMatrixSize(FILE *file)
     return size;
 }
 
-DataType JSON_AutoDetectDataType(FILE *file)
+DataType JSON_auto_detect_dataType(FILE *file)
 {
     DataType dataType = UNDEFINED;
     char *type = NULL;
-    char line[100]; //JSONs attribute is before the 100th position
+    char line[100]; // JSONs attribute is before the 100th position
 
     // Read the file line by line
     while (fgets(line, sizeof(line), file) != NULL)
@@ -69,16 +68,20 @@ DataType JSON_AutoDetectDataType(FILE *file)
                             strncpy(type, quote + 1, length);
                             type[length] = '\0'; // Null-terminate the string
                         }
+                        else{
+                            fprintf(stderr, "Error: Allocation failed.\n");
+                            exit(EXIT_ALOCATION_FAILED); // Allocation failed
+                        }
                     }
                 }
             }
             break; // Stop reading the file after finding the "Tipo" field
         }
     }
-    
+
     type = trim(type);
 
-    //Retorna el correcto DataType segun type
+    // Retorna el correcto DataType segun type
     if (type != NULL)
     {
         if (strcmp(type, "int") == 0)
@@ -93,7 +96,6 @@ DataType JSON_AutoDetectDataType(FILE *file)
         {
             dataType = TYPE_DOUBLE;
         }
-
     }
 
     free(type); // Free the allocated memory for the type string

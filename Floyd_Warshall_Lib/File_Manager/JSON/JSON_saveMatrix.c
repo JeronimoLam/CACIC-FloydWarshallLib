@@ -10,7 +10,7 @@ void static print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int
 
 static char *dt_to_str(DataType dt);
 
-void JSON_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
+void JSON_save_matrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
 {
     if (print_dist)
     {
@@ -25,7 +25,7 @@ void JSON_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned
 // ----------------------------- Private ----------------
 void static create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, const char *extension, unsigned int disconnected_str)
 {
-    void *ordered_matrix = reorganizeToLinear((void *)matrix, FW->norm_size, FW->BS, dt);
+    void *ordered_matrix = reorganize_to_linear((void *)matrix, FW->norm_size, FW->BS, dt);
 
     FILE *file = open_result_file(path, extension);
 
@@ -90,6 +90,12 @@ void static print_JSON_body(FW_Matrix *FW, DataType dt, FILE *file, unsigned int
 static char *dt_to_str(DataType dt)
 {
     char *result = malloc(30); // allocate enough memory for the prefix and the datatype string
+    if (result == NULL)
+    {
+        fprintf(stderr, "Error: Allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED); // Allocation failed
+    }
+
     switch (dt)
     {
     case TYPE_INT:

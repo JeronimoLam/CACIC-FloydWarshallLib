@@ -5,7 +5,7 @@
 
 void create_CSV(FW_Matrix *FW, DataType dt, void *matrix, const char *path, const char *extension, unsigned int disconnected_str);
 
-void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
+void CSV_save_matrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned int no_path, unsigned int disconnected_str)
 {
 
     if (print_dist)
@@ -22,7 +22,7 @@ void CSV_saveMatrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigned 
 void create_CSV(FW_Matrix *FW, DataType dt, void *matrix, const char *path, const char *extension, unsigned int disconnected_str)
 {
 
-    void *ordered_matrix = reorganizeToLinear(matrix, FW->norm_size, FW->BS, dt);
+    void *ordered_matrix = reorganize_to_linear(matrix, FW->norm_size, FW->BS, dt);
 
     // Abrir el archivo
     FILE *file = open_result_file(path, extension);

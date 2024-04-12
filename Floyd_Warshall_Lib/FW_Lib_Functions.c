@@ -17,8 +17,8 @@ static double FW_save_time = 0;
 // Private functions
 static double dwalltime();
 static void print_matrix(void *, unsigned int, DataType);
-static char *dataTypeToString(DataType);
-static unsigned int nextPowerOf2(unsigned int);
+static char *dataType_to_str(DataType);
+static unsigned int next_power_of_2(unsigned int);
 
 // Lib Functions
 
@@ -46,12 +46,12 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
         fprintf(stderr, "Error: Could not open the file.\n");
         exit(EXIT_FAILURE);
     }
-    FW.fileType = getFileType();
+    FW.fileType = get_fileType();
 
     // Autodetect of datatype if not specified
     if (dataType == UNDEFINED)
     {
-        FW.datatype = AutoDetectDataType(FW.fileType, file);
+        FW.datatype = auto_detect_dataType(FW.fileType, file);
     }
     else
     {
@@ -59,8 +59,8 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
     }
 
     // Calculation of matrix size
-    FW.size = calculateMatrixSize(FW.fileType, file); // Calulates rows and cols
-    FW.norm_size = nextPowerOf2(FW.size);             // Calculates the max size of the matrix (nxn)
+    FW.size = calculate_matrix_size(FW.fileType, file); // Calulates rows and cols
+    FW.norm_size = next_power_of_2(FW.size);            // Calculates the max size of the matrix (nxn)
 
     // Set Block Size
     if (BS != -1)
@@ -72,7 +72,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
         FW.BS = DEFAULT_BLOCK_SIZE;
     }
 
-    createMatrixes(&FW, file, local_attr.no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
+    create_matrixes_from_file(&FW, file, local_attr.no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
 
     fclose(file);
     FW_creation_time = dwalltime() - timetick_start;
@@ -92,12 +92,6 @@ void compute_FW_paralell(FW_Matrix FW, FW_attr_t *attr)
     {
         local_attr = *attr;
     }
-
-    // Set Thread Num
-    // if (threads_num == -1)
-    // {
-    //     threads_num = DEFAULT_BLOCK_SIZE;
-    // }
 
     switch (FW.datatype)
     {
@@ -157,56 +151,55 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
 {
     double timetick_start = dwalltime();
 
-    FW_attr_t localAttr;
+    FW_attr_t local_attr;
 
     if (attr == NULL)
     {
         // attr es NULL, usa valores predeterminados
-        localAttr = new_FW_attr();
+        local_attr = new_FW_attr();
     }
     else
     {
         // attr no es NULL, usa los valores proporcionados
-        localAttr = *attr;
+        local_attr = *attr;
     }
 
-    if (localAttr.print_distance_matrix == 0 & localAttr.no_path == 1)
+    if (local_attr.print_distance_matrix == 0 & local_attr.no_path == 1)
     {
         printf("Select a matrix to export\n");
         return;
     }
 
     // Create copies of path and name for manipulation
-    char pathCopy[1024];
-    char nameCopy[256]; // Assuming name length won't exceed 256, adjust as needed
-    strncpy(pathCopy, path, sizeof(pathCopy) - 1);
-    strncpy(nameCopy, name, sizeof(nameCopy) - 1);
-    pathCopy[sizeof(pathCopy) - 1] = '\0'; // Ensure null termination
-    nameCopy[sizeof(nameCopy) - 1] = '\0'; // Ensure null termination
+    char path_copy[1024];
+    char name_copy[256]; // Assuming name length won't exceed 256, adjust as needed
+    strncpy(path_copy, path, sizeof(path_copy) - 1);
+    strncpy(name_copy, name, sizeof(name_copy) - 1);
+    path_copy[sizeof(path_copy) - 1] = '\0'; // Ensure null termination
+    name_copy[sizeof(name_copy) - 1] = '\0'; // Ensure null termination
 
-    // Remove trailing '/' or '\' from pathCopy
-    int pathLength = strlen(pathCopy);
-    if (pathCopy[pathLength - 1] == '/' || pathCopy[pathLength - 1] == '\\')
+    // Remove trailing '/' or '\' from path_copy
+    int pathLength = strlen(path_copy);
+    if (path_copy[pathLength - 1] == '/' || path_copy[pathLength - 1] == '\\')
     {
-        pathCopy[pathLength - 1] = '\0';
+        path_copy[pathLength - 1] = '\0';
     }
 
-    // Modify nameCopy to contain content only until the first '.'
-    char *dotPosition = strchr(nameCopy, '.');
-    if (dotPosition != NULL)
+    // Modify name_copy to contain content only until the first '.'
+    char *dot_position = strchr(name_copy, '.');
+    if (dot_position != NULL)
     {
-        *dotPosition = '\0';
+        *dot_position = '\0';
     }
 
-    char fullPath[1280]; // Buffer for full path
-    sprintf(fullPath, "%s/%s", pathCopy, nameCopy);
-    // printf("Full Path: %s\n", fullPath);
+    char full_path[1280]; // Buffer for full path
+    sprintf(full_path, "%s/%s", path_copy, name_copy);
 
-    saveMatrix(FW, fullPath, fileType, localAttr.print_distance_matrix, localAttr.no_path, localAttr.text_in_output);
+    save_matrix_to_file(FW, full_path, fileType, local_attr.print_distance_matrix, local_attr.no_path, local_attr.text_in_output);
     FW_save_time = dwalltime() - timetick_start;
 }
 
-void freeFW_Matrix(FW_Matrix *FW)
+void free_FW_Matrix(FW_Matrix *FW)
 {
     if (FW != NULL)
     {
@@ -228,11 +221,23 @@ void freeFW_Matrix(FW_Matrix *FW)
 char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
 {
     char *result_martix = malloc(1024);
+    if (result_martix == NULL)
+    {
+        fprintf(stderr, "Error: Memory allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED);
+    }
+
     char *result_attr = malloc(1024);
+    if (result_attr == NULL)
+    {
+        fprintf(stderr, "Error: Memory allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED);
+    }
+
     result_martix[0] = '\0';
     result_attr[0] = '\0';
     if (element != NULL)
-        sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d", element->size, element->norm_size, element->BS, dataTypeToString(element->datatype), element->decimal_length);
+        sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d", element->size, element->norm_size, element->BS, dataType_to_str(element->datatype), element->decimal_length);
     if (attr != NULL)
         sprintf(result_attr, "Thread Num: %d\nNo Path: %s\nPrint distance matrix: %s\nText in output: %s", attr->thread_num, attr->no_path ? "True" : "False", attr->print_distance_matrix ? "True" : "False", attr->text_in_output ? "INF" : "-1");
     if (element != NULL && attr != NULL)
@@ -256,7 +261,7 @@ void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
         if (!blocks)
         {
             printf("Distance Matrix Loaded Normal\n"); // TODO: Check implementation of this
-            print_matrix(reorganizeToLinear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
+            print_matrix(reorganize_to_linear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
         }
     }
     if (strstr(print, "all") || strstr(print, "path"))
@@ -270,7 +275,7 @@ void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
         if (!blocks)
         {
             printf("Path Matrix Loaded Normal\n"); // TODO: Check implementation of this
-            print_matrix(reorganizeToLinear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
+            print_matrix(reorganize_to_linear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
         }
     }
 }
@@ -288,7 +293,6 @@ FW_attr_t new_FW_attr()
     return attr;
 }
 
-
 void init_FW_attr(FW_attr_t *attr)
 {
     // Initialize the attributes of the FW_attr_t object
@@ -297,7 +301,6 @@ void init_FW_attr(FW_attr_t *attr)
     attr->no_path = DEFAULT_NO_PATH;
     attr->thread_num = DEFAULT_THREAD_NUM;
 }
-
 
 // Getters for global times
 
@@ -377,9 +380,14 @@ static void print_matrix(void *matrix, unsigned int size, DataType dataType)
     printf("\n");
 }
 
-static char *dataTypeToString(DataType dt)
+static char *dataType_to_str(DataType dt)
 {
     char *result = malloc(30); // allocate enough memory for the prefix and the datatype string
+    if (result == NULL)
+    {
+        fprintf(stderr, "Error: Memory allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED);
+    }
     switch (dt)
     {
     case TYPE_INT:
@@ -398,7 +406,7 @@ static char *dataTypeToString(DataType dt)
     return result;
 }
 
-static unsigned int nextPowerOf2(unsigned int n)
+static unsigned int next_power_of_2(unsigned int n)
 {
     unsigned count = 0;
 

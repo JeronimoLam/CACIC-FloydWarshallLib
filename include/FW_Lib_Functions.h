@@ -80,7 +80,7 @@ void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
  * 
  * @param matrix A pointer to the FW_Matrix structure to be freed.
  */
-void freeFW_Matrix(FW_Matrix* matrix); //TODO: ver esto
+void free_FW_Matrix(FW_Matrix* matrix); //TODO: ver esto
 
 // Attribute functions
 
