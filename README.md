@@ -36,6 +36,7 @@ Se crearon diversos tipos y enums para contener diversa informacion en 1 mismo t
 4. Se permite que el archivo de entrada tenga el string "INF" o el numero -1 para indicar qu e un nodo NO tiene conexion con otro
 5. Los datos de entrada son normalizados a la siguiente potencia de 2 para su correcto funcionamiento rellenando los vacios con valores maximos como INT_MAX, FLT_MAX y DBL_MAX
 6. Con el tipo FW_attr_t se puede enviar si crear la matriz de caminos o no.
+7. Se realizaron optimizaciones de codigo para acelerar la lectura (Leyendo char por char)
 
 **Procesamiento de Datos**
 
@@ -54,6 +55,7 @@ Atencion: El correcto procesamiento de los datos esta sujeto a la representacion
 
 1. Para float y double, se automatizo el calculo de la cantidad de decimales impresos para usar la misma cantidad que el archivo de entrada
 2. Se puede seleccionar si se quiere que el archivo de salida escriba -1 o "INF" para los nodos que no tienen conexion.
+3. Se realizaron optimizaciones de codigo para acelerar la escritura
 
 
 **Generador**
@@ -68,7 +70,8 @@ Se creo un generador de datos de prueba. Para todas las opciones se ageraron def
 6. (Solo decimal) Parte decimal en 0
 7. Densidad del grafo: Porcentaje entre 0 y 1 para indicar la cantidad de DESCONEXIONES
 8. Formato de salida: CSV o JSON
-9. Path de salida
+9. (Solo decimal y JSON) Tipo de dato a usar: Float o Double
+10. Path de salida
 
 **Examples**
 Se creo una carpta conejemplos para probar la libreria.

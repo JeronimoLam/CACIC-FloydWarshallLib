@@ -42,20 +42,6 @@ int main()
         }
     } while (sscanf(input, "%c", &tipo) != 1 || (tipo != 'i' && tipo != 'd'));
 
-    if (tipo == 'd')
-    {
-        // Tipo de números
-        do
-        {
-            printf("1 = float | 0 = double: [default: %d]: ", DEFAULT_IS_FLOAT);
-            fgets(input, sizeof(input), stdin);
-            if (input[0] == '\n')
-            {
-                break; // Sale del bucle ya que se eligió el valor predeterminado.
-            }
-        } while (sscanf(input, "%d", &is_float) != 1 || (is_float != 1 && is_float != 0));
-    }
-
     // Dimensiones de la matriz
     do
     {
@@ -138,6 +124,20 @@ int main()
     } while (1);
 
     defaultPath = (formato == 'J' || formato == 'j') ? DEFAULT_JSON_PATH : DEFAULT_CSV_PATH;
+
+    if (tipo == 'd' && formato == 'J')
+    {
+        // Tipo de números
+        do
+        {
+            printf("1 = float | 0 = double: [default: %d]: ", DEFAULT_IS_FLOAT);
+            fgets(input, sizeof(input), stdin);
+            if (input[0] == '\n')
+            {
+                break; // Sale del bucle ya que se eligió el valor predeterminado.
+            }
+        } while (sscanf(input, "%d", &is_float) != 1 || (is_float != 1 && is_float != 0));
+    }
 
     // Path del archivo de salida
     printf("Ingrese el path del archivo de salida [default: %s]: ", defaultPath);
