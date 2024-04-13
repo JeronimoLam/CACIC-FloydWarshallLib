@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     compute_FW_paralell(data, &attr); // Process
 
     printf(" ==> Guardando \n");
-    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr); // Save
+    save_structure(data, "./output/", "ResultParalell.csv", CSV, &attr); // Save
 
     free_FW_Matrix(&data); // Free memory
 
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     compute_FW_sequential(data2, &attr); // Process
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", JSON, &attr); // Save
+    save_structure(data2, "./output/", "ResultSecuential.csv", JSON, &attr); // Save
 
     free_FW_Matrix(&data2); // Free memory
 
