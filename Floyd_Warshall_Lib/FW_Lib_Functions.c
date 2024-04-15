@@ -72,7 +72,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
         FW.BS = DEFAULT_BLOCK_SIZE;
     }
 
-    create_matrixes_from_file(&FW, file, local_attr.no_path); // TODO: Revisar tema de espacio en memoria al pasar el FW como parametro. Se duplican las matrices?
+    create_matrixes_from_file(&FW, file, local_attr.no_path);
 
     fclose(file);
     FW_creation_time = dwalltime() - timetick_start;
@@ -247,6 +247,7 @@ char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
     }
     return strcat(result_martix, result_attr);
 }
+
 
 void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
 {

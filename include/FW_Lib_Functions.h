@@ -52,6 +52,17 @@ void compute_FW_sequential(FW_Matrix, FW_attr_t *);
  */
 void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 
+
+/**
+ * @brief Frees the memory allocated for the FW_Matrix structure.
+ * 
+ * This function frees the dynamically allocated memory for the dist and path members of the FW_Matrix structure.
+ * After freeing the memory, the function sets the pointers to NULL to avoid dangling pointers.
+ * 
+ * @param matrix A pointer to the FW_Matrix structure to be freed.
+ */
+void free_FW_Matrix(FW_Matrix* matrix);
+
 /**
  * Converts the details of a FW_Matrix element and FW_attr_t attributes into a string representation.
  *
@@ -62,23 +73,16 @@ void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
 
 /**
- * Prints the FW_Matrix element along with its properties and optionally the distance and path matrices.
+ * Prints the FW_Matrixes.
  *
- * @param element The FW_Matrix element to be printed.
- * @param dist Flag indicating whether to print the distance matrix (1) or not (0).
- * @param path Flag indicating whether to print the path matrix (1) or not (0).
+ * This function prints to the standard output the FW_Matrixes based on the given parameters.
+ *
+ * @param FW A pointer to the FW_Matrix structure.
+ * @param print A string specifying the type of printing. ("all" | "dist" | "path")
+ * @param blocks Flag indicating if the printing should be in blocks or not (1 means in blocks and the function will print a matrix of nxn with n power of 2, 0  means normal printing and the function will print a matrix of nxn with n = size of the original matrix)
  */
 void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
 
-/**
- * @brief Frees the memory allocated for the FW_Matrix structure.
- * 
- * This function frees the dynamically allocated memory for the dist and path members of the FW_Matrix structure.
- * After freeing the memory, the function sets the pointers to NULL to avoid dangling pointers.
- * 
- * @param matrix A pointer to the FW_Matrix structure to be freed.
- */
-void free_FW_Matrix(FW_Matrix* matrix); //TODO: ver esto
 
 // Attribute functions
 
@@ -95,6 +99,8 @@ FW_attr_t new_FW_attr();
  * @param attr A pointer to the FW_attr_t object to be initialized.
  */
 void init_FW_attr(FW_attr_t *);
+
+// Time functions
 
 /**
  * Returns the creation time of the FW_Matrix structure.
@@ -123,8 +129,6 @@ double get_FW_save_time();
  * @return The total time taken by the Floyd Warshall Library.
  */
 double get_FW_total_time();
-
-
 
 
 #endif //FW_LIB_FUNCTIONS_H
