@@ -1,7 +1,7 @@
 
 #include "blocks.h"
 
-void *reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, DataType type)
+void *organize_to_blocks(void *matrix, unsigned int size, unsigned int BS, DataType type)
 {
     if (size % BS != 0)
     {
@@ -10,7 +10,7 @@ void *reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, DataT
     }
 
     unsigned int r = size / BS;       // Número de bloques a lo largo de una dimensión
-    unsigned int blockSize = BS * BS; // Elementos en un bloque
+    unsigned int block_size = BS * BS; // Elementos en un bloque
     void *block_matrix = NULL;
 
     switch (type)
@@ -31,8 +31,8 @@ void *reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, DataT
 
     if (block_matrix == NULL)
     {
-        // Manejo de error en caso de que malloc falle
-        return NULL;
+        fprintf(stderr, "Error: Allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED); // Allocation failed
     }
     double value;
 
@@ -43,16 +43,16 @@ void *reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, DataT
                     switch (type)
                     {
                     case TYPE_INT:
-                        ((int *)block_matrix)[I * size * BS + J * blockSize + i * BS + j] =
+                        ((int *)block_matrix)[I * size * BS + J * block_size + i * BS + j] =
                             ((int *)matrix)[I * size * BS + J * BS + i * size + j];
                         break;
                     case TYPE_FLOAT:
-                        ((float *)block_matrix)[I * size * BS + J * blockSize + i * BS + j] =
+                        ((float *)block_matrix)[I * size * BS + J * block_size + i * BS + j] =
                             ((float *)matrix)[I * size * BS + J * BS + i * size + j];
                         break;
                     case TYPE_DOUBLE:
                         value = ((double *)matrix)[I * size * BS + J * BS + i * size + j];
-                        ((double *)block_matrix)[I * size * BS + J * blockSize + i * BS + j] = value;
+                        ((double *)block_matrix)[I * size * BS + J * block_size + i * BS + j] = value;
                         break;
                     default:
                         // Este caso ya fue manejado antes
@@ -62,32 +62,33 @@ void *reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, DataT
     return block_matrix;
 }
 
-void *reorganizeToLinear(void *blockMatrix, unsigned int size, unsigned int BS, DataType type)
+void *reorganize_to_linear(void *block_matrix, unsigned int size, unsigned int BS, DataType type)
 {
 
     unsigned int r = size / BS; // Number of blocks along one dimension
-    void *originalMatrix = NULL;
+    void *original_matrix = NULL;
 
     // Allocate memory based on data type
     switch (type)
     {
     case TYPE_INT:
-        originalMatrix = malloc(size * size * sizeof(int));
+        original_matrix = malloc(size * size * sizeof(int));
         break;
     case TYPE_FLOAT:
-        originalMatrix = malloc(size * size * sizeof(float));
+        original_matrix = malloc(size * size * sizeof(float));
         break;
     case TYPE_DOUBLE:
-        originalMatrix = malloc(size * size * sizeof(double));
+        original_matrix = malloc(size * size * sizeof(double));
         break;
     default:
         // Unsupported data type
         return NULL;
     }
 
-    if (originalMatrix == NULL)
+    if (original_matrix == NULL)
     {
-        exit(1); // Memory allocation failed
+        fprintf(stderr, "Error: Allocation failed.\n");
+        exit(EXIT_ALOCATION_FAILED); // Allocation failed
     }
 
     // Copy data from the block format back to the original linear format
@@ -98,21 +99,21 @@ void *reorganizeToLinear(void *blockMatrix, unsigned int size, unsigned int BS, 
                     switch (type)
                     {
                     case TYPE_INT:
-                        ((int *)originalMatrix)[I * size * BS + J * BS + i * size + j] =
-                            ((int *)blockMatrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
+                        ((int *)original_matrix)[I * size * BS + J * BS + i * size + j] =
+                            ((int *)block_matrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
                         break;
                     case TYPE_FLOAT:
-                        ((float *)originalMatrix)[I * size * BS + J * BS + i * size + j] =
-                            ((float *)blockMatrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
+                        ((float *)original_matrix)[I * size * BS + J * BS + i * size + j] =
+                            ((float *)block_matrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
                         break;
                     case TYPE_DOUBLE:
-                        ((double *)originalMatrix)[I * size * BS + J * BS + i * size + j] =
-                            ((double *)blockMatrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
+                        ((double *)original_matrix)[I * size * BS + J * BS + i * size + j] =
+                            ((double *)block_matrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
                         break;
                     default:
                         // This case is already handled
                         break;
                     }
 
-    return originalMatrix;
+    return original_matrix;
 }

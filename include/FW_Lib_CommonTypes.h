@@ -6,23 +6,26 @@
 #include <limits.h>
 #include <float.h>
 
-#define INFINITE SHRT_MAX
+#define EXIT_ALOCATION_FAILED 2
 
-typedef enum {
+typedef enum
+{
     TYPE_INT,
     TYPE_FLOAT,
     TYPE_DOUBLE,
     UNDEFINED,
 } DataType;
 
-typedef enum {
+typedef enum
+{
     CSV,
     JSON,
 } FileType;
 
-typedef struct {
-    void * dist;
-    int * path;
+typedef struct
+{
+    void *dist;
+    int *path;
     FileType fileType;
     unsigned int decimal_length;
     DataType datatype;
@@ -31,11 +34,12 @@ typedef struct {
     unsigned int BS;
 } FW_Matrix;
 
-typedef struct {
+typedef struct
+{
     unsigned int text_in_output;
     unsigned int print_distance_matrix;
     unsigned int no_path;
     unsigned int thread_num;
 } FW_attr_t;
 
-#endif //FW_LIB_COMMON_TYPES_H
+#endif // FW_LIB_COMMON_TYPES_H

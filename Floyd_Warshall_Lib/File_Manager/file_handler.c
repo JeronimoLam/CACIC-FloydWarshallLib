@@ -1,9 +1,21 @@
 #include "file_handler.h"
 
-int *initializePathMatrix(FW_Matrix *G);
+int *initialize_path_matrix(FW_Matrix *G);
 
 static FileType fileType;
 
+// Setter and Getter ----------------------------------------------------------
+void set_fileType(FileType type)
+{
+    fileType = type;
+}
+
+FileType get_fileType()
+{
+    return fileType;
+}
+
+// Public ---------------------------------------------------------------------
 FILE *getFile(const char *filename)
 {
     // Get the extension
@@ -27,25 +39,15 @@ FILE *getFile(const char *filename)
     {
         if (strcmp(ext, ".csv") == 0)
         {
-            setFileType(CSV);
+            set_fileType(CSV);
         }
         else if (strcmp(ext, ".json") == 0)
         {
-            setFileType(JSON);
+            set_fileType(JSON);
         }
     }
 
     return file;
-}
-
-void setFileType(FileType type)
-{
-    fileType = type;
-}
-
-FileType getFileType()
-{
-    return fileType;
 }
 
 char *fileTypeToString()
@@ -61,15 +63,16 @@ char *fileTypeToString()
     }
 }
 
-int calculateMatrixSize(FileType ft, FILE *file)
+int calculate_matrix_size(FileType ft, FILE *file)
 {
+    rewind(file);
     switch (ft)
     {
     case CSV:
-        return CSV_calculateMatrixSize(file);
+        return CSV_calculate_matrix_size(file);
         break;
     case JSON:
-        return JSON_calculateMatrixSize(file);
+        return JSON_calculate_matrix_size(file);
         break;
     default:
         // Handle default case
@@ -77,68 +80,69 @@ int calculateMatrixSize(FileType ft, FILE *file)
     }
 }
 
-DataType AutoDetectDataType(FileType ft, FILE *file)
+DataType auto_detect_dataType(FileType ft, FILE *file)
 {
     DataType dt = UNDEFINED;
+    rewind(file);
     switch (ft)
     {
     case CSV:
-        dt = CSV_AutoDetectDataType(file);
+        dt = CSV_auto_detect_dataType(file);
         break;
     case JSON:
-        dt = JSON_AutoDetectDataType(file);
+        dt = JSON_auto_detect_dataType(file);
         break;
     }
-    rewind(file);
     return dt;
 }
 
-void createMatrixes(FW_Matrix *FW, FILE *file, int no_path)
+void create_matrixes_from_file(FW_Matrix *FW, FILE *file, int no_path)
 {
+    rewind(file);
     switch (FW->fileType)
     {
     case CSV:
-        FW->dist = CSV_createMatrix(*FW, file);
-        FW->decimal_length = getMaxDecimalLength();
+        FW->dist = CSV_create_matrix(*FW, file);
+        FW->decimal_length = get_max_decimal_length();
         if (no_path)
         {
             FW->path = NULL;
         }
         else
         {
-            FW->path = initializePathMatrix(FW);
+            FW->path = initialize_path_matrix(FW);
 
-            FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
+            FW->path = (int *)organize_to_blocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
         }
 
-        FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
+        FW->dist = organize_to_blocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
 
         break;
     case JSON:
-        FW->dist = JSON_createMatrix(*FW, file);
-        FW->decimal_length = getMaxDecimalLength();
-        if (no_path){
+        FW->dist = JSON_create_matrix(*FW, file);
+        FW->decimal_length = get_max_decimal_length();
+        if (no_path)
+        {
             FW->path = NULL;
         }
         else
         {
-            FW->path = initializePathMatrix(FW);
-            FW->path = (int *)reorganizeToBlocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
-
+            FW->path = initialize_path_matrix(FW);
+            FW->path = (int *)organize_to_blocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
         }
-        FW->dist = reorganizeToBlocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
+        FW->dist = organize_to_blocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
         break;
     }
 }
 
-void saveMatrix(FW_Matrix FW, char *path, FileType ft, unsigned int dist_matrix, unsigned int no_path, unsigned int disconnected_str)
+void save_matrix_to_file(FW_Matrix FW, char *path, FileType ft, unsigned int dist_matrix, unsigned int no_path, unsigned int disconnected_str)
 {
-    switch (fileType)
+    switch (ft)
     {
     case CSV:
-        return CSV_saveMatrix(FW, path, dist_matrix, no_path, disconnected_str);
+        return CSV_save_matrix(FW, path, dist_matrix, no_path, disconnected_str);
     case JSON:
-        return JSON_saveMatrix(FW, path, dist_matrix, no_path, disconnected_str);
+        return JSON_save_matrix(FW, path, dist_matrix, no_path, disconnected_str);
     default:
         printf("Error: Invalid file type.\n");
         break;
@@ -147,7 +151,7 @@ void saveMatrix(FW_Matrix FW, char *path, FileType ft, unsigned int dist_matrix,
 
 // Private --------------------------------------------------------------------
 
-int *initializePathMatrix(FW_Matrix *G)
+int *initialize_path_matrix(FW_Matrix *G)
 {
     int *P;
 
@@ -157,7 +161,10 @@ int *initializePathMatrix(FW_Matrix *G)
         // Allocate memory for the path matrix
         P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
         if (!P)
-            exit(9); // Allocation failed
+        {
+            fprintf(stderr, "Error: Allocation failed.\n");
+            exit(EXIT_ALOCATION_FAILED); // Allocation failed
+        }
 
         // Initialize the path matrix
         for (uint64_t i = 0; i < G->norm_size; i++)
@@ -171,7 +178,10 @@ int *initializePathMatrix(FW_Matrix *G)
         // Allocate memory for the path matrix
         P = (int *)malloc(G->norm_size * G->norm_size * sizeof(float));
         if (!P)
-            exit(9); // Allocation failed
+        {
+            fprintf(stderr, "Error: Allocation failed.\n");
+            exit(EXIT_ALOCATION_FAILED); // Allocation failed
+        }
 
         // Initialize the path matrix
         for (uint64_t i = 0; i < G->norm_size; i++)
@@ -185,7 +195,10 @@ int *initializePathMatrix(FW_Matrix *G)
         // Allocate memory for the path matrix
         P = (int *)malloc(G->norm_size * G->norm_size * sizeof(double));
         if (!P)
-            exit(9); // Allocation failed
+        {
+            fprintf(stderr, "Error: Allocation failed.\n");
+            exit(EXIT_ALOCATION_FAILED); // Allocation failed
+        }
 
         // Initialize the path matrix
         for (uint64_t i = 0; i < G->norm_size; i++)
@@ -199,5 +212,3 @@ int *initializePathMatrix(FW_Matrix *G)
 
     return P;
 }
-
-

@@ -7,6 +7,8 @@
 
 #define BS 128
 #define TN 16
+#define BAD_BS_ARGUMENT 100
+#define BAD_TN_ARGUMENT 101
 
 double dwalltime();
 FILE *check_file(const char *);
@@ -14,14 +16,14 @@ int try_convert_to_int(const char *, int *);
 
 int main(int argc, char *argv[])
 {
-    int size, c, dataTypeFlag = 0, temp_bs = 0, temp_tn = 0;
+    int size, c, dataType_flag = 0, temp_options = 0;
     char *path;
     FILE *file;
     DataType dataType = UNDEFINED;
 
     // Default values for block size and thread number
-    int blockSize = BS; // Use the default block size
-    int threadNum = TN; // Use the default thread number
+    int block_size = BS; // Use the default block size
+    int thread_num = TN; // Use the default thread number
 
     static struct option long_options[] = {
         {"path", required_argument, 0, 'p'},
@@ -49,12 +51,12 @@ int main(int argc, char *argv[])
         case 'i':
         case 'f':
         case 'd':
-            if (dataTypeFlag)
+            if (dataType_flag)
             {
                 fprintf(stderr, "Error: only one data type argument can be used at a time.\n");
                 exit(EXIT_FAILURE);
             }
-            dataTypeFlag = 1;
+            dataType_flag = 1;
 
             switch (c)
             {
@@ -71,16 +73,18 @@ int main(int argc, char *argv[])
             break;
 
         case 'b':
-            try_convert_to_int(optarg, &temp_bs);
-            if (temp_bs == 0)
-                exit(100);
-            blockSize = temp_bs;
+            try_convert_to_int(optarg, &temp_options);
+            if (temp_options == 0)
+                exit(BAD_BS_ARGUMENT);
+            block_size = temp_options;
+            temp_options = 0;
             break;
         case 't':
-            try_convert_to_int(optarg, &temp_tn);
-            if (temp_tn == 0)
-                exit(101);
-            threadNum = temp_tn;
+            try_convert_to_int(optarg, &temp_options);
+            if (temp_options == 0)
+                exit(BAD_TN_ARGUMENT);
+            thread_num = temp_options;
+            temp_options = 0;
             break;
 
         default:
@@ -97,74 +101,55 @@ int main(int argc, char *argv[])
     }
 
     // Arguments Init
-
     FW_attr_t attr;
     init_FW_attr(&attr);
-    // attr.text_in_output = 0;
     attr.no_path = 0;
-    attr.thread_num = threadNum;
-    
-    printf("------------------------PARALELO------------------------\n");
-    double timetick_p = dwalltime();
+    attr.thread_num = thread_num;
 
-    // Read
+    printf("------------------------PARALELO------------------------\n");
+
     printf(" ==> Leyendo \n");
-    FW_Matrix data = create_structure(dataType, path, blockSize, &attr);
-    printf("%s\n", FW_details_to_string(data));
-    printf("Thread Num: %d\n", threadNum);
+    FW_Matrix data = create_structure(dataType, path, block_size, &attr); // Read
+    // printf("%s\n", FW_details_to_string(&data, &attr));
 
     printf(" ==> Procesado \n");
-    double timetick_p_compute = dwalltime();
-    compute_FW_paralell(data, &attr); // TODO: Adjust thread num
-    double timetick_fp_compute = dwalltime();
+    compute_FW_paralell(data, &attr); // Process
 
-    // Save
     printf(" ==> Guardando \n");
-    
-    
-    save_structure(data, "./Output/", "ResultParalell.csv", CSV, &attr);
+    save_structure(data, "./output/", "ResultParalell.csv", CSV, &attr); // Save
 
-    double timetick_fp = dwalltime();
-    printf("Tiempo Libreria Entera Paralelo %f \n\n", timetick_fp - timetick_p);
+    free_FW_Matrix(&data); // Free memory
 
-
-
+    double paralell_algorithm_time = get_FW_processing_time();
+    double paralell_total_time = get_FW_processing_time();
+    printf("Tiempo algoritmo Paralelo %lf \n", paralell_algorithm_time);
 
     printf("------------------------SECUENCIAL------------------------\n");
-    double timetick_s = dwalltime();
 
     printf(" ==> Leyendo \n");
-    FW_Matrix data2 = create_structure(dataType, path, blockSize, &attr);
-    printf("%s\n", FW_details_to_string(data2));
-    printf("Thread Num: %d\n", threadNum);
+    FW_Matrix data2 = create_structure(dataType, path, block_size, &attr); // Read
+    // printf("%s\n", FW_details_to_string(&data2, NULL));
 
     printf(" ==> Procesado \n");
-    double timetick_s_compute = dwalltime();
-    compute_FW_sequential(data2, &attr);
-    double timetick_fs_compute = dwalltime();
+    compute_FW_sequential(data2, &attr); // Process
 
     printf(" ==> Guardando \n");
-    save_structure(data2, "./Output/", "ResultSecuential.csv", CSV, &attr);
+    save_structure(data2, "./output/", "ResultSecuential.csv", JSON, &attr); // Save
 
-    double timetick_fs = dwalltime();
+    free_FW_Matrix(&data2); // Free memory
 
-    printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
+    double sequential_algorithm_time = get_FW_processing_time();
+    double sequential_total_time = get_FW_processing_time();
+    printf("Tiempo algoritmo Secuencial %lf \n", sequential_algorithm_time);
 
-    printf("\n------------------------ Tiempos ------------------------\n");
+    printf("------------------------ Tiempos ------------------------\n");
 
     // Print Times
-    printf("Tiempo Libreria Entera Paralelo %f \n", timetick_fp - timetick_p);
-    printf("Tiempo Libreria Entera Secuencial %f \n", timetick_fs - timetick_s);
-
-    printf("Tiempo Computo Paralelo %f \n", timetick_fp_compute - timetick_p_compute);
-    printf("Tiempo Computo Secuencial %f \n\n", timetick_fs_compute - timetick_s_compute);
-
-    // Free memory
-    // freeFW_Matrix(&data2);
-    // freeFW_Matrix(&data);
-
-    // Closes the file
-    fclose(file);
+    printf("Tiempo algoritmo Paralelo %lf \n", paralell_algorithm_time);
+    printf("Tiempo algoritmo Secuencial %lf \n", sequential_algorithm_time);
+    printf("\n");
+    printf("Tiempo Libreria Entera Paralelo %lf \n", paralell_total_time);
+    printf("Tiempo Libreria Entera Secuencial %lf \n\n", sequential_total_time);
 
     return 0;
 }
@@ -190,7 +175,7 @@ FILE *check_file(const char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Error: Unable to open file.\n");
+        // fprintf(stderr, "Error: Unable to open file.\n");
         exit(EXIT_FAILURE);
     }
 }
@@ -212,16 +197,4 @@ int try_convert_to_int(const char *str, int *converted_value)
 
     *converted_value = (int)value;
     return 1; // Conversion succeeded
-}
-
-#include <sys/time.h>
-
-double dwalltime()
-{
-    double sec;
-    struct timeval tv;
-
-    gettimeofday(&tv, NULL);
-    sec = tv.tv_sec + tv.tv_usec / 1000000.0;
-    return sec;
 }

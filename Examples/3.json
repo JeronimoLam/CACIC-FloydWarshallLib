@@ -1,5 +1,5 @@
 {
-  "type": "int",
+  "type": "float",
   "size": 3,
   "matrix": [
     [0, 10.9, 100],

@@ -16,7 +16,7 @@ void print_double_matrix_to_file(FW_Matrix * FW, FILE * file, double *matrix, un
  *
  * @return The maximum decimal length.
  */
-unsigned int getMaxDecimalLength();
+unsigned int get_max_decimal_length();
 
 
 /**
@@ -65,7 +65,7 @@ double tokenToDouble(char *);
  *
  * @note This function reads the file character by character and does not saturate buffers.
  */
-char *readNextToken(FILE *file);
+char *read_next_token(FILE *file);
 
 /**
  * Opens a result file with the given path and extension.

@@ -107,7 +107,7 @@ void DoubleMatrix2CSV(double **matriz, int n, const char *path, int parteDecimal
     fclose(file);
 }
 
-void DoubleMatrix2JSON(double **matriz, int n, const char *path, int parteDecimal, int decimalCero)
+void DoubleMatrix2JSON(double **matriz, int n, const char *path, int parteDecimal, int decimalCero, int is_float)
 {
     FILE *file = fopen(path, "w");
     if (file == NULL)
@@ -121,7 +121,7 @@ void DoubleMatrix2JSON(double **matriz, int n, const char *path, int parteDecima
     sprintf(formatString, "%%.%dlf", parteDecimal);
 
     fprintf(file, "{\n");
-    fprintf(file, "  \"type\": \"double\",\n");
+    fprintf(file, "  \"type\": \"%s\",\n", is_float ? "float" : "double");
     fprintf(file, "  \"size\": %d,\n", n);
     fprintf(file, "  \"matrix\": [\n");
 

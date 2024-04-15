@@ -18,7 +18,7 @@
  * @param type Data type of the matrix, specified by the DataType enum.
  * @return Pointer to the new matrix reorganized into block format, or NULL in case of an error.
  */
-void * reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, DataType type);
+void * organize_to_blocks(void *matrix, unsigned int size, unsigned int BS, DataType type);
 
 /**
  * Converts a block format matrix back to its original linear format.
@@ -28,13 +28,13 @@ void * reorganizeToBlocks(void *matrix, unsigned int size, unsigned int BS, Data
  * the matrix back to its original linear row-major format. Memory for the new matrix is dynamically
  * allocated and must be freed by the caller.
  *
- * @param blockMatrix Pointer to the matrix in block format.
+ * @param block_matrix Pointer to the matrix in block format.
  * @param size Size of one side of the square matrix.
  * @param BS Size of the side of the square blocks that the matrix was divided into.
  * @param type Data type of the matrix, specified by the DataType enum.
  * @return Pointer to the new matrix in its original linear format, or NULL in case of an error.
  */
-void * reorganizeToLinear(void *blockMatrix, unsigned int size, unsigned int BS, DataType type);
+void * reorganize_to_linear(void *block_matrix, unsigned int size, unsigned int BS, DataType type);
 
 
 #endif // BLOCKS_H
