@@ -15,6 +15,7 @@ unsigned int nextPowerOf2(unsigned int);
 int *initializePathMatrix(FW_Matrix *G);
 
 // Lib Functions
+
 FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *attr)
 {
     FW_attr_t local_attr;
@@ -74,7 +75,6 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
 
 void compute_FW_paralell(FW_Matrix FW, FW_attr_t * attr)
 {
-    
     FW_attr_t local_attr;
     if (attr == NULL)
     {
@@ -107,7 +107,6 @@ void compute_FW_paralell(FW_Matrix FW, FW_attr_t * attr)
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
         exit(EXIT_FAILURE);
     }
-
 }
 
 void compute_FW_sequential(FW_Matrix FW, FW_attr_t * attr)
@@ -206,7 +205,6 @@ void freeFW_Matrix(FW_Matrix *matrix)
     }
 }
 
-// Revisar cual de las 2 queda si FW_details_to_string o print_FW o  las 2
 char *FW_details_to_string(FW_Matrix element)
 {
     char *result = malloc(1024);
@@ -349,35 +347,3 @@ unsigned int nextPowerOf2(unsigned int n)
 
     return 1 << count;
 }
-
-// int *initializePathMatrix(FW_Matrix *G)
-// {
-//     int *P = (int *)malloc(G->norm_size * G->norm_size * sizeof(int));
-//     if (!P)
-//         exit(9); // Allocation failed
-
-//     for (uint64_t i = 0; i < G->norm_size; i++)
-//         for (uint64_t j = 0; j < G->norm_size; j++)
-//             if (((int *)G->dist)[i * G->norm_size + j] != INT_MAX)
-//                 P[i * G->norm_size + j] = j;
-//             else
-//                 P[i * G->norm_size + j] = -1;
-
-//     //Debug
-//     for (uint64_t i = 0; i < G->norm_size; i++)
-//     {
-//         for (uint64_t j = 0; j < G->norm_size; j++)
-//             printf("%d ", P[i * G->norm_size + j]);
-//         printf("\n");
-//     }
-//     printf("\n");
-
-//     return (int *)reorganizeToBlocks((void *)P, G->norm_size, G->BS, G->datatype);
-
-//     // for(uint64_t i=0; i<G->n; i++)
-//     // 	for(uint64_t j=0; j<G->n; j++)
-//     // 	    if(G->D[i*G->n+j] != INFINITE)
-//     // 			G->P[i*G->n+j] = j;
-//     // 		else
-//     // 			G->P[i*G->n+j] = -1;
-// }
