@@ -2,93 +2,76 @@ import sys
 import csv
 import json
 
-def read_csv(file_path):
-    """Reads a CSV file and returns its matrix, trimming spaces from values."""
+def read_matrix_csv(file_path):
+    """Reads a matrix from a CSV file and standardizes its values."""
+    matrix = []
     with open(file_path, mode='r', newline='') as file:
         reader = csv.reader(file)
-        return [[standardize_value(value.strip()) for value in row] for row in reader]
+        for row in reader:
+            matrix.append([standardize_value(value) for value in row])
+    return matrix
 
-def read_json(file_path):
-    """Reads a JSON file and returns its matrix along with the type and size, handling spaces in values."""
+def read_matrix_json(file_path):
+    """Reads a matrix from a JSON file under the 'matrix' key and standardizes its values."""
     with open(file_path, 'r') as file:
         data = json.load(file)
-        matrix = [[standardize_value(str(value).strip()) for value in row] for row in data['matrix']]
-        matrix_type = data['type']
-        size = data['size']
-        return matrix, matrix_type, size
+        matrix = data['matrix']
+        return [[standardize_value(value) for value in row] for row in matrix]
 
 def standardize_value(value):
-    """Converts value to appropriate numeric type or keeps special markers as strings."""
-    if value == "INF" or value == "\"INF\"":
-        return "INF"
-    try:
-        # Convert to integer or float if possible
-        return float(value) if '.' in value else int(value)
-    except ValueError:
-        return value
+    """Standardizes the matrix values by converting 'INF', '"INF"', and '-1' to -1 and converting all other values to float."""
+    if value in ("-1", "INF", "\"INF\""):
+        return -1
+    return float(value)
 
-def check_diagonal_zeros(matrix):
-    """Checks if all diagonal elements are zero."""
-    return all(matrix[i][i] == 0 for i in range(len(matrix)))
-
-def check_positivity_except(matrix):
-    """Checks all values are positive except specified negative values or 'INF'."""
-    for row in matrix:
-        for value in row:
-            if value != "INF" and (isinstance(value, (int, float)) and value < 0):
-                return False
+def compare_matrices(matrix1, matrix2):
+    """Compares two matrices element by element and reports differences."""
+    if len(matrix1) != len(matrix2):
+        print("Matrices are of different sizes.")
+        return False
+    differences = []
+    for i in range(len(matrix1)):
+        if len(matrix1[i]) != len(matrix2[i]):
+            print(f"Row {i} is of different length.")
+            return False
+        for j in range(len(matrix1[i])):
+            if matrix1[i][j] != matrix2[i][j]:
+                differences.append((i, j, matrix1[i][j], matrix2[i][j]))
+    if differences:
+        print("Matrices are not equal. Differences found at:")
+        for diff in differences:
+            print(f"Row {diff[0]}, Column {diff[1]}: {diff[2]} != {diff[3]}")
+        return False
     return True
 
-def check_matrix_square_and_size(matrix, expected_size=None):
-    """Checks if the matrix is square and matches the expected size, if provided."""
-    n = len(matrix)
-    if expected_size is not None and n != expected_size:
-        return False
-    return all(len(row) == n for row in matrix)
-
-def check_int_type_no_decimals(matrix):
-    """Ensures all elements are integers with no decimal parts."""
-    return all(all(isinstance(x, int) for x in row) for row in matrix)
-
-def validate_matrix(file_path):
-    if file_path.endswith('.csv'):
-        matrix = read_csv(file_path)
-    elif file_path.endswith('.json'):
-        matrix, matrix_type, size = read_json(file_path)
-        if not check_matrix_square_and_size(matrix, size):
-            print("Error: JSON matrix does not match specified size or is not square.")
-            return
-        if matrix_type == 'int' and not check_int_type_no_decimals(matrix):
-            print("Error: JSON specifies type 'int' but contains decimal numbers.")
-            return
+def main(file_path_1, file_path_2):
+    """Main function that reads two files and compares their matrices."""
+    # Read the first file
+    if file_path_1.endswith('.csv'):
+        matrix1 = read_matrix_csv(file_path_1)
+    elif file_path_1.endswith('.json'):
+        matrix1 = read_matrix_json(file_path_1)
     else:
-        print("Unsupported file format.")
+        print("The format of the first file is not supported.")
         return
     
-    # Checking diagonal zeros
-    if not check_diagonal_zeros(matrix):
-        print("Error: Not all diagonal elements are zero.")
+    # Read the second file
+    if file_path_2.endswith('.csv'):
+        matrix2 = read_matrix_csv(file_path_2)
+    elif file_path_2.endswith('.json'):
+        matrix2 = read_matrix_json(file_path_2)
     else:
-        print("Diagonal zero check passed.")
+        print("The format of the second file is not supported.")
+        return
     
-    # Checking positivity except allowed negative values
-    if not check_positivity_except(matrix):
-        print("Error: Matrix contains negative values not allowed.")
+    # Compare the matrices
+    if compare_matrices(matrix1, matrix2):
+        print("The matrices are equal.")
     else:
-        print("Positivity check passed.")
-    
-    # Checking if matrix is square
-    if not check_matrix_square_and_size(matrix):
-        print("Error: Matrix is not square.")
-    else:
-        print("Matrix square and size check passed.")
-
-    # Final validation
-    if check_diagonal_zeros(matrix) and check_positivity_except(matrix) and check_matrix_square_and_size(matrix):
-        print("Matrix validation successful.")
+        print("The matrices are not equal.")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <path_to_file>")
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <full_path_to_file_1> <full_path_to_file_2>")
     else:
-        validate_matrix(sys.argv[1])
+        main(sys.argv[1], sys.argv[2])

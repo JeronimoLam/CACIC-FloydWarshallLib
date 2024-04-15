@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/main_executable",
-            "args": ["-p", "Examples/3.json", "-b", "2"],
+            "args": ["-p", "examples/1024f.json", "-t", "16"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

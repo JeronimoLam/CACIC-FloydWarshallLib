@@ -125,7 +125,7 @@ int main()
 
     defaultPath = (formato == 'J' || formato == 'j') ? DEFAULT_JSON_PATH : DEFAULT_CSV_PATH;
 
-    if (tipo == 'd' && formato == 'J')
+    if ((tipo == 'd' || tipo == 'D') && (formato == 'j' || formato == 'J' ))
     {
         // Tipo de números
         do

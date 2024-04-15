@@ -32,12 +32,17 @@ def check_diagonal_zeros(matrix):
     return all(matrix[i][i] == 0 for i in range(len(matrix)))
 
 def check_positivity_except(matrix):
-    """Checks all values are positive except specified negative values or 'INF'."""
-    for row in matrix:
-        for value in row:
-            if value != "INF" and (isinstance(value, (int, float)) and value < 0):
-                return False
-    return True
+    """Checks all values are positive, -1, or 'INF', and prints error positions if other negative values are found."""
+    valid = True
+    for i, row in enumerate(matrix):
+        for j, value in enumerate(row):
+            # Check if the value is not INF, not -1, and is a negative number
+            if value != "INF" and value != -1 and (isinstance(value, (int, float)) and value < 0):
+                print(f"Error: Invalid negative value {value} at position ({i}, {j}).")
+                valid = False
+    return valid
+
+
 
 def check_matrix_square_and_size(matrix, expected_size=None):
     """Checks if the matrix is square and matches the expected size, if provided."""

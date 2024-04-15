@@ -64,7 +64,7 @@ void *JSON_create_int_matrix(FILE *file, unsigned int size, unsigned int norm_si
 void *JSON_create_float_matrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
     char c;
-    float *matrix = malloc(norm_size * norm_size * sizeof(int));
+    float *matrix = malloc(norm_size * norm_size * sizeof(float));
     int row = 0, col = 0;
     char *token;
 
@@ -99,7 +99,7 @@ void *JSON_create_float_matrix(FILE *file, unsigned int size, unsigned int norm_
 void *JSON_create_double_matrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
     char c;
-    double *matrix = malloc(norm_size * norm_size * sizeof(int));
+    double *matrix = malloc(norm_size * norm_size * sizeof(double));
     int row = 0, col = 0;
     char *token;
 
