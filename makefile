@@ -69,7 +69,7 @@ $(LIB_DIR)/lib$(LIB_NAME).a: $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 
 ifeq ($(OS),Windows_NT)
-	@echo
+	@cmd /c "echo."
 	@cmd /c "echo Compilation Finished"
 else
 	@echo
