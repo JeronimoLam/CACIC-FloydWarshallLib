@@ -14,7 +14,7 @@
  * @param attr Pointer to FW_attr_t structure containing additional attributes.
  * @return The created FW_Matrix structure with the matrix loaded.
  */
-FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
+LIB_EXPORT FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
 
 /**
  * @brief Performs the Floyd-Warshall algorithm calculation on the provided matrix.
@@ -25,7 +25,7 @@ FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-void compute_FW_paralell(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void compute_FW_paralell(FW_Matrix, FW_attr_t *);
 
 /**
  * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs
@@ -34,7 +34,7 @@ void compute_FW_paralell(FW_Matrix, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-void compute_FW_sequential(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void compute_FW_sequential(FW_Matrix, FW_attr_t *);
 
 /**
  * @brief Saves the distance matrix or the shortest path matrix to a file.
@@ -50,7 +50,7 @@ void compute_FW_sequential(FW_Matrix, FW_attr_t *);
  * @param attr Additional attributes for the file (optional).
  * @note If both dist_matrix and path_matrix are set to 0, the function will not perform any action.
  */
-void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
+LIB_EXPORT void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 
 
 /**
@@ -61,7 +61,7 @@ void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
  * 
  * @param matrix A pointer to the FW_Matrix structure to be freed.
  */
-void free_FW_Matrix(FW_Matrix* matrix);
+LIB_EXPORT void free_FW_Matrix(FW_Matrix* matrix);
 
 /**
  * Converts the details of a FW_Matrix element and FW_attr_t attributes into a string representation.
@@ -70,7 +70,7 @@ void free_FW_Matrix(FW_Matrix* matrix);
  * @param attr The FW_attr_t attributes containing additional information.
  * @return A string representation of the matrix details and attributes.
  */
-char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
+LIB_EXPORT char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
 
 /**
  * Prints the FW_Matrixes.
@@ -81,7 +81,7 @@ char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
  * @param print A string specifying the type of printing. ("all" | "dist" | "path")
  * @param blocks Flag indicating if the printing should be in blocks or not (1 means in blocks and the function will print a matrix of nxn with n power of 2, 0  means normal printing and the function will print a matrix of nxn with n = size of the original matrix)
  */
-void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
+LIB_EXPORT void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
 
 
 // Attribute functions
@@ -91,14 +91,14 @@ void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
  *
  * @return The newly created FW_attr_t object.
  */
-FW_attr_t new_FW_attr();
+LIB_EXPORT FW_attr_t new_FW_attr();
 
 /**
  * Initializes a FW_attr_t object with default attribute values.
  *
  * @param attr A pointer to the FW_attr_t object to be initialized.
  */
-void init_FW_attr(FW_attr_t *);
+LIB_EXPORT void init_FW_attr(FW_attr_t *);
 
 // Time functions
 
@@ -107,28 +107,28 @@ void init_FW_attr(FW_attr_t *);
  *
  * @return The creation time in seconds.
  */
-double get_FW_creation_time();
+LIB_EXPORT double get_FW_creation_time();
 
 /**
  * Returns the processing time of the Floyd-Warshall algorithm.
  *
  * @return The processing time in seconds.
  */
-double get_FW_processing_time();
+LIB_EXPORT double get_FW_processing_time();
 
 /**
  * Returns the save to file time of the FW_Matrix structure.
  *
  * @return The save time in seconds.
  */
-double get_FW_save_time();
+LIB_EXPORT double get_FW_save_time();
 
 /**
  * Returns the total time taken by the Floyd Warshall Library.
  *
  * @return The total time taken by the Floyd Warshall Library.
  */
-double get_FW_total_time();
+LIB_EXPORT double get_FW_total_time();
 
 
 #endif //FW_LIB_FUNCTIONS_H

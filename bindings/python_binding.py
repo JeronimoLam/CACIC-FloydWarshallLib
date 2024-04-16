@@ -29,7 +29,7 @@ class FW_attr_t(Structure):
                 ("thread_num", c_uint)]
 
 # Load the shared library
-lib = ctypes.CDLL('./lib/libFloydWarshall.dll')
+lib = ctypes.CDLL('./FloydWarshall_dynamic.dll')
 
 # Specify argument and return types for functions
 lib.create_structure.argtypes = [DataType, c_char_p, c_int, POINTER(FW_attr_t)]

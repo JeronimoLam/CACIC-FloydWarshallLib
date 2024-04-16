@@ -4,7 +4,7 @@ LIB_NAME = FloydWarshall
 OBJ_DIR = obj
 LIB_DIR = lib
 
-all: prepare $(LIB_DIR)/lib$(LIB_NAME).a
+all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_NAME)_dynamic.dll
 
 
 clean:
@@ -65,15 +65,10 @@ $(OBJ_DIR)/FW_compute_float.o: Floyd_Warshall_Lib/FW_compute_float.c
 $(OBJ_DIR)/FW_compute_double.o: Floyd_Warshall_Lib/FW_compute_double.c
 	gcc -c -g -fopenmp $< -o $@ -IFloyd_Warshall_Lib/
 
-$(LIB_DIR)/lib$(LIB_NAME).a: $(OBJECTS)
+$(LIB_DIR)/lib$(LIB_NAME)_static.a: $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 
-ifeq ($(OS),Windows_NT)
-	@cmd /c "echo."
-	@cmd /c "echo Compilation Finished"
-else
-	@echo
-	@echo Compilation Finished
-endif
+./$(LIB_NAME)_dynamic.dll: $(OBJECTS)
+	gcc -O0 -g -fopenmp -shared -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,--out-implib,$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll.a -Wl,--output-def,$(LIB_DIR)/$(LIB_NAME).def
 
 .PHONY: all clean prepare
