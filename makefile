@@ -1,10 +1,11 @@
-all: main_executable
 
 OS = Windows_NT
-
 LIB_NAME = FloydWarshall
 OBJ_DIR = obj
 LIB_DIR = lib
+
+all: prepare $(LIB_DIR)/lib$(LIB_NAME).a
+
 
 clean:
 ifeq ($(OS),Windows_NT)
@@ -74,8 +75,5 @@ else
 	@echo
 	@echo Compilation Finished
 endif
-
-main_executable: prepare $(LIB_DIR)/lib$(LIB_NAME).a
-	gcc -O0 -g -fopenmp main.c -o $@ -L$(LIB_DIR) -l$(LIB_NAME)
 
 .PHONY: all clean prepare
