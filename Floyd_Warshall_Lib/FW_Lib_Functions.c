@@ -261,7 +261,7 @@ void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
         }
         if (!blocks)
         {
-            printf("Distance Matrix Loaded Normal\n"); // TODO: Check implementation of this
+            printf("Distance Matrix Loaded Normal\n");
             print_matrix(reorganize_to_linear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
         }
     }
@@ -275,7 +275,7 @@ void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
         }
         if (!blocks)
         {
-            printf("Path Matrix Loaded Normal\n"); // TODO: Check implementation of this
+            printf("Path Matrix Loaded Normal\n");
             print_matrix(reorganize_to_linear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
         }
     }
