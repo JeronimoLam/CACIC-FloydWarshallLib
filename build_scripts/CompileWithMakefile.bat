@@ -22,8 +22,8 @@ if "%1"=="static" (
 ) else if "%1"=="dynamic" (
     REM Compile main.c and link with the dynamic FloydWarshall library and copy the dll to current environment for runtime linking
     @REM if "%2"=="32" (
-        gcc -DBUILDING_DLL -O0 -g -fopenmp main.c -o main.exe -Llib -lFloydWarshall_dynamic -Wl,-rpath,$(pwd)/lib
-        copy ./lib/libFloydWarshall_dynamic.dll ./libFloydWarshall_dynamic.dll
+        gcc -DBUILDING_DLL -O0 -g -fopenmp main.c -o main.exe -Llib -lFloydWarshall_dynamic
+        copy .\lib\libFloydWarshall_dynamic.dll .\libFloydWarshall_dynamic.dll
     @REM ) else if "%2"=="64" (
     @REM     REM NOT WORKING
     @REM     x86_64-w64-mingw32-gcc -m64 -O0 -g -fopenmp main.c -o main.exe -Llib -lFloydWarshall_dynamic
