@@ -6,27 +6,20 @@
 #include <limits.h>
 #include <float.h>
 
-#if defined(_WIN32) || defined(__CYGWIN__)
-    #ifdef BUILDING_LIB
-        #ifdef __GNUC__
-            #define LIB_EXPORT __attribute__ ((dllexport))
-        #else
-            #define LIB_EXPORT __declspec(dllexport) // Note: MSVC
-        #endif
+#if defined(_WIN32) || defined(_WIN64)
+    #if defined(BUILDING_DLL)
+        #define LIB_EXPORT __declspec(dllexport)
     #else
-        #ifdef __GNUC__
-            #define LIB_EXPORT __attribute__ ((dllimport))
-        #else
-            #define LIB_EXPORT __declspec(dllimport) // Note: MSVC
-        #endif
+        #define LIB_EXPORT __declspec(dllimport)
     #endif
 #else
-    #if __GNUC__ >= 4
-        #define LIB_EXPORT __attribute__ ((visibility ("default")))
+    #if defined(BUILDING_DLL)
+        #define LIB_EXPORT __attribute__((visibility("default")))
     #else
         #define LIB_EXPORT
     #endif
 #endif
+
 
 
 
