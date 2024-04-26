@@ -9,7 +9,6 @@ all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dyna
 CFLAGS = -O0 -g -fopenmp
 else
 all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
-
 CFLAGS = -O0 -g -fopenmp -fPIC
 endif
 

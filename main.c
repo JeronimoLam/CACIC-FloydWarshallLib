@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 
     printf(" ==> Leyendo \n");
     FW_Matrix data = create_structure(dataType, path, block_size, &attr); // Read
-    // printf("%s\n", FW_details_to_string(&data, &attr));
+    printf("%s\n", FW_details_to_string(&data, &attr));
 
     printf(" ==> Procesado \n");
     compute_FW_paralell(data, &attr); // Process
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 
     printf(" ==> Leyendo \n");
     FW_Matrix data2 = create_structure(dataType, path, block_size, &attr); // Read
-    // printf("%s\n", FW_details_to_string(&data2, NULL));
+    printf("%s\n", FW_details_to_string(&data2, NULL));
 
     printf(" ==> Procesado \n");
     compute_FW_sequential(data2, &attr); // Process

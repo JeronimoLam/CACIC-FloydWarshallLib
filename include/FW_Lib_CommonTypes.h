@@ -22,7 +22,6 @@
 
 
 
-
 #define EXIT_ALOCATION_FAILED 2
 
 typedef enum
