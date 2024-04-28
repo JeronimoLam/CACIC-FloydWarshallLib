@@ -1,6 +1,8 @@
 # C artifacts
 *.o
 *.exe
+*.dll
+*.a
 
 #Folders
 compiled/
