@@ -176,7 +176,7 @@ FILE *check_file(const char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        // fprintf(stderr, "Error: Unable to open file.\n");
+        fprintf(stderr, "Error: Unable to open file.\n");
         exit(EXIT_FAILURE);
     }
 }

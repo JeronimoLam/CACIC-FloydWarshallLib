@@ -33,7 +33,7 @@ FILE *getFile(const char *filename)
     if (file == NULL)
     {
         fprintf(stderr, "Error: Unable to open file.\n");
-        exit(EXIT_FAILURE);
+        exit(EXIT_OPEN_FILE_ERROR);
     }
     else
     {
