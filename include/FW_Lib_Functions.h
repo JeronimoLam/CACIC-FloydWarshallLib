@@ -79,7 +79,7 @@ LIB_EXPORT char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
  *
  * @param FW A pointer to the FW_Matrix structure.
  * @param print A string specifying the type of printing. ("all" | "dist" | "path")
- * @param blocks Flag indicating if the printing should be in blocks or not (1 means in blocks and the function will print a matrix of nxn with n power of 2, 0  means normal printing and the function will print a matrix of nxn with n = size of the original matrix)
+ * @param blocks Flag indicating if the printing should be in blocks or not (1 means in blocks and the function will print a matrix of nxn with n multiple of BS, 0  means normal printing and the function will print a matrix of nxn with n = size of the original matrix)
  */
 LIB_EXPORT void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
 
