@@ -1,12 +1,19 @@
 # C artifacts
 *.o
-*.exe
+./*.exe
 *.dll
 *.a
+*.def
+
+# Output Files
+output/*.csv
+output/*.json
+compiled_example/**/output/*.csv
+compiled_example/**/output/*.json
 
 #Folders
 compiled/
-output/
+
 obj/
 lib/
 
