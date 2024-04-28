@@ -29,7 +29,7 @@ int main()
     char input[256];
     const char *defaultPath;
     int parteEntera, parteDecimal, decimalCero = DEFAULT_DECIMAL_ZERO;
-    double porcentajeNegativos = DEFAULT_NEGATIVOS_DENSIDAD;
+    double porcentajeCompletitud = DEFAULT_NEGATIVOS_DENSIDAD;
 
     // Tipo de números
     do
@@ -101,12 +101,12 @@ int main()
     // Densidad de -1
     do
     {
-        printf("Ingrese la densidad de -1 [default: %.1f]: ", DEFAULT_NEGATIVOS_DENSIDAD);
+        printf("Porcentaje de completitud [default: %.1f]: ", DEFAULT_NEGATIVOS_DENSIDAD);
         fgets(input, sizeof(input), stdin);
         if (input[0] == '\n')
             break; // Sale del bucle ya que se eligió el valor predeterminado.
 
-    } while (sscanf(input, "%lf", &porcentajeNegativos) != 1);
+    } while (sscanf(input, "%lf", &porcentajeCompletitud) != 1);
 
     // Formato de salida
     do
@@ -160,7 +160,7 @@ int main()
 
         printf("Parte decimal toda en 0: %s\n", decimalCero ? "Si" : "No");
     }
-    printf("Densidad de -1: %.1f\n", porcentajeNegativos);
+    printf("Porcentaje de completitud: %.1f\n", porcentajeCompletitud);
     printf("Formato de salida: %c\n", formato);
     printf("Path del archivo de salida: %s\n\n", path);
 
@@ -168,7 +168,7 @@ int main()
     if (tipo == 'i')
     {
         int **matrizInt;
-        IntMatrixGenerator(n, &matrizInt, MAX_INT_VALUE, porcentajeNegativos, direction);
+        IntMatrixGenerator(n, &matrizInt, MAX_INT_VALUE, 1 - porcentajeCompletitud, direction);
         if (formato == 'C' || formato == 'c')
         {
             IntMatrix2CSV(matrizInt, n, path);
@@ -185,7 +185,7 @@ int main()
     else if (tipo == 'd')
     {
         double **matrizDouble;
-        DoubleMatrixGenerator(n, &matrizDouble, parteEntera, parteDecimal, decimalCero, porcentajeNegativos, direction);
+        DoubleMatrixGenerator(n, &matrizDouble, parteEntera, parteDecimal, decimalCero, 1 - porcentajeCompletitud, direction);
         if (formato == 'C' || formato == 'c')
         {
             DoubleMatrix2CSV(matrizDouble, n, path, parteDecimal, decimalCero);
