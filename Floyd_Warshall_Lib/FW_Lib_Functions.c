@@ -71,6 +71,11 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
         FW.BS = DEFAULT_BLOCK_SIZE;
     }
 
+    if(FW.size < FW.BS)
+    {
+        printf("WARNING: The matrix size is smaller than the block size\n");
+    }
+
     FW.norm_size = next_multiple_of_BS(FW.size, FW.BS); //Size normalization          
     create_matrixes_from_file(&FW, file, local_attr.no_path);
 
