@@ -10,7 +10,7 @@
     #if defined(BUILDING_DLL)
         #define LIB_EXPORT __declspec(dllexport)
     #else
-        #define LIB_EXPORT __declspec(dllimport)
+        #define LIB_EXPORT 
     #endif
 #else
     #if defined(BUILDING_DLL)
@@ -23,6 +23,7 @@
 
 
 #define EXIT_ALOCATION_FAILED 2
+#define EXIT_OPEN_FILE_ERROR 3
 
 typedef enum
 {

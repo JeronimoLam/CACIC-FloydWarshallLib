@@ -19,6 +19,7 @@
         "string_view": "c",
         "initializer_list": "c",
         "utility": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "getopt.h": "c"
     }
 }
