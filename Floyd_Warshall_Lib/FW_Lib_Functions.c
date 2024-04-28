@@ -18,7 +18,7 @@ static double FW_save_time = 0;
 static double dwalltime();
 static void print_matrix(void *, unsigned int, DataType);
 static char *dataType_to_str(DataType);
-static unsigned int next_power_of_2(unsigned int);
+static unsigned int next_multiple_of_BS(unsigned int, int BS);
 
 // Lib Functions
 
@@ -60,7 +60,6 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
 
     // Calculation of matrix size
     FW.size = calculate_matrix_size(FW.fileType, file); // Calulates rows and cols
-    FW.norm_size = next_power_of_2(FW.size);            // Calculates the max size of the matrix (nxn)
 
     // Set Block Size
     if (BS != -1)
@@ -72,6 +71,7 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
         FW.BS = DEFAULT_BLOCK_SIZE;
     }
 
+    FW.norm_size = next_multiple_of_BS(FW.size, FW.BS); //Size normalization          
     create_matrixes_from_file(&FW, file, local_attr.no_path);
 
     fclose(file);
@@ -407,7 +407,24 @@ static char *dataType_to_str(DataType dt)
     return result;
 }
 
-static unsigned int next_power_of_2(unsigned int n)
+static unsigned int next_multiple_of_BS(unsigned int n, int BS)
+{
+    unsigned count = 0;
+
+    int remainder = n % BS;
+    if (remainder == 0)
+    {
+        return n;
+    }
+    else
+    {
+        return n + (BS - remainder);
+    }
+}
+
+
+/*
+static unsigned int next_multiple_of_BS(unsigned int n, int BS)
 {
     unsigned count = 0;
 
@@ -425,3 +442,4 @@ static unsigned int next_power_of_2(unsigned int n)
 
     return 1 << count;
 }
+*/
