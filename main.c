@@ -152,6 +152,7 @@ int main(int argc, char *argv[])
     printf("Tiempo Libreria Entera Secuencial %lf \n\n", sequential_total_time);
 
     return 0;
+    
 }
 
 /*****************************************************************/
