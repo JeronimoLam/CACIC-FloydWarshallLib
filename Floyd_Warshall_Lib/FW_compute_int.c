@@ -162,9 +162,6 @@ static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const 
             i_disp = i * BS;
             i_disp_d1 = i_disp + d1;
             dik = graph_int[i_disp + d2 + k];
-#ifdef INTEL_ARC
-#pragma unroll(UNROLL_FACTOR)
-#endif
 #pragma omp simd private(dij, dkj, sum)
             for (j = 0; j < BS; j++)
             {
@@ -183,9 +180,6 @@ static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const 
             i_disp = (i + 1) * BS;
             i_disp_d1 = i_disp + d1;
             dik = graph_int[i_disp + d2 + k];
-#ifdef INTEL_ARC
-#pragma unroll(UNROLL_FACTOR)
-#endif
 #pragma omp simd private(dij, dkj, sum)
             for (j = 0; j < BS; j++)
             {
@@ -224,16 +218,12 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
             i_disp = i * BS;
             i_disp_d1 = i_disp + d1;
             dik = graph_int[i_disp + d2 + k];
-#ifdef INTEL_ARC
-#pragma unroll(UNROLL_FACTOR)
-#endif
 #pragma omp simd private(dij, dkj, sum)
             for (j = 0; j < BS; j++)
             {
-                int test1 = graph_int[i_disp_d1 + j], test2 = graph_int[k_disp_d3 + j];
-                dij = (uint64_t)test1;
-                dkj = (uint64_t)test2;
-                sum = dik + dkj;
+                dij = graph_int[i_disp_d1 + j];
+				dkj = graph_int[k_disp_d3 + j];
+				sum = dik + dkj;
                 if (unlikely(sum < dij))
                 {
                     graph_int[i_disp_d1 + j] = sum;
@@ -246,9 +236,6 @@ static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d
             i_disp = (i + 1) * BS;
             i_disp_d1 = i_disp + d1;
             dik = graph_int[i_disp + d2 + k];
-#ifdef INTEL_ARC
-#pragma unroll(UNROLL_FACTOR)
-#endif
 #pragma omp simd private(dij, dkj, sum)
             for (j = 0; j < BS; j++)
             {

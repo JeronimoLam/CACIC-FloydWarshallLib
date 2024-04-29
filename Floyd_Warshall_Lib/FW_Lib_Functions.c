@@ -308,7 +308,7 @@ void init_FW_attr(FW_attr_t *attr)
     attr->thread_num = DEFAULT_THREAD_NUM;
 }
 
-// Getters for global times
+//----------------------------------------------- Times -----------------------------------------
 
 double get_FW_creation_time()
 {
@@ -328,6 +328,27 @@ double get_FW_save_time()
 double get_FW_total_time()
 {
     return FW_creation_time + FW_processing_time + FW_save_time;
+}
+
+//----------------------------------------------- FLOPS -----------------------------------------
+
+double get_FW_flops(FW_Matrix FW)
+{
+    double flops = 0;
+    switch (FW.datatype)
+    {
+    case TYPE_INT:
+        break;
+    case TYPE_FLOAT:
+    case TYPE_DOUBLE:
+        flops = (double)FW.size * (double)FW.size * (double)FW.size * 2;
+        flops = flops / get_FW_processing_time();
+        break;
+    default:
+        fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
+        exit(EXIT_FAILURE);
+    }
+    return flops;
 }
 
 // ------------------------------------------------------------------ Private Section ------------------------------------------------------------------

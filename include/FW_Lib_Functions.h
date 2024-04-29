@@ -130,5 +130,14 @@ LIB_EXPORT double get_FW_save_time();
  */
 LIB_EXPORT double get_FW_total_time();
 
+/**
+ * @brief Retrieves the number of floating-point operations per second (FLOPS).
+ *
+ * This function returns the number of floating-point operations that can be performed per second by the system.
+ *
+ * @return The number of FLOPS as a double.
+ */
+LIB_EXPORT double get_FW_flops(FW_Matrix * matrix);
+
 
 #endif //FW_LIB_FUNCTIONS_H
