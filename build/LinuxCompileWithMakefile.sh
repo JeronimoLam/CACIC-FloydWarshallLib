@@ -22,7 +22,7 @@ elif [ "$1" = "dynamic" ]; then
         cp ./lib/libFloydWarshall_dynamic.so ./lib/FloydWarshall_dynamic.so
 else
     # Default to static linking if no parameter is provided
-    echo "Invalid parameter. Defaulting to static linking with 32 bits."
+    echo "Invalid parameter. Defaulting to static linking with 64 bits."
     gcc -O0 -fopenmp main.c -o main.bin -Llib -lFloydWarshall_static
 fi
 

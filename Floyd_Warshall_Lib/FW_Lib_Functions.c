@@ -332,17 +332,17 @@ double get_FW_total_time()
 
 //----------------------------------------------- FLOPS -----------------------------------------
 
-double get_FW_flops(FW_Matrix FW)
+double get_FW_flops(FW_Matrix * FW)
 {
     double flops = 0;
-    switch (FW.datatype)
+    switch (FW->datatype)
     {
     case TYPE_INT:
-        break;
+        break; // Ver IOPS
     case TYPE_FLOAT:
     case TYPE_DOUBLE:
-        flops = (double)FW.size * (double)FW.size * (double)FW.size * 2;
-        flops = flops / get_FW_processing_time();
+        flops = (double)FW->size * (double)FW->size * (double)FW->size * 2;
+        flops = flops / get_FW_processing_time(); // Mostrar en giga Flops 10^9
         break;
     default:
         fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
@@ -447,6 +447,20 @@ static unsigned int next_multiple_of_BS(unsigned int n, int BS)
         return n + (BS - remainder);
     }
 }
+
+// static unsigned int next_multiple_of_BS(unsigned int n, int BS)
+// {
+//     if (n && !(n & (n - 1))) {
+//         return n;
+//     }
+
+//     unsigned int power = 1;
+//     while (power < n) {
+//         power <<= 1;
+//     }
+
+//     return power;
+// }
 
 
 /*
