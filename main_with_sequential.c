@@ -107,14 +107,13 @@ int main(int argc, char *argv[])
     attr.thread_num = thread_num;
 
     printf("\nFWL v1.0\n\n");
-    printf("Input file: %s\n\n", path);
+    printf("Input file: %s\n", path);
 
-    printf("Execution mode: \n");
-    printf("%s", fwl_get_attr_info(&attr));
+    printf("------------------------PARALELO------------------------\n");
 
-    printf("\nLoading Graph ...\n");
+    printf("Loading Graph ...\n");
     FW_Matrix data = fwl_matrix_create(dataType, path, block_size, &attr); // Read
-    printf("%s", fwl_get_matrix_info(&data));
+    printf("%s\n", FW_details_to_string(&data, &attr));
     printf("Done\n\n");
 
     printf("Computing FW Algorithm ...\n");
@@ -137,6 +136,41 @@ int main(int argc, char *argv[])
     }
     else{
         printf("%lf GFLPOS\n", get_fw_performance(&data));
+    }
+
+    printf("------------------------SECUENCIAL------------------------\n");
+
+    printf(" ==> Leyendo \n");
+    FW_Matrix data2 = fwl_matrix_create(dataType, path, block_size, &attr); // Read
+    printf("%s\n", FW_details_to_string(&data2, NULL));
+
+    printf(" ==> Procesado \n");
+    fwl_matrix_search_sequential(data2, &attr); // Process
+
+    printf(" ==> Guardando \n");
+    fwl_matrix_save(data2, "./output/", "ResultSecuential.csv", JSON, &attr); // Save
+
+    fwl_matrix_free(&data2); // Free memory
+
+    double sequential_algorithm_time = fwl_get_search_time();
+    double sequential_total_time = fwl_get_total_time();
+    printf("Tiempo algoritmo Secuencial %lf \n", sequential_algorithm_time);
+
+    printf("------------------------ Tiempos ------------------------\n");
+
+    // Print Times
+    printf("Tiempo algoritmo Paralelo %lf \n", paralell_algorithm_time);
+    printf("Tiempo algoritmo Secuencial %lf \n", sequential_algorithm_time);
+    printf("\n");
+    printf("Tiempo Libreria Entera Paralelo %lf \n", paralell_total_time);
+    printf("Tiempo Libreria Entera Secuencial %lf \n\n", sequential_total_time);
+
+    printf("Performance\n");
+    if (data.datatype == TYPE_INT){
+        printf("GIPOS: %lf\n", get_fw_performance(&data));
+    }
+    else{
+        printf("GFLPOS: %lf\n", get_fw_performance(&data));
     }
 
     return 0;

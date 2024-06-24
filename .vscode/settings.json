@@ -20,6 +20,10 @@
         "initializer_list": "c",
         "utility": "c",
         "semaphore.h": "c",
-        "getopt.h": "c"
+        "getopt.h": "c",
+        "common_functions.h": "c",
+        "string.h": "c",
+        "xstring": "c",
+        "xutility": "c"
     }
 }

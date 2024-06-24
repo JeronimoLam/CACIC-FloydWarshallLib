@@ -19,17 +19,18 @@ static double dwalltime();
 static void print_matrix(void *, unsigned int, DataType);
 static char *dataType_to_str(DataType);
 static unsigned int next_multiple_of_BS(unsigned int, int BS);
+static double custom_pow(double base, int exponent);
 
-// Lib Functions
+//----------------------------------------------- Lib Functions -----------------------------------------
 
-FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *attr)
+FW_Matrix fwl_matrix_create(DataType dataType, char *path, int BS, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
     FW_attr_t local_attr;
     if (attr == NULL)
     {
-        local_attr = new_FW_attr();
+        local_attr = fwl_attr_new();
     }
     else
     {
@@ -84,18 +85,25 @@ FW_Matrix create_structure(DataType dataType, char *path, int BS, FW_attr_t *att
     return FW;
 }
 
-void compute_FW_paralell(FW_Matrix FW, FW_attr_t *attr)
+void fwl_matrix_search_paralell(FW_Matrix FW, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
     FW_attr_t local_attr;
     if (attr == NULL)
     {
-        local_attr = new_FW_attr();
+        local_attr = fwl_attr_new();
     }
     else
     {
         local_attr = *attr;
+    }
+
+    // If thread number is 1, run the sequential version 
+    if(local_attr.thread_num == 1)
+    {
+        fwl_matrix_search_sequential(FW, &local_attr);
+        return;
     }
 
     switch (FW.datatype)
@@ -118,14 +126,14 @@ void compute_FW_paralell(FW_Matrix FW, FW_attr_t *attr)
     FW_processing_time = dwalltime() - timetick_start;
 }
 
-void compute_FW_sequential(FW_Matrix FW, FW_attr_t *attr)
+void fwl_matrix_search_sequential(FW_Matrix FW, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
     FW_attr_t local_attr;
     if (attr == NULL)
     {
-        local_attr = new_FW_attr();
+        local_attr = fwl_attr_new();
     }
     else
     {
@@ -152,7 +160,7 @@ void compute_FW_sequential(FW_Matrix FW, FW_attr_t *attr)
     FW_processing_time = dwalltime() - timetick_start;
 }
 
-void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_attr_t *attr)
+void fwl_matrix_save(FW_Matrix FW, char *path, char *name, FileType fileType, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
@@ -161,7 +169,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
     if (attr == NULL)
     {
         // attr es NULL, usa valores predeterminados
-        local_attr = new_FW_attr();
+        local_attr = fwl_attr_new();
     }
     else
     {
@@ -204,7 +212,7 @@ void save_structure(FW_Matrix FW, char *path, char *name, FileType fileType, FW_
     FW_save_time = dwalltime() - timetick_start;
 }
 
-void free_FW_Matrix(FW_Matrix *FW)
+void fwl_matrix_free(FW_Matrix *FW)
 {
     if (FW != NULL)
     {
@@ -223,72 +231,112 @@ void free_FW_Matrix(FW_Matrix *FW)
     }
 }
 
-char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
-{
-    char *result_martix = malloc(1024);
-    if (result_martix == NULL)
-    {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
-        exit(EXIT_ALOCATION_FAILED);
+//----------------------------------------------- Details -----------------------------------------
+
+// char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
+// {
+//     char *result_martix = malloc(1024);
+//     if (result_martix == NULL)
+//     {
+//         fprintf(stderr, "Error: Memory allocation failed.\n");
+//         exit(EXIT_ALOCATION_FAILED);
+//     }
+
+//     char *result_attr = malloc(1024);
+//     if (result_attr == NULL)
+//     {
+//         fprintf(stderr, "Error: Memory allocation failed.\n");
+//         exit(EXIT_ALOCATION_FAILED);
+//     }
+
+//     result_martix[0] = '\0';
+//     result_attr[0] = '\0';
+//     if (element != NULL)
+//         sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d", element->size, element->norm_size, element->BS, dataType_to_str(element->datatype), element->decimal_length);
+//     if (attr != NULL)
+//         sprintf(result_attr, "Thread Num: %d\nNo Path: %s\nPrint distance matrix: %s\nText in output: %s", attr->thread_num, attr->no_path ? "True" : "False", attr->print_distance_matrix ? "True" : "False", attr->text_in_output ? "INF" : "-1");
+//     if (element != NULL && attr != NULL)
+//     {
+//         sprintf(result_martix, "%s\n\n%s", result_martix, result_attr);
+//         return result_martix;
+//     }
+//     return strcat(result_martix, result_attr);
+// }
+
+char* fwl_get_matrix_info(FW_Matrix *element) {
+    const int buffer_size = 1024;
+    int len = 0;
+    char *result = malloc(buffer_size);
+    if (result == NULL) {
+        fprintf(stderr, "Error: Memory allocation failed in FW_details_to_string().\n");
+        return "";
     }
 
-    char *result_attr = malloc(1024);
-    if (result_attr == NULL)
-    {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
-        exit(EXIT_ALOCATION_FAILED);
+    len += snprintf(result + len, buffer_size - len, "-> File format: %s\n", (element->fileType == CSV) ? "CSV" : "JSON");
+    len += snprintf(result + len, buffer_size - len, "-> Datatype: %s\n", dataType_to_str(element->datatype));
+    len += snprintf(result + len, buffer_size - len, "-> Matrix Size: %d\n", element->size);
+    len += snprintf(result + len, buffer_size - len, "-> Matrix Normalized Size: %d\n", element->norm_size);
+    len += snprintf(result + len, buffer_size - len, "-> Block Size: %d\n", element->BS);
+    if (element->datatype != TYPE_INT) {
+        len += snprintf(result + len, buffer_size - len, "-> Decimal Places: %d\n", element->decimal_length);
     }
 
-    result_martix[0] = '\0';
-    result_attr[0] = '\0';
-    if (element != NULL)
-        sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d", element->size, element->norm_size, element->BS, dataType_to_str(element->datatype), element->decimal_length);
-    if (attr != NULL)
-        sprintf(result_attr, "Thread Num: %d\nNo Path: %s\nPrint distance matrix: %s\nText in output: %s", attr->thread_num, attr->no_path ? "True" : "False", attr->print_distance_matrix ? "True" : "False", attr->text_in_output ? "INF" : "-1");
-    if (element != NULL && attr != NULL)
-    {
-        sprintf(result_martix, "%s\n\n%s", result_martix, result_attr);
-        return result_martix;
+    return result;
+}
+
+char* fwl_get_attr_info(FW_attr_t *attr) {
+
+    const int buffer_size = 1024;
+    int len = 0;
+    char *result = malloc(buffer_size);
+    if (result == NULL) {
+        fprintf(stderr, "Error: Memory allocation failed in FW_details_to_string().\n");
+        return "";
     }
-    return strcat(result_martix, result_attr);
+
+    len += snprintf(result + len, buffer_size - len, "=> %d threads\n", attr->thread_num);
+    len += snprintf(result + len, buffer_size - len, "=> %sncluding paths\n", attr->no_path ? "Not i" : "I");
+    len += snprintf(result + len, buffer_size - len, "=> Infinite outputs as %s\n", attr->text_in_output ? "INF" : "-1");
+
+    return result;
 }
 
 
-void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
-{
+// void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
+// {
 
-    if (strstr(print, "all") || strstr(print, "dist"))
-    {
-        if (blocks)
-        {
-            printf("Distance Matrix Loaded in blocks\n");
-            print_matrix(element->dist, element->norm_size, element->datatype);
-        }
-        if (!blocks)
-        {
-            printf("Distance Matrix Loaded Normal\n");
-            print_matrix(reorganize_to_linear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
-        }
-    }
-    if (strstr(print, "all") || strstr(print, "path"))
-    {
-        if (blocks)
-        {
-            printf("Path Matrix Loaded in blocks\n");
-            print_matrix(element->path, element->norm_size, TYPE_INT);
-            printf("\n");
-        }
-        if (!blocks)
-        {
-            printf("Path Matrix Loaded Normal\n");
-            print_matrix(reorganize_to_linear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
-        }
-    }
-}
+//     if (strstr(print, "all") || strstr(print, "dist"))
+//     {
+//         if (blocks)
+//         {
+//             printf("Distance Matrix Loaded in blocks\n");
+//             print_matrix(element->dist, element->norm_size, element->datatype);
+//         }
+//         if (!blocks)
+//         {
+//             printf("Distance Matrix Loaded Normal\n");
+//             print_matrix(reorganize_to_linear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
+//         }
+//     }
+//     if (strstr(print, "all") || strstr(print, "path"))
+//     {
+//         if (blocks)
+//         {
+//             printf("Path Matrix Loaded in blocks\n");
+//             print_matrix(element->path, element->norm_size, TYPE_INT);
+//             printf("\n");
+//         }
+//         if (!blocks)
+//         {
+//             printf("Path Matrix Loaded Normal\n");
+//             print_matrix(reorganize_to_linear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
+//         }
+//     }
+// }
 
 //----------------------------------------------- Attr -----------------------------------------
 
-FW_attr_t new_FW_attr()
+FW_attr_t fwl_attr_new()
 {
     FW_attr_t attr;
     attr.text_in_output = DEFAULT_OUTPUT_FORMAT;
@@ -299,7 +347,7 @@ FW_attr_t new_FW_attr()
     return attr;
 }
 
-void init_FW_attr(FW_attr_t *attr)
+void fwl_attr_init(FW_attr_t *attr)
 {
     // Initialize the attributes of the FW_attr_t object
     attr->text_in_output = DEFAULT_OUTPUT_FORMAT;
@@ -310,45 +358,34 @@ void init_FW_attr(FW_attr_t *attr)
 
 //----------------------------------------------- Times -----------------------------------------
 
-double get_FW_creation_time()
+double fwl_get_create_time()
 {
     return FW_creation_time;
 }
 
-double get_FW_processing_time()
+double fwl_get_search_time()
 {
     return FW_processing_time;
 }
 
-double get_FW_save_time()
+double fwl_get_save_time()
 {
     return FW_save_time;
 }
 
-double get_FW_total_time()
+double fwl_get_total_time()
 {
     return FW_creation_time + FW_processing_time + FW_save_time;
 }
 
-//----------------------------------------------- FLOPS -----------------------------------------
+//----------------------------------------------- Performance -----------------------------------------
 
-double get_FW_flops(FW_Matrix * FW)
+double get_fw_performance(FW_Matrix * FW)
 {
-    double flops = 0;
-    switch (FW->datatype)
-    {
-    case TYPE_INT:
-        break; // Ver IOPS
-    case TYPE_FLOAT:
-    case TYPE_DOUBLE:
-        flops = (double)FW->size * (double)FW->size * (double)FW->size * 2;
-        flops = flops / get_FW_processing_time(); // Mostrar en giga Flops 10^9
-        break;
-    default:
-        fprintf(stderr, "Error: Unsupported data type for Floyd-Warshall computation.\n");
-        exit(EXIT_FAILURE);
-    }
-    return flops;
+    double performance = 0;
+
+    performance = (double)FW->size * (double)FW->size * (double)FW->size * 2; // *2 porque se realiza la suma y una comparacion.
+    return performance / (fwl_get_search_time() * custom_pow(10, 9)); // Mostrar en giga Flops 10^9
 }
 
 // ------------------------------------------------------------------ Private Section ------------------------------------------------------------------
@@ -446,6 +483,23 @@ static unsigned int next_multiple_of_BS(unsigned int n, int BS)
     {
         return n + (BS - remainder);
     }
+}
+
+// Function to calculate the power of a number
+static double custom_pow(double base, int exponent)
+{
+    double result = 1.0;
+    int abs_exponent = (exponent < 0) ? -exponent : exponent;
+
+    for (int i = 0; i < abs_exponent; i++) {
+        result *= base;
+    }
+
+    if (exponent < 0) {
+        result = 1.0 / result;
+    }
+
+    return result;
 }
 
 // static unsigned int next_multiple_of_BS(unsigned int n, int BS)

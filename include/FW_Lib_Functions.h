@@ -14,7 +14,7 @@
  * @param attr Pointer to FW_attr_t structure containing additional attributes.
  * @return The created FW_Matrix structure with the matrix loaded.
  */
-LIB_EXPORT FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
+LIB_EXPORT FW_Matrix fwl_matrix_create(DataType, char *, int, FW_attr_t *);
 
 /**
  * @brief Performs the Floyd-Warshall algorithm calculation on the provided matrix.
@@ -25,7 +25,7 @@ LIB_EXPORT FW_Matrix create_structure(DataType, char *, int, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-LIB_EXPORT void compute_FW_paralell(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_search_paralell(FW_Matrix, FW_attr_t *);
 
 /**
  * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs
@@ -34,7 +34,7 @@ LIB_EXPORT void compute_FW_paralell(FW_Matrix, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-LIB_EXPORT void compute_FW_sequential(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_search_sequential(FW_Matrix, FW_attr_t *);
 
 /**
  * @brief Saves the distance matrix or the shortest path matrix to a file.
@@ -50,7 +50,7 @@ LIB_EXPORT void compute_FW_sequential(FW_Matrix, FW_attr_t *);
  * @param attr Additional attributes for the file (optional).
  * @note If both dist_matrix and path_matrix are set to 0, the function will not perform any action.
  */
-LIB_EXPORT void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_save(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 
 
 /**
@@ -61,27 +61,13 @@ LIB_EXPORT void save_structure(FW_Matrix, char*, char*, FileType, FW_attr_t *);
  * 
  * @param matrix A pointer to the FW_Matrix structure to be freed.
  */
-LIB_EXPORT void free_FW_Matrix(FW_Matrix* matrix);
+LIB_EXPORT void fwl_matrix_free(FW_Matrix* matrix);
 
-/**
- * Converts the details of a FW_Matrix element and FW_attr_t attributes into a string representation.
- *
- * @param element The FW_Matrix element containing the matrix details.
- * @param attr The FW_attr_t attributes containing additional information.
- * @return A string representation of the matrix details and attributes.
- */
-LIB_EXPORT char *  FW_details_to_string(FW_Matrix * element, FW_attr_t * attr);
 
-/**
- * Prints the FW_Matrixes.
- *
- * This function prints to the standard output the FW_Matrixes based on the given parameters.
- *
- * @param FW A pointer to the FW_Matrix structure.
- * @param print A string specifying the type of printing. ("all" | "dist" | "path")
- * @param blocks Flag indicating if the printing should be in blocks or not (1 means in blocks and the function will print a matrix of nxn with n multiple of BS, 0  means normal printing and the function will print a matrix of nxn with n = size of the original matrix)
- */
-LIB_EXPORT void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
+LIB_EXPORT char *  fwl_get_matrix_info(FW_Matrix * element);
+
+
+LIB_EXPORT char * fwl_get_attr_info(FW_attr_t * attr);
 
 
 // Attribute functions
@@ -91,14 +77,14 @@ LIB_EXPORT void print_FW_matrixes(FW_Matrix * element, char *, int blocks);
  *
  * @return The newly created FW_attr_t object.
  */
-LIB_EXPORT FW_attr_t new_FW_attr();
+LIB_EXPORT FW_attr_t fwl_attr_new();
 
 /**
  * Initializes a FW_attr_t object with default attribute values.
  *
  * @param attr A pointer to the FW_attr_t object to be initialized.
  */
-LIB_EXPORT void init_FW_attr(FW_attr_t *);
+LIB_EXPORT void fwl_attr_init(FW_attr_t *);
 
 // Time functions
 
@@ -107,37 +93,37 @@ LIB_EXPORT void init_FW_attr(FW_attr_t *);
  *
  * @return The creation time in seconds.
  */
-LIB_EXPORT double get_FW_creation_time();
+LIB_EXPORT double fwl_get_create_time();
 
 /**
  * Returns the processing time of the Floyd-Warshall algorithm.
  *
  * @return The processing time in seconds.
  */
-LIB_EXPORT double get_FW_processing_time();
+LIB_EXPORT double fwl_get_search_time();
 
 /**
  * Returns the save to file time of the FW_Matrix structure.
  *
  * @return The save time in seconds.
  */
-LIB_EXPORT double get_FW_save_time();
+LIB_EXPORT double fwl_get_save_time();
 
 /**
  * Returns the total time taken by the Floyd Warshall Library.
  *
  * @return The total time taken by the Floyd Warshall Library.
  */
-LIB_EXPORT double get_FW_total_time();
+LIB_EXPORT double fwl_get_total_time();
 
 /**
- * @brief Retrieves the number of floating-point operations per second (FLOPS).
+ * @brief Retrieves the number of floating-point operations per second (FLOPS or IOPS).
  *
- * This function returns the number of floating-point operations that can be performed per second by the system.
+ * This function returns the number of floating-point operations or integer-operations that can be performed per second by the system.
  *
- * @return The number of FLOPS as a double.
+ * @return The number of FLOPS or IOPS as a double.
  */
-LIB_EXPORT double get_FW_flops(FW_Matrix * matrix);
+LIB_EXPORT double get_fw_performance(FW_Matrix * matrix);
 
 
 #endif //FW_LIB_FUNCTIONS_H
