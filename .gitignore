@@ -1,8 +1,8 @@
 # C artifacts
 *.o
-./*.exe
+*.exe
 ./generator/*.exe
-./*.bin
+*.bin
 *.dll
 *.a
 *.def

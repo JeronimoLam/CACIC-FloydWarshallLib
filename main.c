@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 
     printf("Compute Speed: ");
     if (data.datatype == TYPE_INT){
-        printf("%lf GIPOS\n", get_fw_performance(&data));
+        printf("%lf GIOPS\n", get_fw_performance(&data));
     }
     else{
         printf("%lf GFLPOS\n", get_fw_performance(&data));
