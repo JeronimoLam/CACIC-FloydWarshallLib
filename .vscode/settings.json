@@ -24,6 +24,7 @@
         "common_functions.h": "c",
         "string.h": "c",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "xlocale": "c"
     }
 }
