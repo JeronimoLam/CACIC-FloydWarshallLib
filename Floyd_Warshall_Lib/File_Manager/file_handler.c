@@ -102,7 +102,7 @@ void create_matrixes_from_file(FW_Matrix *FW, FILE *file, int no_path)
     switch (FW->fileType)
     {
     case CSV:
-        FW->dist = CSV_create_matrix(*FW, file);
+        FW->dist = create_csv_matrix(*FW, file);
         FW->decimal_length = get_max_decimal_length();
         if (no_path)
         {
@@ -119,7 +119,7 @@ void create_matrixes_from_file(FW_Matrix *FW, FILE *file, int no_path)
 
         break;
     case JSON:
-        FW->dist = JSON_create_matrix(*FW, file);
+        FW->dist = create_json_matrix(*FW, file);
         FW->decimal_length = get_max_decimal_length();
         if (no_path)
         {

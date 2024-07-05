@@ -64,9 +64,27 @@ LIB_EXPORT void fwl_matrix_save(FW_Matrix, char*, char*, FileType, FW_attr_t *);
 LIB_EXPORT void fwl_matrix_free(FW_Matrix* matrix);
 
 
-LIB_EXPORT char *  fwl_get_matrix_info(FW_Matrix * element);
+/**
+ * Retrieves information about a FW_Matrix element.
+ *
+ * This function takes a pointer to a FW_Matrix element and returns a string
+ * containing information about the matrix.
+ *
+ * @param element A pointer to the FW_Matrix element.
+ * @return A string containing information about the matrix.
+ */
+LIB_EXPORT char * fwl_get_matrix_info(FW_Matrix * element);
 
 
+/**
+ * Retrieves information about a FW_attr_t element.
+ *
+ * This function takes a pointer to a FW_attr_t element and returns a string
+ * containing information about it.
+ * 
+ * @param attr A pointer to the FW_attr_t element.
+ * @return A string containing information about the attributes.
+ */
 LIB_EXPORT char * fwl_get_attr_info(FW_attr_t * attr);
 
 

@@ -6,7 +6,7 @@
 #include "include/FW_Lib_Functions.h"
 
 #define BS 128
-#define TN 16
+#define TN 8
 #define BAD_BS_ARGUMENT 100
 #define BAD_TN_ARGUMENT 101
 

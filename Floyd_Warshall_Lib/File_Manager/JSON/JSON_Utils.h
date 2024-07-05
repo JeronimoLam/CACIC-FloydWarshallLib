@@ -4,7 +4,7 @@
 #include "../Common/common_functions.h"
 #include "../Block_Operations/blocks.h"
 
-void * JSON_create_matrix(FW_Matrix, FILE *);
+void * create_json_matrix(FW_Matrix, FILE *);
 void JSON_save_matrix(FW_Matrix, char *, unsigned int, unsigned int, unsigned int);
 
 

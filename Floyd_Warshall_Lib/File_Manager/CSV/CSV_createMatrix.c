@@ -6,7 +6,7 @@ void *CSV_create_int_matrix(FILE *file, unsigned int size, unsigned int norm_siz
 void *CSV_create_float_matrix(FILE *file, unsigned int size, unsigned int norm_size);
 void *CSV_create_double_matrix(FILE *, unsigned int, unsigned int);
 
-void *CSV_create_matrix(FW_Matrix FW, FILE *file)
+void *create_csv_matrix(FW_Matrix FW, FILE *file)
 {
     switch (FW.datatype)
     {

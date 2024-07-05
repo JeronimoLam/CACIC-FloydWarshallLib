@@ -233,37 +233,8 @@ void fwl_matrix_free(FW_Matrix *FW)
 
 //----------------------------------------------- Details -----------------------------------------
 
-// char *FW_details_to_string(FW_Matrix *element, FW_attr_t *attr)
-// {
-//     char *result_martix = malloc(1024);
-//     if (result_martix == NULL)
-//     {
-//         fprintf(stderr, "Error: Memory allocation failed.\n");
-//         exit(EXIT_ALOCATION_FAILED);
-//     }
-
-//     char *result_attr = malloc(1024);
-//     if (result_attr == NULL)
-//     {
-//         fprintf(stderr, "Error: Memory allocation failed.\n");
-//         exit(EXIT_ALOCATION_FAILED);
-//     }
-
-//     result_martix[0] = '\0';
-//     result_attr[0] = '\0';
-//     if (element != NULL)
-//         sprintf(result_martix, "Matrix Size: %d\nNormalized Size: %d\nBlock Size: %d\nData Type: %s\nDecimal Part: %d", element->size, element->norm_size, element->BS, dataType_to_str(element->datatype), element->decimal_length);
-//     if (attr != NULL)
-//         sprintf(result_attr, "Thread Num: %d\nNo Path: %s\nPrint distance matrix: %s\nText in output: %s", attr->thread_num, attr->no_path ? "True" : "False", attr->print_distance_matrix ? "True" : "False", attr->text_in_output ? "INF" : "-1");
-//     if (element != NULL && attr != NULL)
-//     {
-//         sprintf(result_martix, "%s\n\n%s", result_martix, result_attr);
-//         return result_martix;
-//     }
-//     return strcat(result_martix, result_attr);
-// }
-
-char* fwl_get_matrix_info(FW_Matrix *element) {
+char* fwl_get_matrix_info(FW_Matrix *element) 
+{
     const int buffer_size = 1024;
     int len = 0;
     char *result = malloc(buffer_size);
@@ -284,7 +255,8 @@ char* fwl_get_matrix_info(FW_Matrix *element) {
     return result;
 }
 
-char* fwl_get_attr_info(FW_attr_t *attr) {
+char* fwl_get_attr_info(FW_attr_t *attr) 
+{
 
     const int buffer_size = 1024;
     int len = 0;
@@ -300,39 +272,6 @@ char* fwl_get_attr_info(FW_attr_t *attr) {
 
     return result;
 }
-
-
-// void print_FW_matrixes(FW_Matrix *element, char *print, int blocks)
-// {
-
-//     if (strstr(print, "all") || strstr(print, "dist"))
-//     {
-//         if (blocks)
-//         {
-//             printf("Distance Matrix Loaded in blocks\n");
-//             print_matrix(element->dist, element->norm_size, element->datatype);
-//         }
-//         if (!blocks)
-//         {
-//             printf("Distance Matrix Loaded Normal\n");
-//             print_matrix(reorganize_to_linear(element->dist, element->norm_size, element->BS, element->datatype), element->size, element->datatype);
-//         }
-//     }
-//     if (strstr(print, "all") || strstr(print, "path"))
-//     {
-//         if (blocks)
-//         {
-//             printf("Path Matrix Loaded in blocks\n");
-//             print_matrix(element->path, element->norm_size, TYPE_INT);
-//             printf("\n");
-//         }
-//         if (!blocks)
-//         {
-//             printf("Path Matrix Loaded Normal\n");
-//             print_matrix(reorganize_to_linear(element->path, element->norm_size, element->BS, TYPE_INT), element->size, TYPE_INT);
-//         }
-//     }
-// }
 
 //----------------------------------------------- Attr -----------------------------------------
 
@@ -485,7 +424,6 @@ static unsigned int next_multiple_of_BS(unsigned int n, int BS)
     }
 }
 
-// Function to calculate the power of a number
 static double custom_pow(double base, int exponent)
 {
     double result = 1.0;
@@ -501,39 +439,3 @@ static double custom_pow(double base, int exponent)
 
     return result;
 }
-
-// static unsigned int next_multiple_of_BS(unsigned int n, int BS)
-// {
-//     if (n && !(n & (n - 1))) {
-//         return n;
-//     }
-
-//     unsigned int power = 1;
-//     while (power < n) {
-//         power <<= 1;
-//     }
-
-//     return power;
-// }
-
-
-/*
-static unsigned int next_multiple_of_BS(unsigned int n, int BS)
-{
-    unsigned count = 0;
-
-    // First n in the below condition is for the case where n is 0
-    if (n && !(n & (n - 1)))
-    {
-        return n;
-    }
-
-    while (n != 0)
-    {
-        n >>= 1;
-        count += 1;
-    }
-
-    return 1 << count;
-}
-*/

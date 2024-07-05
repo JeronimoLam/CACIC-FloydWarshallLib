@@ -4,7 +4,7 @@ void *JSON_create_int_matrix(FILE *file, unsigned int size, unsigned int norm_si
 void *JSON_create_float_matrix(FILE *file, unsigned int size, unsigned int norm_size);
 void *JSON_create_double_matrix(FILE *file, unsigned int size, unsigned int norm_size);
 
-void *JSON_create_matrix(FW_Matrix FW, FILE *file)
+void *create_json_matrix(FW_Matrix FW, FILE *file)
 {
     switch (FW.datatype)
     {
