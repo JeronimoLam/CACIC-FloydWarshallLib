@@ -25,7 +25,7 @@ LIB_EXPORT FW_Matrix fwl_matrix_create(DataType, char *, int, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-LIB_EXPORT void fwl_matrix_search_paralell(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_paralell_search(FW_Matrix, FW_attr_t *);
 
 /**
  * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs
@@ -34,7 +34,7 @@ LIB_EXPORT void fwl_matrix_search_paralell(FW_Matrix, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-LIB_EXPORT void fwl_matrix_search_sequential(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_sequential_search(FW_Matrix, FW_attr_t *);
 
 /**
  * @brief Saves the distance matrix or the shortest path matrix to a file.
@@ -73,7 +73,7 @@ LIB_EXPORT void fwl_matrix_free(FW_Matrix* matrix);
  * @param element A pointer to the FW_Matrix element.
  * @return A string containing information about the matrix.
  */
-LIB_EXPORT char * fwl_get_matrix_info(FW_Matrix * element);
+LIB_EXPORT char * fwl_matrix_get_info(FW_Matrix * element);
 
 
 /**
@@ -85,7 +85,7 @@ LIB_EXPORT char * fwl_get_matrix_info(FW_Matrix * element);
  * @param attr A pointer to the FW_attr_t element.
  * @return A string containing information about the attributes.
  */
-LIB_EXPORT char * fwl_get_attr_info(FW_attr_t * attr);
+LIB_EXPORT char * fwl_attr_get_info(FW_attr_t * attr);
 
 
 // Attribute functions

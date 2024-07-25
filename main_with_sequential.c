@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     printf("Done\n\n");
 
     printf("Computing FW Algorithm ...\n");
-    fwl_matrix_search_paralell(data, &attr); // Process
+    fwl_matrix_paralell_search(data, &attr); // Process
     printf("Done\n\n");
 
     printf("Saving Results ...\n");
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     printf("%s\n", FW_details_to_string(&data2, NULL));
 
     printf(" ==> Procesado \n");
-    fwl_matrix_search_sequential(data2, &attr); // Process
+    fwl_matrix_sequential_search(data2, &attr); // Process
 
     printf(" ==> Guardando \n");
     fwl_matrix_save(data2, "./output/", "ResultSecuential.csv", JSON, &attr); // Save

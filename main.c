@@ -110,15 +110,15 @@ int main(int argc, char *argv[])
     printf("Input file: %s\n\n", path);
 
     printf("Execution mode: \n");
-    printf("%s", fwl_get_attr_info(&attr));
+    printf("%s", fwl_attr_get_info(&attr));
 
     printf("\nLoading Graph ...\n");
     FW_Matrix data = fwl_matrix_create(dataType, path, block_size, &attr); // Read
-    printf("%s", fwl_get_matrix_info(&data));
+    printf("%s", fwl_matrix_get_info(&data));
     printf("Done\n\n");
 
     printf("Computing FW Algorithm ...\n");
-    fwl_matrix_search_paralell(data, &attr); // Process
+    fwl_matrix_paralell_search(data, &attr); // Process
     printf("Done\n\n");
 
     printf("Saving Results ...\n");

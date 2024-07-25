@@ -85,7 +85,7 @@ FW_Matrix fwl_matrix_create(DataType dataType, char *path, int BS, FW_attr_t *at
     return FW;
 }
 
-void fwl_matrix_search_paralell(FW_Matrix FW, FW_attr_t *attr)
+void fwl_matrix_paralell_search(FW_Matrix FW, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
@@ -102,7 +102,7 @@ void fwl_matrix_search_paralell(FW_Matrix FW, FW_attr_t *attr)
     // If thread number is 1, run the sequential version 
     if(local_attr.thread_num == 1)
     {
-        fwl_matrix_search_sequential(FW, &local_attr);
+        fwl_matrix_sequential_search(FW, &local_attr);
         return;
     }
 
@@ -126,7 +126,7 @@ void fwl_matrix_search_paralell(FW_Matrix FW, FW_attr_t *attr)
     FW_processing_time = dwalltime() - timetick_start;
 }
 
-void fwl_matrix_search_sequential(FW_Matrix FW, FW_attr_t *attr)
+void fwl_matrix_sequential_search(FW_Matrix FW, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
@@ -233,7 +233,7 @@ void fwl_matrix_free(FW_Matrix *FW)
 
 //----------------------------------------------- Details -----------------------------------------
 
-char* fwl_get_matrix_info(FW_Matrix *element) 
+char* fwl_matrix_get_info(FW_Matrix *element) 
 {
     const int buffer_size = 1024;
     int len = 0;
@@ -255,7 +255,7 @@ char* fwl_get_matrix_info(FW_Matrix *element)
     return result;
 }
 
-char* fwl_get_attr_info(FW_attr_t *attr) 
+char* fwl_attr_get_info(FW_attr_t *attr) 
 {
 
     const int buffer_size = 1024;

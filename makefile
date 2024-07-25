@@ -6,10 +6,10 @@ LIB_DIR = lib
 
 ifeq ($(OS),Windows_NT)
 all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
-CFLAGS = -O0 -g -fopenmp
+CFLAGS = -fopenmp -O3
 else
 all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
-CFLAGS = -O0 -g -fopenmp -fPIC
+CFLAGS = -fopenmp -fPIC -O3
 endif
 
 clean:
@@ -76,10 +76,10 @@ $(LIB_DIR)/lib$(LIB_NAME)_static.a: $(OBJECTS)
 
 ifeq ($(OS),Windows_NT)
 ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll: $(OBJECTS)
-	gcc -DBUILDING_DLL -O0 -fopenmp -shared -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,--out-implib,$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll.a -Wl,--output-def,$(LIB_DIR)/$(LIB_NAME).def
+	gcc -DBUILDING_DLL $(CFLAGS) -shared -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,--out-implib,$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll.a -Wl,--output-def,$(LIB_DIR)/$(LIB_NAME).def
 else
 ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so: $(OBJECTS)
-	gcc -DBUILDING_DLL -O0 -fopenmp -shared -fPIC -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,-soname,$(LIB_NAME)_dynamic.so
+	gcc -DBUILDING_DLL $(CFLAGS) -shared -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,-soname,$(LIB_NAME)_dynamic.so
 
 endif
 .PHONY: all clean prepare
