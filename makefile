@@ -6,10 +6,10 @@ LIB_DIR = lib
 
 ifeq ($(OS),Windows_NT)
 all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
-CFLAGS = -fopenmp -O3
+CFLAGS = -fopenmp -march=native -O3 
 else
 all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
-CFLAGS = -fopenmp -fPIC -O3
+CFLAGS = -fopenmp -march=native -fPIC -O3
 endif
 
 clean:

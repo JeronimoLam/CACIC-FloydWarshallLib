@@ -13,10 +13,12 @@
 double dwalltime();
 FILE *check_file(const char *);
 int try_convert_to_int(const char *, int *);
+void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType *dataType, int *block_size, int *thread_num);
+
 
 int main(int argc, char *argv[])
 {
-    int size, c, dataType_flag = 0, temp_options = 0;
+    int size, dataType_flag = 0;
     char *path;
     FILE *file;
     DataType dataType = UNDEFINED;
@@ -25,80 +27,7 @@ int main(int argc, char *argv[])
     int block_size = BS; // Use the default block size
     int thread_num = TN; // Use the default thread number
 
-    static struct option long_options[] = {
-        {"path", required_argument, 0, 'p'},
-        {"int", no_argument, 0, 'i'},
-        {"float", no_argument, 0, 'f'},
-        {"double", no_argument, 0, 'd'},
-        {"block-size", required_argument, 0, 'b'},
-        {"thread-num", required_argument, 0, 't'},
-        {0, 0, 0, 0}};
-
-    int option_index = 0;
-
-    while ((c = getopt_long(argc, argv, "p:ifdb:t:", long_options, &option_index)) != -1)
-    {
-        switch (c)
-        {
-        case 'p':
-            path = optarg;
-            file = check_file(optarg);
-            if (file == NULL)
-            {
-                return -1;
-            }
-            break;
-        case 'i':
-        case 'f':
-        case 'd':
-            if (dataType_flag)
-            {
-                fprintf(stderr, "Error: only one data type argument can be used at a time.\n");
-                exit(EXIT_FAILURE);
-            }
-            dataType_flag = 1;
-
-            switch (c)
-            {
-            case 'i':
-                dataType = TYPE_INT;
-                break;
-            case 'f':
-                dataType = TYPE_FLOAT;
-                break;
-            case 'd':
-                dataType = TYPE_DOUBLE;
-                break;
-            }
-            break;
-
-        case 'b':
-            try_convert_to_int(optarg, &temp_options);
-            if (temp_options == 0)
-                exit(BAD_BS_ARGUMENT);
-            block_size = temp_options;
-            temp_options = 0;
-            break;
-        case 't':
-            try_convert_to_int(optarg, &temp_options);
-            if (temp_options == 0)
-                exit(BAD_TN_ARGUMENT);
-            thread_num = temp_options;
-            temp_options = 0;
-            break;
-
-        default:
-            fprintf(stderr, "Usage: \n"
-                            "-p, --path <path>              Specify the path to the input file.\n"
-                            "-i, --int                      Set the data type to integer.\n"
-                            "-f, --float                    Set the data type to float.\n"
-                            "-d, --double                   Set the data type to double.\n"
-                            "-b, --block-size <size>        Set the block size (default: %d).\n"
-                            "-t, --thread-num <number>      Set the number of threads (default: %d).\n",
-                    BS, TN);
-            exit(EXIT_FAILURE);
-        }
-    }
+    parse_arguments(argc, argv, &path, &file, &dataType, &block_size, &thread_num);
 
     // Arguments Init
     FW_attr_t attr;
@@ -186,4 +115,87 @@ int try_convert_to_int(const char *str, int *converted_value)
 
     *converted_value = (int)value;
     return 1; // Conversion succeeded
+}
+
+void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType *dataType, int *block_size, int *thread_num)
+{
+    int c, temp_options = 0;
+    int dataType_flag = 0;
+
+    static struct option long_options[] = {
+        {"path", required_argument, 0, 'p'},
+        {"int", no_argument, 0, 'i'},
+        {"float", no_argument, 0, 'f'},
+        {"double", no_argument, 0, 'd'},
+        {"block-size", required_argument, 0, 'b'},
+        {"thread-num", required_argument, 0, 't'},
+        {0, 0, 0, 0}};
+
+    int option_index = 0;
+
+    while ((c = getopt_long(argc, argv, "p:ifdb:t:", long_options, &option_index)) != -1)
+    {
+        switch (c)
+        {
+        case 'p':
+            *path = optarg;
+            *file = check_file(optarg);
+            if (*file == NULL)
+            {
+                exit(EXIT_FAILURE);
+            }
+            break;
+        case 'i':
+        case 'f':
+        case 'd':
+            if (dataType_flag)
+            {
+                fprintf(stderr, "Error: only one data type argument can be used at a time.\n");
+                exit(EXIT_FAILURE);
+            }
+            dataType_flag = 1;
+
+            switch (c)
+            {
+            case 'i':
+                *dataType = TYPE_INT;
+                break;
+            case 'f':
+                *dataType = TYPE_FLOAT;
+                break;
+            case 'd':
+                *dataType = TYPE_DOUBLE;
+                break;
+            }
+            break;
+
+        case 'b':
+            if (!try_convert_to_int(optarg, &temp_options) || temp_options <= 0)
+            {
+                exit(BAD_BS_ARGUMENT);
+            }
+            *block_size = temp_options;
+            temp_options = 0;
+            break;
+        case 't':
+            if (!try_convert_to_int(optarg, &temp_options) || temp_options <= 0)
+            {
+                exit(BAD_TN_ARGUMENT);
+            }
+            *thread_num = temp_options;
+            temp_options = 0;
+            break;
+
+        default:
+            fprintf(stderr, "Usage: \n"
+                            "-p, --path <path>              Specify the path to the input file.\n"
+                            "-i, --int                      Set the data type to integer.\n"
+                            "-f, --float                    Set the data type to float.\n"
+                            "-d, --double                   Set the data type to double.\n"
+                            "-b, --block-size <size>        Set the block size (default: %d).\n"
+                            "-t, --thread-num <number>      Set the number of threads (default: %d).\n",
+                    BS, TN);
+            exit(EXIT_FAILURE);
+        }
+    }
 }
