@@ -6,7 +6,8 @@
 *.dll
 *.a
 *.def
-metricas*
+metricas.sh
+metricas.txt
 
 # Output Files
 output/*.csv
