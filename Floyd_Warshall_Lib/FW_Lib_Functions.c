@@ -323,7 +323,7 @@ double get_fw_performance(FW_Matrix * FW)
 {
     double performance = 0;
 
-    performance = (double)FW->size * (double)FW->size * (double)FW->size * 2; // *2 porque se realiza la suma y una comparacion.
+    performance = (double)FW->norm_size * (double)FW->norm_size * (double)FW->norm_size * 2; // *2 porque se realiza la suma y una comparacion.
     return performance / (fwl_get_search_time() * custom_pow(10, 9)); // Mostrar en giga Flops 10^9
 }
 

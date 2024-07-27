@@ -22,8 +22,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.407108
-Compute Speed: 4.912700 GIOPS
+Compute Time: 0.418467
+Compute Speed: 4.779349 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -48,8 +49,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.205691
-Compute Speed: 9.723318 GIOPS
+Compute Time: 0.217709
+Compute Speed: 9.186572 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -74,8 +76,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.105793
-Compute Speed: 18.904843 GIOPS
+Compute Time: 0.110637
+Compute Speed: 18.077143 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -100,8 +103,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.058525
-Compute Speed: 34.173380 GIOPS
+Compute Time: 0.076797
+Compute Speed: 26.042681 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -126,8 +130,12 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.080435
-Compute Speed: 24.864786 GIOPS
+Compute Time: 0.182213
+Compute Speed: 10.976176 GIOPS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
 
 FWL v1.0
 
@@ -152,8 +160,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 2.976883
-Compute Speed: 5.374749 GIOPS
+Compute Time: 3.093487
+Compute Speed: 5.172157 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -178,8 +187,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 1.483924
-Compute Speed: 10.782224 GIOPS
+Compute Time: 1.629001
+Compute Speed: 9.821970 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -204,8 +214,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.767525
-Compute Speed: 20.846228 GIOPS
+Compute Time: 0.835986
+Compute Speed: 19.139073 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -230,8 +241,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.401392
-Compute Speed: 39.861284 GIOPS
+Compute Time: 0.548757
+Compute Speed: 29.156799 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -256,8 +268,12 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 0.509369
-Compute Speed: 31.411419 GIOPS
+Compute Time: 0.729940
+Compute Speed: 21.919612 GIOPS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
 
 FWL v1.0
 
@@ -282,8 +298,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 22.838767
-Compute Speed: 5.604506 GIOPS
+Compute Time: 23.494829
+Compute Speed: 5.448007 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -308,8 +325,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 12.361946
-Compute Speed: 10.354357 GIOPS
+Compute Time: 12.479494
+Compute Speed: 10.256826 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -334,8 +352,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 5.879450
-Compute Speed: 21.770744 GIOPS
+Compute Time: 6.558208
+Compute Speed: 19.517527 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -360,8 +379,9 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 3.717479
-Compute Speed: 34.431936 GIOPS
+Compute Time: 4.298592
+Compute Speed: 29.777192 GIOPS
+----------------------------------------
 
 FWL v1.0
 
@@ -386,5 +406,1281 @@ Done
 Saving Results ...
 Done
 
-Compute Time: 2.883197
-Compute Speed: 44.395162 GIOPS
+Compute Time: 4.358750
+Compute Speed: 29.366218 GIOPS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.175605
+Compute Speed: 11.389194 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.092725
+Compute Speed: 21.569147 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.050219
+Compute Speed: 39.825517 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.032946
+Compute Speed: 60.705634 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.143530
+Compute Speed: 13.934356 GFLPOS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.224396
+Compute Speed: 13.067668 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.656643
+Compute Speed: 24.366364 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.348381
+Compute Speed: 45.926724 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.245608
+Compute Speed: 65.144497 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.410819
+Compute Speed: 38.946587 GFLPOS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 7.939727
+Compute Speed: 16.121461 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 4.447673
+Compute Speed: 28.779094 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 2.357362
+Compute Speed: 54.297982 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.578153
+Compute Speed: 81.107477 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.752627
+Compute Speed: 73.033218 GFLPOS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.418809
+Compute Speed: 5.127597 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.240398
+Compute Speed: 8.933037 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.113489
+Compute Speed: 18.922409 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.076426
+Compute Speed: 28.098852 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.187830
+Compute Speed: 11.433126 GIOPS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 3.111510
+Compute Speed: 5.521393 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.599208
+Compute Speed: 10.742735 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.903160
+Compute Speed: 19.021953 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.555078
+Compute Speed: 30.950368 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.756814
+Compute Speed: 22.700253 GIOPS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 24.007273
+Compute Speed: 5.724888 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 12.149182
+Compute Speed: 11.312610 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 6.476193
+Compute Speed: 21.222183 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 4.266847
+Compute Speed: 32.210892 GIOPS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: INT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 4.935583
+Compute Speed: 27.846548 GIOPS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.176233
+Compute Speed: 12.185493 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.149166
+Compute Speed: 14.396615 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.054698
+Compute Speed: 39.260741 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.035381
+Compute Speed: 60.696231 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/1000f.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 1000
+-> Matrix Normalized Size: 1024
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.152339
+Compute Speed: 14.096744 GFLPOS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.290668
+Compute Speed: 13.310835 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.678935
+Compute Speed: 25.304151 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.371587
+Compute Speed: 46.233769 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.222354
+Compute Speed: 77.263617 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/2000f.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 2000
+-> Matrix Normalized Size: 2048
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 0.424751
+Compute Speed: 40.446915 GFLPOS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 1 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 8.227761
+Compute Speed: 16.704296 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 2 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 4.438717
+Compute Speed: 30.963666 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 4 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 2.357807
+Compute Speed: 58.291013 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 8 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.557917
+Compute Speed: 88.219682 GFLPOS
+----------------------------------------
+
+FWL v1.0
+
+Input file: ./examples/4000f.csv
+
+Execution mode: 
+=> 16 threads
+=> Including paths
+=> Infinite outputs as INF
+
+Loading Graph ...
+-> File format: CSV
+-> Datatype: FLOAT
+-> Matrix Size: 4000
+-> Matrix Normalized Size: 4096
+-> Block Size: 128
+-> Decimal Places: 4
+Done
+
+Computing FW Algorithm ...
+Done
+
+Saving Results ...
+Done
+
+Compute Time: 1.778299
+Compute Speed: 77.286758 GFLPOS
+----------------------------------------
+----------------------------------------
+----------------------------------------
+----------------------------------------
