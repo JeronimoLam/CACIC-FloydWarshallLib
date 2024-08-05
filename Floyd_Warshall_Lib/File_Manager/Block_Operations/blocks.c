@@ -1,16 +1,16 @@
 
 #include "blocks.h"
 
-void *organize_to_blocks(void *matrix, unsigned int size, unsigned int BS, DataType type)
+void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
 {
-    if (size % BS != 0)
+    if (size % BLOCK_SIZE != 0)
     {
         // Manejar el error o ajustar el tamaño de la matriz según sea necesario
         return NULL;
     }
 
-    unsigned int r = size / BS;       // Número de bloques a lo largo de una dimensión
-    unsigned int block_size = BS * BS; // Elementos en un bloque
+    unsigned int r = size / BLOCK_SIZE;       // Número de bloques a lo largo de una dimensión
+    unsigned int block_size = BLOCK_SIZE * BLOCK_SIZE; // Elementos en un bloque
     void *block_matrix = NULL;
 
     switch (type)
@@ -38,21 +38,21 @@ void *organize_to_blocks(void *matrix, unsigned int size, unsigned int BS, DataT
 
     for (unsigned int I = 0; I < r; I++)
         for (unsigned int J = 0; J < r; J++)
-            for (unsigned int i = 0; i < BS; i++)
-                for (unsigned int j = 0; j < BS; j++)
+            for (unsigned int i = 0; i < BLOCK_SIZE; i++)
+                for (unsigned int j = 0; j < BLOCK_SIZE; j++)
                     switch (type)
                     {
                     case TYPE_INT:
-                        ((int *)block_matrix)[I * size * BS + J * block_size + i * BS + j] =
-                            ((int *)matrix)[I * size * BS + J * BS + i * size + j];
+                        ((int *)block_matrix)[I * size * BLOCK_SIZE + J * block_size + i * BLOCK_SIZE + j] =
+                            ((int *)matrix)[I * size * BLOCK_SIZE + J * BLOCK_SIZE + i * size + j];
                         break;
                     case TYPE_FLOAT:
-                        ((float *)block_matrix)[I * size * BS + J * block_size + i * BS + j] =
-                            ((float *)matrix)[I * size * BS + J * BS + i * size + j];
+                        ((float *)block_matrix)[I * size * BLOCK_SIZE + J * block_size + i * BLOCK_SIZE + j] =
+                            ((float *)matrix)[I * size * BLOCK_SIZE + J * BLOCK_SIZE + i * size + j];
                         break;
                     case TYPE_DOUBLE:
-                        value = ((double *)matrix)[I * size * BS + J * BS + i * size + j];
-                        ((double *)block_matrix)[I * size * BS + J * block_size + i * BS + j] = value;
+                        value = ((double *)matrix)[I * size * BLOCK_SIZE + J * BLOCK_SIZE + i * size + j];
+                        ((double *)block_matrix)[I * size * BLOCK_SIZE + J * block_size + i * BLOCK_SIZE + j] = value;
                         break;
                     default:
                         // Este caso ya fue manejado antes
@@ -62,10 +62,10 @@ void *organize_to_blocks(void *matrix, unsigned int size, unsigned int BS, DataT
     return block_matrix;
 }
 
-void *reorganize_to_linear(void *block_matrix, unsigned int size, unsigned int BS, DataType type)
+void *reorganize_to_linear(void *block_matrix, unsigned int size, DataType type)
 {
 
-    unsigned int r = size / BS; // Number of blocks along one dimension
+    unsigned int r = size / BLOCK_SIZE; // Number of blocks along one dimension
     void *original_matrix = NULL;
 
     // Allocate memory based on data type
@@ -94,21 +94,21 @@ void *reorganize_to_linear(void *block_matrix, unsigned int size, unsigned int B
     // Copy data from the block format back to the original linear format
     for (unsigned int I = 0; I < r; I++)
         for (unsigned int J = 0; J < r; J++)
-            for (unsigned int i = 0; i < BS; i++)
-                for (unsigned int j = 0; j < BS; j++)
+            for (unsigned int i = 0; i < BLOCK_SIZE; i++)
+                for (unsigned int j = 0; j < BLOCK_SIZE; j++)
                     switch (type)
                     {
                     case TYPE_INT:
-                        ((int *)original_matrix)[I * size * BS + J * BS + i * size + j] =
-                            ((int *)block_matrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
+                        ((int *)original_matrix)[I * size * BLOCK_SIZE + J * BLOCK_SIZE + i * size + j] =
+                            ((int *)block_matrix)[I * BLOCK_SIZE * BLOCK_SIZE * r + J * BLOCK_SIZE * BLOCK_SIZE + i * BLOCK_SIZE + j];
                         break;
                     case TYPE_FLOAT:
-                        ((float *)original_matrix)[I * size * BS + J * BS + i * size + j] =
-                            ((float *)block_matrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
+                        ((float *)original_matrix)[I * size * BLOCK_SIZE + J * BLOCK_SIZE + i * size + j] =
+                            ((float *)block_matrix)[I * BLOCK_SIZE * BLOCK_SIZE * r + J * BLOCK_SIZE * BLOCK_SIZE + i * BLOCK_SIZE + j];
                         break;
                     case TYPE_DOUBLE:
-                        ((double *)original_matrix)[I * size * BS + J * BS + i * size + j] =
-                            ((double *)block_matrix)[I * BS * BS * r + J * BS * BS + i * BS + j];
+                        ((double *)original_matrix)[I * size * BLOCK_SIZE + J * BLOCK_SIZE + i * size + j] =
+                            ((double *)block_matrix)[I * BLOCK_SIZE * BLOCK_SIZE * r + J * BLOCK_SIZE * BLOCK_SIZE + i * BLOCK_SIZE + j];
                         break;
                     default:
                         // This case is already handled

@@ -2,7 +2,6 @@
 #include "File_Manager/file_handler.h"
 #include "FW_compute.h"
 
-#define DEFAULT_BLOCK_SIZE 128
 #define DEFAULT_THREAD_NUM 4
 #define DEFAULT_OUTPUT_FORMAT 1     // Imprime INF en lugar de -1 por defecto
 #define DEFAULT_PRINT_DIST_MATRIX 1 // Imprime la matriz de distancia por defecto
@@ -17,12 +16,12 @@ static double FW_save_time = 0;
 // Private functions
 static double dwalltime();
 static char *dataType_to_str(DataType);
-static unsigned int next_multiple_of_BS(unsigned int, int BS);
+static unsigned int next_multiple_of_BS(unsigned int);
 static double custom_pow(double base, int exponent);
 
 //----------------------------------------------- Lib Functions -----------------------------------------
 
-FW_Matrix fwl_matrix_create(DataType dataType, char *path, int BS, FW_attr_t *attr)
+FW_Matrix fwl_matrix_create(DataType dataType, char *path, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
@@ -61,22 +60,12 @@ FW_Matrix fwl_matrix_create(DataType dataType, char *path, int BS, FW_attr_t *at
     // Calculation of matrix size
     FW.size = calculate_matrix_size(FW.fileType, file); // Calulates rows and cols
 
-    // Set Block Size
-    if (BS != -1)
-    {
-        FW.BS = BS;
-    }
-    else
-    {
-        FW.BS = DEFAULT_BLOCK_SIZE;
-    }
-
-    if(FW.size < FW.BS)
+    if(FW.size < BLOCK_SIZE)
     {
         printf("WARNING: The matrix size is smaller than the block size\n");
     }
 
-    FW.norm_size = next_multiple_of_BS(FW.size, FW.BS); //Size normalization          
+    FW.norm_size = next_multiple_of_BS(FW.size); //Size normalization          
     create_matrixes_from_file(&FW, file, local_attr.no_path);
 
     fclose(file);
@@ -246,7 +235,7 @@ char* fwl_matrix_get_info(FW_Matrix *element)
     len += snprintf(result + len, buffer_size - len, "-> Datatype: %s\n", dataType_to_str(element->datatype));
     len += snprintf(result + len, buffer_size - len, "-> Matrix Size: %d\n", element->size);
     len += snprintf(result + len, buffer_size - len, "-> Matrix Normalized Size: %d\n", element->norm_size);
-    len += snprintf(result + len, buffer_size - len, "-> Block Size: %d\n", element->BS);
+    len += snprintf(result + len, buffer_size - len, "-> Block Size: %d\n", BLOCK_SIZE);
     if (element->datatype != TYPE_INT) {
         len += snprintf(result + len, buffer_size - len, "-> Decimal Places: %d\n", element->decimal_length);
     }
@@ -364,16 +353,16 @@ static char *dataType_to_str(DataType dt)
     return result;
 }
 
-static unsigned int next_multiple_of_BS(unsigned int n, int BS)
+static unsigned int next_multiple_of_BS(unsigned int n)
 {
-    int remainder = n % BS;
+    int remainder = n % BLOCK_SIZE;
     if (remainder == 0)
     {
         return n;
     }
     else
     {
-        return n + (BS - remainder);
+        return n + (BLOCK_SIZE - remainder);
     }
 }
 

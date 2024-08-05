@@ -330,12 +330,13 @@ static inline void FW_BLOCK_SEQ(float *const graph, const uint64_t d1, const uin
                 if (unlikely(sum < dij))
                 {
                     graph[i_disp_d1 + j] = sum;
-                   if (no_path == 0)
+                    if (no_path == 0)
                     {
                        path[i_disp_d1 + j] = base + k;
-                   }
+                    }
                 }
             }
+
             i_disp = (i + 1) * BLOCK_SIZE;
             i_disp_d1 = i_disp + d1;
             dik = graph[i_disp + d2 + k];
