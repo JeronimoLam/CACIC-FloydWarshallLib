@@ -19,7 +19,6 @@ if "%1"=="static" (
 ) else (
     echo -^> DEFAULT Static linking
     REM Default to static linking if no parameter is provided
-    echo Invalid parameter. Defaulting to static linking with 32 bits.
     gcc -O3 -fopenmp -march=native main.c -o FW.exe -Llib -lFloydWarshall_static
 )
 

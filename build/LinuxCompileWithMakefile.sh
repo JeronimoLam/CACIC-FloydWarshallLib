@@ -20,7 +20,6 @@ elif [ "$1" = "dynamic" ]; then
 else
     echo "-> DEFAULT Static linking"
     # Default to static linking if no parameter is provided
-    echo "Invalid parameter. Defaulting to static linking with 64 bits."
     gcc -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_static
 fi
 

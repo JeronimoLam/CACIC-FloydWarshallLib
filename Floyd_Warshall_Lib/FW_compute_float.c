@@ -194,9 +194,6 @@ static inline void FW_BLOCK(float *const graph, const uint64_t d1, const uint64_
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 static inline void FW_BLOCK_PARALLEL(float *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
 {
-    // Casteo de graph a int
-    // int *graph_int = (int *)graph; // Segun Datatype
-
     uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
     float dij, dik, dkj, sum; // Segun Datatype
 
@@ -312,8 +309,6 @@ void compute_FW_float_sequential(FW_Matrix FW, int no_path)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 static inline void FW_BLOCK_SEQ(float *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
 {
-    // int *graph_int = (int *)graph; // Segun Datatype
-
     uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
     float dij, dik, dkj, sum;
 
