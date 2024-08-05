@@ -2,6 +2,18 @@
 #include "File_Manager/file_handler.h"
 #include "FW_compute.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+    #include <windows.h>
+    int get_nprocs() {
+        SYSTEM_INFO sysinfo;
+        GetSystemInfo(&sysinfo);
+        return sysinfo.dwNumberOfProcessors;
+    }
+#else
+    #include <sys/sysinfo.h>
+#endif
+
+
 #define DEFAULT_THREAD_NUM 4
 #define DEFAULT_OUTPUT_FORMAT 1     // Imprime INF en lugar de -1 por defecto
 #define DEFAULT_PRINT_DIST_MATRIX 1 // Imprime la matriz de distancia por defecto
@@ -280,7 +292,7 @@ void fwl_attr_init(FW_attr_t *attr)
     attr->text_in_output = DEFAULT_OUTPUT_FORMAT;
     attr->print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
     attr->no_path = DEFAULT_NO_PATH;
-    attr->thread_num = DEFAULT_THREAD_NUM;
+    attr->thread_num = get_nprocs();
 }
 
 //----------------------------------------------- Times -----------------------------------------
