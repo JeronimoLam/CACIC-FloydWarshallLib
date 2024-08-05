@@ -2,20 +2,19 @@
 
 //------------------------------------------------------------------------- parallel Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
 
-static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
-static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
+static inline void FW_BLOCK_PARALLEL(double *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
+static inline void FW_BLOCK(double *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
 
 void compute_FW_double_parallel(FW_Matrix FW, int threads_num, int no_path)
 {
     uint64_t r, row_of_blocks_disp, num_of_bock_elems;
-    r = FW.norm_size / FW.BS;
-    row_of_blocks_disp = FW.norm_size * FW.BS;
-    num_of_bock_elems = FW.BS * FW.BS;
+    r = FW.norm_size / BLOCK_SIZE;
+    row_of_blocks_disp = FW.norm_size * BLOCK_SIZE;
+    num_of_bock_elems = BLOCK_SIZE * BLOCK_SIZE;
     double *D = (double *)FW.dist;
     int *P = FW.path;
-    int BS = FW.BS;
 
     // --------------------------- BLOQUE AGREGADO -----------------------
 
@@ -39,25 +38,22 @@ void compute_FW_double_parallel(FW_Matrix FW, int threads_num, int no_path)
 
     // Modificación: shared(pendientes, cv, mutex)
 
-#pragma omp parallel shared(S, no_path) default(none) firstprivate(r, BS, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
+#pragma omp parallel shared(S, no_path) default(none) firstprivate(r, row_of_blocks_disp, num_of_bock_elems, D, P) num_threads(threads_num)
     {
         uint64_t i, j, k, b, kj, ik, kk, ij, k_row_disp, k_col_disp, i_row_disp, j_col_disp, w;
 
         // Variable agregada
         uint64_t aux;
 
-        // inicialización de semaforos
-        // #pragma omp for collapse(2)
-
         for (k = 0; k < r; k++)
         {
-            b = k * BS;
+            b = k * BLOCK_SIZE;
             k_row_disp = k * row_of_blocks_disp;
             k_col_disp = k * num_of_bock_elems;
 
             // Phase 1
             kk = k_row_disp + k_col_disp;
-            FW_BLOCK_PARALLEL(D, BS, kk, kk, kk, P, b, no_path);
+            FW_BLOCK_PARALLEL(D, kk, kk, kk, P, b, no_path);
 
 // Phase 2 y 3
 #pragma omp for schedule(dynamic) nowait
@@ -70,7 +66,7 @@ void compute_FW_double_parallel(FW_Matrix FW, int threads_num, int no_path)
                     if (j == k)
                         continue;
                     kj = k_row_disp + j * num_of_bock_elems;
-                    FW_BLOCK(D, BS, kj, kk, kj, P, b, no_path);
+                    FW_BLOCK(D, kj, kk, kj, P, b, no_path);
 
                     // -------------- BLOQUE AGREGADO -------------------
 
@@ -92,7 +88,7 @@ void compute_FW_double_parallel(FW_Matrix FW, int threads_num, int no_path)
                     if (i == k)
                         continue;
                     ik = i * row_of_blocks_disp + k_col_disp;
-                    FW_BLOCK(D, BS, ik, ik, kk, P, b, no_path);
+                    FW_BLOCK(D, ik, ik, kk, P, b, no_path);
 
                     // -------------- BLOQUE AGREGADO -------------------
 
@@ -131,7 +127,7 @@ void compute_FW_double_parallel(FW_Matrix FW, int threads_num, int no_path)
                     j_col_disp = j * num_of_bock_elems;
                     kj = k_row_disp + j_col_disp;
                     ij = i_row_disp + j_col_disp;
-                    FW_BLOCK(D, BS, ij, ik, kj, P, b, no_path);
+                    FW_BLOCK(D, ij, ik, kj, P, b, no_path);
                 }
             }
         }
@@ -144,25 +140,22 @@ void compute_FW_double_parallel(FW_Matrix FW, int threads_num, int no_path)
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+static inline void FW_BLOCK(double *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
 {
-    // Casteo de graph a double
-    // double *graph_int = (double *)graph; // Segun Datatype
-
     uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
     double dij, dik, dkj, sum; // Segun Datatype
 
-    for (k = 0; k < BS; k++)
+    for (k = 0; k < BLOCK_SIZE; k++)
     {
-        k_disp = k * BS;
+        k_disp = k * BLOCK_SIZE;
         k_disp_d3 = k_disp + d3;
-        for (i = 0; i < BS; i += 2)
+        for (i = 0; i < BLOCK_SIZE; i += 2)
         {
-            i_disp = i * BS;
+            i_disp = i * BLOCK_SIZE;
             i_disp_d1 = i_disp + d1;
             dik = graph[i_disp + d2 + k];
 #pragma omp simd private(dij, dkj, sum)
-            for (j = 0; j < BS; j++)
+            for (j = 0; j < BLOCK_SIZE; j++)
             {
                 dij = graph[i_disp_d1 + j];
                 dkj = graph[k_disp_d3 + j];
@@ -176,11 +169,11 @@ static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, cons
                     }
                 }
             }
-            i_disp = (i + 1) * BS;
+            i_disp = (i + 1) * BLOCK_SIZE;
             i_disp_d1 = i_disp + d1;
             dik = graph[i_disp + d2 + k];
 #pragma omp simd private(dij, dkj, sum)
-            for (j = 0; j < BS; j++)
+            for (j = 0; j < BLOCK_SIZE; j++)
             {
                 dij = graph[i_disp_d1 + j];
                 dkj = graph[k_disp_d3 + j];
@@ -199,26 +192,23 @@ static inline void FW_BLOCK(double *const graph, int BS, const uint64_t d1, cons
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+static inline void FW_BLOCK_PARALLEL(double *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
 {
-    // Casteo de graph a int
-    // int *graph_int = (int *)graph; // Segun Datatype
-
     uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
     double dij, dik, dkj, sum; // Segun Datatype
 
-    for (k = 0; k < BS; k++)
+    for (k = 0; k < BLOCK_SIZE; k++)
     {
-        k_disp = k * BS;
+        k_disp = k * BLOCK_SIZE;
         k_disp_d3 = k_disp + d3;
 #pragma omp for
-        for (i = 0; i < BS; i += 2)
+        for (i = 0; i < BLOCK_SIZE; i += 2)
         {
-            i_disp = i * BS;
+            i_disp = i * BLOCK_SIZE;
             i_disp_d1 = i_disp + d1;
             dik = graph[i_disp + d2 + k];
 #pragma omp simd private(dij, dkj, sum)
-            for (j = 0; j < BS; j++)
+            for (j = 0; j < BLOCK_SIZE; j++)
             {
                 dij = graph[i_disp_d1 + j];
 				dkj = graph[k_disp_d3 + j];
@@ -232,11 +222,11 @@ static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t
                     }
                 }
             }
-            i_disp = (i + 1) * BS;
+            i_disp = (i + 1) * BLOCK_SIZE;
             i_disp_d1 = i_disp + d1;
             dik = graph[i_disp + d2 + k];
 #pragma omp simd private(dij, dkj, sum)
-            for (j = 0; j < BS; j++)
+            for (j = 0; j < BLOCK_SIZE; j++)
             {
                 dij = graph[i_disp_d1 + j];
                 dkj = graph[k_disp_d3 + j];
@@ -256,28 +246,27 @@ static inline void FW_BLOCK_PARALLEL(double *const graph, int BS, const uint64_t
 
 // ------------------------------------------------------------------ Sequentiall Floyd-Warshall Algorithm Implementation ------------------------------------------------------------------------------------------------
 
-static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
+static inline void FW_BLOCK_SEQ(double *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void compute_FW_double_sequential(FW_Matrix FW, int no_path)
 {
     uint64_t i, j, k, r, b, kj, ik, kk, ij, row_of_blocks_disp, block_size, k_row_disp, k_col_disp, i_row_disp, j_col_disp;
-    int BS = FW.BS;
     int n = FW.norm_size;
 
-    r = n / BS;
-    row_of_blocks_disp = n * BS;
-    block_size = BS * BS;
+    r = n / BLOCK_SIZE;
+    row_of_blocks_disp = n * BLOCK_SIZE;
+    block_size = BLOCK_SIZE * BLOCK_SIZE;
 
     for (k = 0; k < r; k++)
     {
-        b = k * BS;
+        b = k * BLOCK_SIZE;
         k_row_disp = k * row_of_blocks_disp;
         k_col_disp = k * block_size;
 
         // Phase 1
         kk = k_row_disp + k_col_disp;
-        FW_BLOCK_SEQ((double *)FW.dist, BS, kk, kk, kk, FW.path, b, no_path);
+        FW_BLOCK_SEQ((double *)FW.dist, kk, kk, kk, FW.path, b, no_path);
 
         // Phase 2
         for (j = 0; j < r; j++)
@@ -285,7 +274,7 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
             if (j == k)
                 continue;
             kj = k_row_disp + j * block_size;
-            FW_BLOCK_SEQ((double *)FW.dist, BS, kj, kk, kj, FW.path, b, no_path);
+            FW_BLOCK_SEQ((double *)FW.dist, kj, kk, kj, FW.path, b, no_path);
         }
 
         // Phase 3
@@ -294,7 +283,7 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
             if (i == k)
                 continue;
             ik = i * row_of_blocks_disp + k_col_disp;
-            FW_BLOCK_SEQ((double *)FW.dist, BS, ik, ik, kk, FW.path, b, no_path);
+            FW_BLOCK_SEQ((double *)FW.dist, ik, ik, kk, FW.path, b, no_path);
         }
 
         // Phase 4
@@ -311,41 +300,58 @@ void compute_FW_double_sequential(FW_Matrix FW, int no_path)
                 j_col_disp = j * block_size;
                 kj = k_row_disp + j_col_disp;
                 ij = i_row_disp + j_col_disp;
-                FW_BLOCK_SEQ((double *)FW.dist, BS, ij, ik, kj, FW.path, b, no_path);
+                FW_BLOCK_SEQ((double *)FW.dist, ij, ik, kj, FW.path, b, no_path);
             }
         }
     }
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-static inline void FW_BLOCK_SEQ(double *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
+static inline void FW_BLOCK_SEQ(double *const graph, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
 {
-    // int *graph_int = (int *)graph; // Segun Datatype
-
     uint64_t i, j, k, i_disp, i_disp_d1, k_disp, k_disp_d3;
     double dij, dik, dkj, sum;
 
-    for (k = 0; k < BS; k++)
+    for (k = 0; k < BLOCK_SIZE; k++)
     {
-        k_disp = k * BS;
+        k_disp = k * BLOCK_SIZE;
         k_disp_d3 = k_disp + d3;
-        for (i = 0; i < BS; i++)
+        for (i = 0; i < BLOCK_SIZE; i += 2)
         {
-            i_disp = i * BS;
+            i_disp = i * BLOCK_SIZE;
             i_disp_d1 = i_disp + d1;
             dik = graph[i_disp + d2 + k];
-            for (j = 0; j < BS; j++)
+			#pragma omp simd private(dij, dkj, sum)
+            for (j = 0; j < BLOCK_SIZE; j++)
             {
                 dij = graph[i_disp_d1 + j];
                 dkj = graph[k_disp_d3 + j];
                 sum = dik + dkj;
-                if (sum < dij)
+                if (unlikely(sum < dij))
                 {
                     graph[i_disp_d1 + j] = sum;
-                    if (no_path == 0)
+                   if (no_path == 0)
                     {
-                        path[i_disp_d1 + j] = base + k;
-                    }
+                       path[i_disp_d1 + j] = base + k;
+                   }
+                }
+            }
+            i_disp = (i + 1) * BLOCK_SIZE;
+            i_disp_d1 = i_disp + d1;
+            dik = graph[i_disp + d2 + k];
+			#pragma omp simd private(dij, dkj, sum)
+            for (j = 0; j < BLOCK_SIZE; j++)
+            {
+                dij = graph[i_disp_d1 + j];
+                dkj = graph[k_disp_d3 + j];
+                sum = dik + dkj;
+                if (unlikely(sum < dij))
+                {
+                    graph[i_disp_d1 + j] = sum;
+                   if (no_path == 0)
+                    {
+                       path[i_disp_d1 + j] = base + k;
+                   }
                 }
             }
         }

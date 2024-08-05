@@ -7,6 +7,8 @@
 #include <semaphore.h>
 #include <stdint.h>
 
+#define BLOCK_SIZE 128
+
 void compute_FW_int_parallel(FW_Matrix FW, int threads_num, int no_path);
 void compute_FW_int_sequential(FW_Matrix FW, int no_path);
 

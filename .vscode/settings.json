@@ -25,6 +25,7 @@
         "string.h": "c",
         "xstring": "c",
         "xutility": "c",
-        "xlocale": "c"
+        "xlocale": "c",
+        "stdint.h": "c"
     }
 }
