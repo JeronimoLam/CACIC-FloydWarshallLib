@@ -56,9 +56,9 @@ int main(int argc, char *argv[])
 
     fwl_matrix_free(&data); // Free memory
 
-    double paralell_algorithm_time = fwl_get_search_time();
-    double paralell_total_time = fwl_get_total_time();
-    printf("Compute Time: %lf\n", paralell_algorithm_time);
+    double parallel_algorithm_time = fwl_get_search_time();
+    double parallel_total_time = fwl_get_total_time();
+    printf("Compute Time: %lf\n", parallel_algorithm_time);
 
     printf("Compute Speed: ");
     if (data.datatype == TYPE_INT){

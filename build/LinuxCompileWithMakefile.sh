@@ -6,12 +6,6 @@ make
 echo "Makefile Done!"
 echo "Compiling main.c with $1 linking..."
 
-
-LIB_PATH=$(pwd)/lib  # Adjust this if your library is in a different relative path
-
-# Export LD_LIBRARY_PATH to include the directory of your library
-export LD_LIBRARY_PATH=$LIB_PATH:$LD_LIBRARY_PATH
-
 # Check if the parameter is "static" or "dynamic"
 if [ "$1" = "static" ]; then
     # Compile main.c and link with the static FloydWarshall library
