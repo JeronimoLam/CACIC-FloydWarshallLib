@@ -13,11 +13,9 @@
     #include <sys/sysinfo.h>
 #endif
 
-
-#define DEFAULT_THREAD_NUM 4
 #define DEFAULT_OUTPUT_FORMAT 1     // Imprime INF en lugar de -1 por defecto
 #define DEFAULT_PRINT_DIST_MATRIX 1 // Imprime la matriz de distancia por defecto
-#define DEFAULT_NO_PATH 1           // No imprime ni procesa la matriz de caminos por defecto
+#define DEFAULT_NO_PATH 0           // Procesa y guarda la matriz de caminos por defecto
 
 // Global Times
 
@@ -281,7 +279,7 @@ FW_attr_t fwl_attr_new()
     attr.text_in_output = DEFAULT_OUTPUT_FORMAT;
     attr.print_distance_matrix = DEFAULT_PRINT_DIST_MATRIX;
     attr.no_path = DEFAULT_NO_PATH;
-    attr.thread_num = DEFAULT_THREAD_NUM;
+    attr.thread_num = get_nprocs();
 
     return attr;
 }
