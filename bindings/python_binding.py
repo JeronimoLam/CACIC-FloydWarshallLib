@@ -35,8 +35,8 @@ lib = ctypes.CDLL('../libFloydWarshall_dynamic.so')
 lib.create_structure.argtypes = [DataType, c_char_p, c_int, POINTER(FW_attr_t)]
 lib.create_structure.restype = FW_Matrix
 
-lib.compute_FW_paralell.argtypes = [FW_Matrix, POINTER(FW_attr_t)]
-lib.compute_FW_paralell.restype = None
+lib.compute_FW_parallel.argtypes = [FW_Matrix, POINTER(FW_attr_t)]
+lib.compute_FW_parallel.restype = None
 
 lib.compute_FW_sequential.argtypes = [FW_Matrix, POINTER(FW_attr_t)]
 lib.compute_FW_sequential.restype = None

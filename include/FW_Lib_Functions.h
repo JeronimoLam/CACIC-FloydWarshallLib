@@ -25,7 +25,7 @@ LIB_EXPORT FW_Matrix fwl_matrix_create(DataType, char *, int, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-LIB_EXPORT void fwl_matrix_paralell_search(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_parallel_search(FW_Matrix, FW_attr_t *);
 
 /**
  * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs

@@ -1,13 +1,13 @@
 #include "FW_compute.h"
 
-//------------------------------------------------------------------------- Paralell Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
+//------------------------------------------------------------------------- parallel Floyd-Warshall Algorithm Implementation ----------------------------------------------------------------------------
 
 static inline void FW_BLOCK_PARALLEL(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
 static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path) __attribute__((always_inline));
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
 
-void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int no_path)
+void compute_FW_int_parallel(FW_Matrix FW, int threads_num, int no_path)
 {
     uint64_t r, row_of_blocks_disp, num_of_bock_elems;
     r = FW.norm_size / FW.BS;
@@ -143,7 +143,7 @@ void compute_FW_int_paralell(FW_Matrix FW, int threads_num, int no_path)
     free(S);
 }
 
-// Paralell algorithm implementation
+// parallel algorithm implementation
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 static inline void FW_BLOCK(void *const graph, int BS, const uint64_t d1, const uint64_t d2, const uint64_t d3, int *const path, const uint64_t base, int no_path)
 {

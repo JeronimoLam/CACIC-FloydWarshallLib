@@ -10,7 +10,7 @@ def main():
     fw_matrix = lib.create_structure(DataType.TYPE_INT, b"path_to_data_file", 64, ctypes.byref(attr))
     
     # Use the structure
-    lib.compute_FW_paralell(fw_matrix, ctypes.byref(attr))
+    lib.compute_FW_parallel(fw_matrix, ctypes.byref(attr))
 
     # Convert details to string and print
     details = lib.FW_details_to_string(ctypes.byref(fw_matrix), ctypes.byref(attr))

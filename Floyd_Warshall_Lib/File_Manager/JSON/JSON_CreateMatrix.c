@@ -22,9 +22,7 @@ void *create_json_matrix(FW_Matrix FW, FILE *file)
 
 void *JSON_create_int_matrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
-    char c;
-    int row = 0, col = 0;
-    char *token;
+    char c,  *token;
 
     int *matrix = malloc(norm_size * norm_size * sizeof(int));
     if (!matrix)
@@ -63,10 +61,8 @@ void *JSON_create_int_matrix(FILE *file, unsigned int size, unsigned int norm_si
 
 void *JSON_create_float_matrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
-    char c;
+    char c, *token;
     float *matrix = malloc(norm_size * norm_size * sizeof(float));
-    int row = 0, col = 0;
-    char *token;
 
     while ((c = fgetc(file)) != EOF && c != '['); // Matrix start
 
@@ -98,10 +94,8 @@ void *JSON_create_float_matrix(FILE *file, unsigned int size, unsigned int norm_
 
 void *JSON_create_double_matrix(FILE *file, unsigned int size, unsigned int norm_size)
 {
-    char c;
+    char c, * token;
     double *matrix = malloc(norm_size * norm_size * sizeof(double));
-    int row = 0, col = 0;
-    char *token;
 
     while ((c = fgetc(file)) != EOF && c != '['); // Matrix start
 

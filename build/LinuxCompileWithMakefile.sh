@@ -3,21 +3,25 @@
 
 echo "Building the library..."
 make
-echo "Makefile Done!"
-echo "Compiling main.c with $1 linking..."
+echo "-> Makefile Done!"
 
 # Check if the parameter is "static" or "dynamic"
 if [ "$1" = "static" ]; then
+    echo "-> Static linking"
     # Compile main.c and link with the static FloydWarshall library
-        gcc -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_static
+    gcc -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_static
+
 elif [ "$1" = "dynamic" ]; then
+    echo "-> Dynamic linking"
     # Compile main.c and link with the dynamic FloydWarshall library
-        gcc -DBUILDING_DLL -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_dynamic -Wl,-rpath,$(pwd)/lib
-        cp ./lib/libFloydWarshall_dynamic.so ./lib/FloydWarshall_dynamic.so
+    gcc -DBUILDING_DLL -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_dynamic -Wl,-rpath,$(pwd)/lib
+    cp ./lib/libFloydWarshall_dynamic.so ./lib/FloydWarshall_dynamic.so
+
 else
+    echo "-> DEFAULT Static linking"
     # Default to static linking if no parameter is provided
     echo "Invalid parameter. Defaulting to static linking with 64 bits."
     gcc -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_static
 fi
 
-echo "Compilation finished."
+echo "=> Compilation finished <="

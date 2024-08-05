@@ -41,7 +41,7 @@ int main() {
     compute_FW_parallel(data, &attr);
 
     std::cout << " ==> Guardando \n";
-    save_structure(data, "./output/", "ResultParalell.csv", CSV, &attr);
+    save_structure(data, "./output/", "Resultparallel.csv", CSV, &attr);
 
     free_FW_Matrix(&data); // Free memory
 

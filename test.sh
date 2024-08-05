@@ -12,13 +12,13 @@ echo
 echo
 echo
 
-echo cat ./output/ResultParalell_distances.csv
+echo cat ./output/Resultparallel_distances.csv
 echo
-cat ./output/ResultParalell_distances.csv
+cat ./output/Resultparallel_distances.csv
 
 echo
 echo
 
-echo cat ./output/ResultParalell_path.csv
+echo cat ./output/Resultparallel_path.csv
 echo
-cat ./output/ResultParalell_path.csv
+cat ./output/Resultparallel_path.csv

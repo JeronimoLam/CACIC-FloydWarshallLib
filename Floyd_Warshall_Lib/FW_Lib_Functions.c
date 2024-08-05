@@ -16,7 +16,6 @@ static double FW_save_time = 0;
 
 // Private functions
 static double dwalltime();
-static void print_matrix(void *, unsigned int, DataType);
 static char *dataType_to_str(DataType);
 static unsigned int next_multiple_of_BS(unsigned int, int BS);
 static double custom_pow(double base, int exponent);
@@ -85,7 +84,7 @@ FW_Matrix fwl_matrix_create(DataType dataType, char *path, int BS, FW_attr_t *at
     return FW;
 }
 
-void fwl_matrix_paralell_search(FW_Matrix FW, FW_attr_t *attr)
+void fwl_matrix_parallel_search(FW_Matrix FW, FW_attr_t *attr)
 {
     double timetick_start = dwalltime();
 
@@ -109,13 +108,13 @@ void fwl_matrix_paralell_search(FW_Matrix FW, FW_attr_t *attr)
     switch (FW.datatype)
     {
     case TYPE_INT:
-        compute_FW_int_paralell(FW, local_attr.thread_num, local_attr.no_path);
+        compute_FW_int_parallel(FW, local_attr.thread_num, local_attr.no_path);
         break;
     case TYPE_FLOAT:
-        compute_FW_float_paralell(FW, local_attr.thread_num, local_attr.no_path);
+        compute_FW_float_parallel(FW, local_attr.thread_num, local_attr.no_path);
         break;
     case TYPE_DOUBLE:
-        compute_FW_double_paralell(FW, local_attr.thread_num, local_attr.no_path);
+        compute_FW_double_parallel(FW, local_attr.thread_num, local_attr.no_path);
         break;
 
     default:
@@ -177,7 +176,7 @@ void fwl_matrix_save(FW_Matrix FW, char *path, char *name, FileType fileType, FW
         local_attr = *attr;
     }
 
-    if (local_attr.print_distance_matrix == 0 & local_attr.no_path == 1)
+    if ((local_attr.print_distance_matrix == 0) & (local_attr.no_path == 1))
     {
         printf("Select a matrix to export\n");
         return;
@@ -339,50 +338,6 @@ static double dwalltime()
     return sec;
 }
 
-static void print_matrix(void *matrix, unsigned int size, DataType dataType)
-{
-    int i, j;
-    switch (dataType)
-    {
-    case TYPE_INT:
-        for (i = 0; i < size; i++)
-        {
-            for (j = 0; j < size; j++)
-            {
-                printf("%d ", ((int *)matrix)[i * size + j]);
-            }
-            printf("\n");
-        }
-        break;
-    case TYPE_FLOAT:
-        for (i = 0; i < size; i++)
-        {
-            for (j = 0; j < size; j++)
-            {
-                float value = ((float *)matrix)[i * size + j];
-                printf("%f ", value);
-            }
-            printf("\n");
-        }
-        break;
-    case TYPE_DOUBLE:
-        for (i = 0; i < size; i++)
-        {
-            for (j = 0; j < size; j++)
-            {
-                double value = ((double *)matrix)[i * size + j];
-                printf("%lf ", value);
-            }
-            printf("\n");
-        }
-        break;
-    default:
-        printf("Unsupported data type for printing.\n");
-        break;
-    }
-    printf("\n");
-}
-
 static char *dataType_to_str(DataType dt)
 {
     char *result = malloc(30); // allocate enough memory for the prefix and the datatype string
@@ -411,8 +366,6 @@ static char *dataType_to_str(DataType dt)
 
 static unsigned int next_multiple_of_BS(unsigned int n, int BS)
 {
-    unsigned count = 0;
-
     int remainder = n % BS;
     if (remainder == 0)
     {

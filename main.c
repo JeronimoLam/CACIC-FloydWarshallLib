@@ -47,11 +47,11 @@ int main(int argc, char *argv[])
     printf("Done\n\n");
 
     printf("Computing FW Algorithm ...\n");
-    fwl_matrix_paralell_search(data, &attr); // Process
+    fwl_matrix_parallel_search(data, &attr); // Process
     printf("Done\n\n");
 
     printf("Saving Results ...\n");
-    fwl_matrix_save(data, "./output/", "ResultParalell.csv", CSV, &attr); // Save
+    fwl_matrix_save(data, "./output/", "Resultparallel.csv", CSV, &attr); // Save
     printf("Done\n\n");
 
     fwl_matrix_free(&data); // Free memory

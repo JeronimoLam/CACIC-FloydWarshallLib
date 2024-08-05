@@ -70,13 +70,10 @@ int calculate_matrix_size(FileType ft, FILE *file)
     {
     case CSV:
         return CSV_calculate_matrix_size(file);
-        break;
     case JSON:
         return JSON_calculate_matrix_size(file);
-        break;
     default:
-        // Handle default case
-        break;
+        return -1;
     }
 }
 
@@ -208,6 +205,9 @@ int *initialize_path_matrix(FW_Matrix *G)
                 else
                     P[i * G->norm_size + j] = -1.0;
         break;
+    default:
+        P = NULL;
+    break;
     }
 
     return P;

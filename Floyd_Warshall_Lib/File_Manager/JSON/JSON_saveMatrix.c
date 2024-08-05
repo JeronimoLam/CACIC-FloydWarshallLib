@@ -108,6 +108,9 @@ static char *dt_to_str(DataType dt)
     case TYPE_DOUBLE:
         result = "double";
         break;
+    default:
+        result = "unknown";
+        break;
     }
     return result;
 }
