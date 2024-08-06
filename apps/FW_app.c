@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <getopt.h>
 
-#include "include/FW_Lib_CommonTypes.h"
-#include "include/FW_Lib_Functions.h"
+#include "../include/FW_Lib_CommonTypes.h"
+#include "../include/FW_Lib_Functions.h"
 
-#define BS 128
 #define TN 8
 #define BAD_BS_ARGUMENT 100
 #define BAD_TN_ARGUMENT 101
@@ -13,7 +12,7 @@
 double dwalltime();
 FILE *check_file(const char *);
 int try_convert_to_int(const char *, int *);
-void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType *dataType, int *block_size, int *thread_num);
+void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType *dataType, int *thread_num);
 
 
 int main(int argc, char *argv[])
@@ -23,11 +22,9 @@ int main(int argc, char *argv[])
     FILE *file;
     DataType dataType = UNDEFINED;
 
-    // Default values for block size and thread number
-    int block_size = BS; // Use the default block size
     int thread_num = TN; // Use the default thread number
 
-    parse_arguments(argc, argv, &path, &file, &dataType, &block_size, &thread_num);
+    parse_arguments(argc, argv, &path, &file, &dataType, &thread_num);
 
     // Arguments Init
     FW_attr_t attr;
@@ -42,7 +39,7 @@ int main(int argc, char *argv[])
     printf("%s", fwl_attr_get_info(&attr));
 
     printf("\nLoading Graph ...\n");
-    FW_Matrix data = fwl_matrix_create(dataType, path, block_size, &attr); // Read
+    FW_Matrix data = fwl_matrix_create(dataType, path, &attr); // Read
     printf("%s", fwl_matrix_get_info(&data));
     printf("Done\n\n");
 
@@ -65,7 +62,7 @@ int main(int argc, char *argv[])
         printf("%lf GIOPS\n", get_fw_performance(&data));
     }
     else{
-        printf("%lf GFLPOS\n", get_fw_performance(&data));
+        printf("%lf GFLOPS\n", get_fw_performance(&data));
     }
 
     return 0;
@@ -96,6 +93,8 @@ FILE *check_file(const char *filename)
         fprintf(stderr, "Error: Unable to open file.\n");
         exit(EXIT_FAILURE);
     }
+
+    return file;
 }
 
 #include <errno.h>
@@ -117,7 +116,7 @@ int try_convert_to_int(const char *str, int *converted_value)
     return 1; // Conversion succeeded
 }
 
-void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType *dataType, int *block_size, int *thread_num)
+void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType *dataType, int *thread_num)
 {
     int c, temp_options = 0;
     int dataType_flag = 0;
@@ -127,13 +126,12 @@ void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType 
         {"int", no_argument, 0, 'i'},
         {"float", no_argument, 0, 'f'},
         {"double", no_argument, 0, 'd'},
-        {"block-size", required_argument, 0, 'b'},
         {"thread-num", required_argument, 0, 't'},
         {0, 0, 0, 0}};
 
     int option_index = 0;
 
-    while ((c = getopt_long(argc, argv, "p:ifdb:t:", long_options, &option_index)) != -1)
+    while ((c = getopt_long(argc, argv, "p:ifdt:", long_options, &option_index)) != -1)
     {
         switch (c)
         {
@@ -142,6 +140,7 @@ void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType 
             *file = check_file(optarg);
             if (*file == NULL)
             {
+                fprintf(stderr, "Error: Unable to open file.\n");
                 exit(EXIT_FAILURE);
             }
             break;
@@ -169,14 +168,6 @@ void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType 
             }
             break;
 
-        case 'b':
-            if (!try_convert_to_int(optarg, &temp_options) || temp_options <= 0)
-            {
-                exit(BAD_BS_ARGUMENT);
-            }
-            *block_size = temp_options;
-            temp_options = 0;
-            break;
         case 't':
             if (!try_convert_to_int(optarg, &temp_options) || temp_options <= 0)
             {
@@ -192,9 +183,8 @@ void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType 
                             "-i, --int                      Set the data type to integer.\n"
                             "-f, --float                    Set the data type to float.\n"
                             "-d, --double                   Set the data type to double.\n"
-                            "-b, --block-size <size>        Set the block size (default: %d).\n"
                             "-t, --thread-num <number>      Set the number of threads (default: %d).\n",
-                    BS, TN);
+                    TN);
             exit(EXIT_FAILURE);
         }
     }

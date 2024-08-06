@@ -22,8 +22,6 @@
     #endif
 #endif
 
-
-
 #define EXIT_ALOCATION_FAILED 2
 #define EXIT_OPEN_FILE_ERROR 3
 
