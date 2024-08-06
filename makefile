@@ -1,14 +1,19 @@
-OS ?= linux
+OS ?= UNDEFINED
 LIB_NAME = FloydWarshall
 OBJ_DIR = obj
 LIB_DIR = lib
 
 ifeq ($(OS),windows)
-all: clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
+all: check-os clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
 CFLAGS = -fopenmp -march=native -O3 -Wall
 else
-all: clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
+all: check-os clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
 CFLAGS = -fopenmp -march=native -fPIC -O3 -Wall
+endif
+
+check-os:
+ifeq (,$(filter windows linux,$(OS)))
+	$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
 endif
 
 clean:

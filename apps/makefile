@@ -1,10 +1,15 @@
 # Makefile en ./apps/
 
 # Valor por defecto de LINK_TYPE
-LINK_TYPE ?= static
-OS ?= Linux
+LINK_TYPE ?= default
+OS ?= UNDEFINED
 
-all: build_lib clean create_output_dir compile exit
+all: check-os build_lib clean create_output_dir compile exit
+
+check-os:
+ifeq (,$(filter windows linux,$(OS)))
+	$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
+endif
 
 build_lib:
 ifeq ($(OS),windows)
@@ -12,7 +17,7 @@ ifeq ($(OS),windows)
 	@$(MAKE) -C .. all OS=windows
 else
 	@echo "==> Building the library for Linux"
-	@$(MAKE) -C .. all
+	@$(MAKE) -C .. all OS=linux
 endif
 	@echo "-> Makefile Done!"
 

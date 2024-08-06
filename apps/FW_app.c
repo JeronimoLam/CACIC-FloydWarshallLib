@@ -5,7 +5,6 @@
 #include "../include/FW_Lib_CommonTypes.h"
 #include "../include/FW_Lib_Functions.h"
 
-#define TN 8
 #define BAD_BS_ARGUMENT 100
 #define BAD_TN_ARGUMENT 101
 
@@ -17,12 +16,10 @@ void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType 
 
 int main(int argc, char *argv[])
 {
-    int size, dataType_flag = 0;
+    int size, thread_num = 0, dataType_flag = 0;
     char *path;
     FILE *file;
     DataType dataType = UNDEFINED;
-
-    int thread_num = TN; // Use the default thread number
 
     parse_arguments(argc, argv, &path, &file, &dataType, &thread_num);
 
@@ -30,7 +27,10 @@ int main(int argc, char *argv[])
     FW_attr_t attr;
     fwl_attr_init(&attr);
     attr.no_path = 0;
-    attr.thread_num = thread_num;
+    if (thread_num != 0)
+    {
+        attr.thread_num = thread_num;
+    }
 
     printf("\nFWL v1.0\n\n");
     printf("Input file: %s\n\n", path);
@@ -183,8 +183,8 @@ void parse_arguments(int argc, char *argv[], char **path, FILE **file, DataType 
                             "-i, --int                      Set the data type to integer.\n"
                             "-f, --float                    Set the data type to float.\n"
                             "-d, --double                   Set the data type to double.\n"
-                            "-t, --thread-num <number>      Set the number of threads (default: %d).\n",
-                    TN);
+                            "-t, --thread-num <number>      Set the number of threads (default: get_nproc()).\n"
+                    );
             exit(EXIT_FAILURE);
         }
     }
