@@ -3,7 +3,7 @@
 #include "FW_compute.h"
 
 #if defined(_WIN32) || defined(_WIN64)
-    #include <windows.h>
+    
     int get_nprocs() {
         SYSTEM_INFO sysinfo;
         GetSystemInfo(&sysinfo);

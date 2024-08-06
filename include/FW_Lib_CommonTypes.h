@@ -9,6 +9,7 @@
 #define BLOCK_SIZE 128
 
 #if defined(_WIN32) || defined(_WIN64)
+    #include <windows.h>
     #if defined(BUILDING_DLL)
         #define LIB_EXPORT __declspec(dllexport)
     #else

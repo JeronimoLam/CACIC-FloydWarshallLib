@@ -27,6 +27,7 @@
         "xutility": "c",
         "xlocale": "c",
         "stdint.h": "c",
-        "windows.h": "c"
+        "windows.h": "c",
+        "malloc.h": "c"
     }
 }

@@ -1,6 +1,10 @@
 
 #include "blocks.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <malloc.h> // Para _aligned_malloc y _aligned_free
+#endif
+
 void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
 {
     if (size % BLOCK_SIZE != 0)
@@ -9,25 +13,50 @@ void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
         return NULL;
     }
 
-    unsigned int r = size / BLOCK_SIZE;       // Número de bloques a lo largo de una dimensión
+    unsigned int r = size / BLOCK_SIZE;                // Número de bloques a lo largo de una dimensión
     unsigned int block_size = BLOCK_SIZE * BLOCK_SIZE; // Elementos en un bloque
     void *block_matrix = NULL;
 
+#if defined(_WIN32) || defined(_WIN64)
     switch (type)
     {
     case TYPE_INT:
-        block_matrix = malloc(size * size * sizeof(int));
+        block_matrix = _aligned_malloc(size * size * sizeof(int), MEMALIGN);
         break;
     case TYPE_FLOAT:
-        block_matrix = malloc(size * size * sizeof(float));
+        block_matrix = _aligned_malloc(size * size * sizeof(float), MEMALIGN);
         break;
     case TYPE_DOUBLE:
-        block_matrix = malloc(size * size * sizeof(double));
+        block_matrix = _aligned_malloc(size * size * sizeof(double), MEMALIGN);
         break;
     default:
         // Manejar tipos no definidos
         return NULL;
     }
+#else
+    int result;
+    switch (type)
+    {
+    case TYPE_INT:
+        result = posix_memalign(&block_matrix, MEMALIGN, size * size * sizeof(int));
+        break;
+    case TYPE_FLOAT:
+        result = posix_memalign(&block_matrix, MEMALIGN, size * size * sizeof(float));
+        break;
+    case TYPE_DOUBLE:
+        result = posix_memalign(&block_matrix, MEMALIGN, size * size * sizeof(double));
+        break;
+    default:
+        // Manejar tipos no definidos
+        return NULL;
+    }
+
+    if (result != 0)
+    {
+        fprintf(stderr, "Error: Allocation failed with error code %d.\n", result);
+        return NULL;
+    }
+#endif
 
     if (block_matrix == NULL)
     {
@@ -68,22 +97,48 @@ void *reorganize_to_linear(void *block_matrix, unsigned int size, DataType type)
     unsigned int r = size / BLOCK_SIZE; // Number of blocks along one dimension
     void *original_matrix = NULL;
 
-    // Allocate memory based on data type
+    // Allocate aligned memory based on data type
+#if defined(_WIN32) || defined(_WIN64)
     switch (type)
     {
     case TYPE_INT:
-        original_matrix = malloc(size * size * sizeof(int));
+        original_matrix = _aligned_malloc(size * size * sizeof(int), MEMALIGN);
         break;
     case TYPE_FLOAT:
-        original_matrix = malloc(size * size * sizeof(float));
+        original_matrix = _aligned_malloc(size * size * sizeof(float), MEMALIGN);
         break;
     case TYPE_DOUBLE:
-        original_matrix = malloc(size * size * sizeof(double));
+        original_matrix = _aligned_malloc(size * size * sizeof(double), MEMALIGN);
         break;
     default:
-        // Unsupported data type
+        // Manejar tipos no definidos
         return NULL;
     }
+#else
+    int result;
+    switch (type)
+    {
+    case TYPE_INT:
+        result = posix_memalign(&original_matrix, MEMALIGN, size * size * sizeof(int));
+        break;
+    case TYPE_FLOAT:
+        result = posix_memalign(&original_matrix, MEMALIGN, size * size * sizeof(float));
+        break;
+    case TYPE_DOUBLE:
+        result = posix_memalign(&original_matrix, MEMALIGN, size * size * sizeof(double));
+
+        break;
+    default:
+        // Manejar tipos no definidos
+        return NULL;
+    }
+
+    if (result != 0)
+    {
+        fprintf(stderr, "Error: Allocation failed with error code %d.\n", result);
+        return NULL;
+    }
+#endif
 
     if (original_matrix == NULL)
     {

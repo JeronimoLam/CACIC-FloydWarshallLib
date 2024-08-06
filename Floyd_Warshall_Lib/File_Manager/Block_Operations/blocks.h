@@ -1,6 +1,8 @@
 #ifndef BLOCKS_H
 #define BLOCKS_H
 
+#define MEMALIGN 64
+
 #include "../../../include/FW_Lib_CommonTypes.h"
 
 /**
