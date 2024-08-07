@@ -18,8 +18,8 @@ endif
 
 clean:
 ifeq ($(OS),windows)
-	@rmdir /s /q $(OBJ_DIR)
-	@rmdir /s /q $(LIB_DIR)
+	@if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)"
+	@if exist "$(LIB_DIR)" rmdir /s /q "$(LIB_DIR)"
 else
 	rm -rf $(OBJ_DIR) $(LIB_DIR)
 endif
