@@ -1,21 +1,44 @@
 OS ?= UNDEFINED
+BS ?= 128
 LIB_NAME = FloydWarshall
 OBJ_DIR = obj
 LIB_DIR = lib
 
+# all para cada SO
 ifeq ($(OS),windows)
-all: check-os clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
-CFLAGS = -fopenmp -march=native -O3 -Wall
+all: check-os check-BS clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
+CFLAGS = -fopenmp -march=native -O3 -Wall -D BLOCK_SIZE=$(BS)
 else
-all: check-os clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
-CFLAGS = -fopenmp -march=native -fPIC -O3 -Wall
+all: check-os check-BS clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
+CFLAGS = -fopenmp -march=native -O3 -Wall -fPIC -D BLOCK_SIZE=$(BS)
 endif
 
+# Chequeo de SO 
 check-os:
 ifeq (,$(filter windows linux,$(OS)))
-	$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
+$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
 endif
 
+# Comprobación de que BS es un número
+check-BS:
+ifeq (, $(BS))
+$(error BS no puede estar vacio)
+endif
+ifeq ($(OS),windows)
+VALID_NUMBER := $(shell powershell -Command "[regex]::Match('$(BS)', '^[0-9]+$$').Success")
+ifneq ($(strip $(VALID_NUMBER)), True)
+$(error BS debe ser un numero)
+endif
+else
+VALID_NUMBER=$(shell echo $(BS) | grep -E '^[0-9]+$$')
+ifneq ($(strip $(VALID_NUMBER)), $(strip $(BS)))
+$(error BS debe ser un numero)
+endif
+endif
+
+
+
+# Borrado de ./obj y ./lib
 clean:
 ifeq ($(OS),windows)
 	@if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)"
@@ -24,6 +47,7 @@ else
 	rm -rf $(OBJ_DIR) $(LIB_DIR)
 endif
 
+# Creación de ./obj y ./lib
 prepare:
 ifeq ($(OS),windows)
 	@if not exist "$(OBJ_DIR)" mkdir $(OBJ_DIR)

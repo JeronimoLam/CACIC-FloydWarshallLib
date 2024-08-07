@@ -3,21 +3,40 @@
 # Valor por defecto de LINK_TYPE
 LINK_TYPE ?= default
 OS ?= UNDEFINED
+BS ?= 128
 
-all: check-os build_lib clean create_output_dir compile exit
+all: check-os check-BS build_lib clean create_output_dir compile exit
 
 check-os:
 ifeq (,$(filter windows linux,$(OS)))
-	$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
+$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
+endif
+
+# Comprobación de que BS es un número
+# Comprobación de que BS es un número
+check-BS:
+ifeq (, $(BS))
+$(error BS no puede estar vacio)
+endif
+ifeq ($(OS),windows)
+VALID_NUMBER := $(shell powershell -Command "[regex]::Match('$(BS)', '^[0-9]+$$').Success")
+ifneq ($(strip $(VALID_NUMBER)), True)
+$(error BS debe ser un numero)
+endif
+else
+VALID_NUMBER=$(shell echo $(BS) | grep -E '^[0-9]+$$')
+ifneq ($(strip $(VALID_NUMBER)), $(strip $(BS)))
+$(error BS debe ser un numero)
+endif
 endif
 
 build_lib:
 ifeq ($(OS),windows)
 	@echo "==> Building the library for Windows"
-	@$(MAKE) -C .. all OS=windows
+	@$(MAKE) -C .. all OS=windows BS=$(BS)
 else
 	@echo "==> Building the library for Linux"
-	@$(MAKE) -C .. all OS=linux
+	@$(MAKE) -C .. all OS=linux BS=$(BS)
 endif
 	@echo "-> Makefile Done!"
 

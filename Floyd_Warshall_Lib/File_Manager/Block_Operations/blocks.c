@@ -3,6 +3,8 @@
 
 void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
 {
+
+    printf("organize_to_blocks <==> Block size: %d\n", BLOCK_SIZE);
     if (size % BLOCK_SIZE != 0)
     {
         // Manejar el error o ajustar el tamaño de la matriz según sea necesario
@@ -89,6 +91,7 @@ void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
 
 void *reorganize_to_linear(void *block_matrix, unsigned int size, DataType type)
 {
+    printf("reorganize_to_linear <==> Block size: %d\n", BLOCK_SIZE);
 
     unsigned int r = size / BLOCK_SIZE; // Number of blocks along one dimension
     void *original_matrix = NULL;
