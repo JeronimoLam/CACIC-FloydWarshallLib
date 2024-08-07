@@ -1,27 +1,31 @@
-
-OS ?= Linux
+OS ?= UNDEFINED
 LIB_NAME = FloydWarshall
 OBJ_DIR = obj
 LIB_DIR = lib
 
-ifeq ($(OS),Windows_NT)
-all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
-CFLAGS = -fopenmp -march=native -O3 
+ifeq ($(OS),windows)
+all: check-os clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll
+CFLAGS = -fopenmp -march=native -O3 -Wall
 else
-all: prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
-CFLAGS = -fopenmp -march=native -fPIC -O3
+all: check-os clean prepare $(LIB_DIR)/lib$(LIB_NAME)_static.a ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so
+CFLAGS = -fopenmp -march=native -fPIC -O3 -Wall
+endif
+
+check-os:
+ifeq (,$(filter windows linux,$(OS)))
+	$(error Invalid OS value '$(OS)'. Please set OS to either 'windows' or 'linux'.)
 endif
 
 clean:
-ifeq ($(OS),Windows_NT)
-	@cmd /c "echo Clearing the screen... && cls"
+ifeq ($(OS),windows)
+	@if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)"
+	@if exist "$(LIB_DIR)" rmdir /s /q "$(LIB_DIR)"
 else
-	@echo "Clearing the screen..."
-	@clear
+	rm -rf $(OBJ_DIR) $(LIB_DIR)
 endif
 
 prepare:
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS),windows)
 	@if not exist "$(OBJ_DIR)" mkdir $(OBJ_DIR)
 	@if not exist "$(LIB_DIR)" mkdir $(LIB_DIR)
 else
@@ -74,12 +78,12 @@ $(OBJ_DIR)/FW_compute_double.o: Floyd_Warshall_Lib/FW_compute_double.c
 $(LIB_DIR)/lib$(LIB_NAME)_static.a: $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS),windows)
 ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll: $(OBJECTS)
 	gcc -DBUILDING_DLL $(CFLAGS) -shared -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,--out-implib,$(LIB_DIR)/lib$(LIB_NAME)_dynamic.dll.a -Wl,--output-def,$(LIB_DIR)/$(LIB_NAME).def
 else
 ./$(LIB_DIR)/lib$(LIB_NAME)_dynamic.so: $(OBJECTS)
 	gcc -DBUILDING_DLL $(CFLAGS) -shared -o $@ $(OBJECTS) -L$(LIB_DIR) -lFloydWarshall_static -Wl,-soname,$(LIB_NAME)_dynamic.so
-
 endif
+
 .PHONY: all clean prepare

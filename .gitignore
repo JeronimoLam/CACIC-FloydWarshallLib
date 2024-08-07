@@ -10,8 +10,8 @@ metricas.sh
 metricas.txt
 
 # Output Files
-output/*.csv
-output/*.json
+apps/output/*.csv
+apps/output/*.json
 compiled_example/**/output/*.csv
 compiled_example/**/output/*.json
 

@@ -6,15 +6,14 @@
 #include "FW_Lib_CommonTypes.h"
 
 /**
- * This function creates a FW_Matrix structure based on the specified data type, file path, block size, and attributes. It automatically detects the data type if not specified. 
+ * This function creates a FW_Matrix structure based on the specified data type, file path, and attributes. It automatically detects the data type if not specified. 
  *
  * @param dataType The data type of the matrix elements. UNDEFINED for autodetection.
  * @param path The path to the file containing the matrix data.
- * @param BS The block size for matrix operations.
  * @param attr Pointer to FW_attr_t structure containing additional attributes.
  * @return The created FW_Matrix structure with the matrix loaded.
  */
-LIB_EXPORT FW_Matrix fwl_matrix_create(DataType, char *, int, FW_attr_t *);
+LIB_EXPORT FW_Matrix fwl_matrix_create(DataType, char *, FW_attr_t *);
 
 /**
  * @brief Performs the Floyd-Warshall algorithm calculation on the provided matrix.
@@ -25,7 +24,7 @@ LIB_EXPORT FW_Matrix fwl_matrix_create(DataType, char *, int, FW_attr_t *);
  * @param FW The FW_Matrix representing the graph.
  * @param attr The FW_attr_t pointer representing the attributes for the computation.
  */
-LIB_EXPORT void fwl_matrix_paralell_search(FW_Matrix, FW_attr_t *);
+LIB_EXPORT void fwl_matrix_parallel_search(FW_Matrix, FW_attr_t *);
 
 /**
  * Computes the Floyd-Warshall algorithm sequentially on the given FW_Matrix to calculate the shortest distances between all pairs

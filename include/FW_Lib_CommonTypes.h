@@ -6,7 +6,10 @@
 #include <limits.h>
 #include <float.h>
 
+#define BLOCK_SIZE 128
+
 #if defined(_WIN32) || defined(_WIN64)
+    #include <windows.h>
     #if defined(BUILDING_DLL)
         #define LIB_EXPORT __declspec(dllexport)
     #else
@@ -19,8 +22,6 @@
         #define LIB_EXPORT
     #endif
 #endif
-
-
 
 #define EXIT_ALOCATION_FAILED 2
 #define EXIT_OPEN_FILE_ERROR 3
@@ -48,7 +49,6 @@ typedef struct LIB_EXPORT
     DataType datatype;
     unsigned int size;
     unsigned int norm_size;
-    unsigned int BS;
 } FW_Matrix;
 
 typedef struct LIB_EXPORT

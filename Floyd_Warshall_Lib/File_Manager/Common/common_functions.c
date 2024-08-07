@@ -111,9 +111,6 @@ char *read_next_token(FILE *file)
     // Null-terminate the token
     token[len] = '\0';
 
-    // Calculo la cantidad de lugares decimales
-    char *dot_position;
-
     if (token)
     {
         token = trim(token);
@@ -128,7 +125,7 @@ void print_int_matrix_to_file(FW_Matrix *FW, FILE *file, int *matrix, unsigned i
 
     if (value == INT_MAX && disconnected_str)
     {
-        fprintf(file, string);
+        fprintf(file, "%s", string);
     }
     else
     {
@@ -142,7 +139,7 @@ void print_float_matrix_to_file(FW_Matrix *FW, FILE *file, float *matrix, unsign
 
     if (value == FLT_MAX && disconnected_str)
     {
-        fprintf(file, string);
+        fprintf(file, "%s",string);
     }
     else
     {
@@ -156,7 +153,7 @@ void print_double_matrix_to_file(FW_Matrix *FW, FILE *file, double *matrix, unsi
 
     if (value == DBL_MAX && disconnected_str)
     {
-        fprintf(file, string);
+        fprintf(file, "%s",string);
     }
     else
     {

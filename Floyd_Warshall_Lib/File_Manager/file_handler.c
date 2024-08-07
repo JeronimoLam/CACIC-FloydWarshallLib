@@ -70,13 +70,10 @@ int calculate_matrix_size(FileType ft, FILE *file)
     {
     case CSV:
         return CSV_calculate_matrix_size(file);
-        break;
     case JSON:
         return JSON_calculate_matrix_size(file);
-        break;
     default:
-        // Handle default case
-        break;
+        return -1;
     }
 }
 
@@ -112,10 +109,10 @@ void create_matrixes_from_file(FW_Matrix *FW, FILE *file, int no_path)
         {
             FW->path = initialize_path_matrix(FW);
 
-            FW->path = (int *)organize_to_blocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
+            FW->path = (int *)organize_to_blocks((void *)FW->path, FW->norm_size, TYPE_INT);
         }
 
-        FW->dist = organize_to_blocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
+        FW->dist = organize_to_blocks(FW->dist, FW->norm_size, FW->datatype);
 
         break;
     case JSON:
@@ -128,9 +125,9 @@ void create_matrixes_from_file(FW_Matrix *FW, FILE *file, int no_path)
         else
         {
             FW->path = initialize_path_matrix(FW);
-            FW->path = (int *)organize_to_blocks((void *)FW->path, FW->norm_size, FW->BS, TYPE_INT);
+            FW->path = (int *)organize_to_blocks((void *)FW->path, FW->norm_size, TYPE_INT);
         }
-        FW->dist = organize_to_blocks(FW->dist, FW->norm_size, FW->BS, FW->datatype);
+        FW->dist = organize_to_blocks(FW->dist, FW->norm_size, FW->datatype);
         break;
     }
 }
@@ -208,6 +205,9 @@ int *initialize_path_matrix(FW_Matrix *G)
                 else
                     P[i * G->norm_size + j] = -1.0;
         break;
+    default:
+        P = NULL;
+    break;
     }
 
     return P;

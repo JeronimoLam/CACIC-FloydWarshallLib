@@ -18,6 +18,9 @@
 #define DEFAULT_PARTE_ENTERA 4
 #define DEFAULT_PARTE_DECIMAL 12
 
+
+void readInput(char *input, size_t size);
+
 int main()
 {
     char tipo = DEFAULT_TYPE;
@@ -35,7 +38,7 @@ int main()
     do
     {
         printf("Ingrese el tipo de numero (i = integer, d = decimal) [default: %c]: ", DEFAULT_TYPE);
-        fgets(input, sizeof(input), stdin);
+        readInput(input, sizeof(input));
         if (input[0] == '\n')
         {
             break; // Sale del bucle ya que se eligió el valor predeterminado.
@@ -46,7 +49,7 @@ int main()
     do
     {
         printf("Ingrese las dimensiones de la matriz [default: %d]: ", DEFAULT_SIZE);
-        fgets(input, sizeof(input), stdin);
+        readInput(input, sizeof(input));
         if (input[0] == '\n')
         {
             break; // Sale del bucle ya que se eligió el valor predeterminado.
@@ -57,7 +60,7 @@ int main()
     do
     {
         printf("Tipo de Grafo: (1: Dirigido | 0: No dirigido) [default: %d]: ", DEFAULT_DIRECTION);
-        fgets(input, sizeof(input), stdin);
+        readInput(input, sizeof(input));
         if (input[0] == '\n')
         {
             break; // Sale del bucle ya que se eligió el valor predeterminado.
@@ -73,7 +76,7 @@ int main()
         do
         {
             printf("Ingrese la parte entera [default: %d]: ", parteEntera);
-            fgets(input, sizeof(input), stdin);
+            readInput(input, sizeof(input));
             if (input[0] == '\n')
                 break; // Presionó Enter, usar valor predeterminado
 
@@ -82,7 +85,7 @@ int main()
         do
         {
             printf("Ingrese la parte decimal [default: %d]: ", parteDecimal);
-            fgets(input, sizeof(input), stdin);
+            readInput(input, sizeof(input));
             if (input[0] == '\n')
                 break; // Presionó Enter, usar valor predeterminado
 
@@ -91,7 +94,7 @@ int main()
         do
         {
             printf("Parte decimal toda en 0? (1: Yes | 0: No) [default: %d]: ", DEFAULT_DECIMAL_ZERO);
-            fgets(input, sizeof(input), stdin);
+            readInput(input, sizeof(input));
             if (input[0] == '\n')
                 break; // Presionó Enter, usar valor predeterminado
 
@@ -102,7 +105,7 @@ int main()
     do
     {
         printf("Porcentaje de completitud [default: %.1f]: ", DEFAULT_NEGATIVOS_DENSIDAD);
-        fgets(input, sizeof(input), stdin);
+        readInput(input, sizeof(input));
         if (input[0] == '\n')
             break; // Sale del bucle ya que se eligió el valor predeterminado.
 
@@ -112,7 +115,7 @@ int main()
     do
     {
         printf("Ingrese el formato de salida (C para CSV, J para JSON) [default: %c]: ", DEFAULT_FORMAT);
-        fgets(input, sizeof(input), stdin);
+        readInput(input, sizeof(input));
         if (input[0] == '\n')
         {
             break;
@@ -125,13 +128,13 @@ int main()
 
     defaultPath = (formato == 'J' || formato == 'j') ? DEFAULT_JSON_PATH : DEFAULT_CSV_PATH;
 
-    if ((tipo == 'd' || tipo == 'D') && (formato == 'j' || formato == 'J' ))
+    if ((tipo == 'd' || tipo == 'D') && (formato == 'j' || formato == 'J'))
     {
         // Tipo de números
         do
         {
             printf("1 = float | 0 = double: [default: %d]: ", DEFAULT_IS_FLOAT);
-            fgets(input, sizeof(input), stdin);
+            readInput(input, sizeof(input));
             if (input[0] == '\n')
             {
                 break; // Sale del bucle ya que se eligió el valor predeterminado.
@@ -141,7 +144,7 @@ int main()
 
     // Path del archivo de salida
     printf("Ingrese el path del archivo de salida [default: %s]: ", defaultPath);
-    fgets(input, sizeof(input), stdin);
+    readInput(input, sizeof(input));
     if (sscanf(input, "%s", path) != 1)
     {
         strcpy(path, defaultPath);
@@ -208,4 +211,14 @@ int main()
     printf("Archivo generado con exito en '%s'.\n\n", path);
 
     return 0;
+}
+
+
+//------------------------------------ Private Functions ------------------------------------//
+
+void readInput(char *input, size_t size) {
+    if (fgets(input, size, stdin) == NULL) {
+        fprintf(stderr, "Error reading input\n");
+        exit(EXIT_FAILURE);
+    }
 }

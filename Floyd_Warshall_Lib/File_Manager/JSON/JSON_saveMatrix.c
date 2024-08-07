@@ -25,7 +25,7 @@ void JSON_save_matrix(FW_Matrix FW, char *path, unsigned int print_dist, unsigne
 // ----------------------------- Private ----------------
 void static create_JSON(FW_Matrix *FW, DataType dt, int *matrix, const char *path, const char *extension, unsigned int disconnected_str)
 {
-    void *ordered_matrix = reorganize_to_linear((void *)matrix, FW->norm_size, FW->BS, dt);
+    void *ordered_matrix = reorganize_to_linear((void *)matrix, FW->norm_size, dt);
 
     FILE *file = open_result_file(path, extension);
 
@@ -107,6 +107,9 @@ static char *dt_to_str(DataType dt)
         break;
     case TYPE_DOUBLE:
         result = "double";
+        break;
+    default:
+        result = "unknown";
         break;
     }
     return result;
