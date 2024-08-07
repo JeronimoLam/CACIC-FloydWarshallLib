@@ -21,61 +21,51 @@ This library implements the Floyd-Warshall algorithm to find the shortest paths 
 
 ### Clone the Repository
 
-    ```sh
     git clone https://github.com/username/floyd-warshall-lib.git
     cd floyd-warshall-lib
-    ```
 
-### Compile the Library
+### Library
+
+#### Compile
 
 The library can be compiled using the makefile in the root directory. Attribute OS is mandatory and it can only be "linux" or "windows".
 
 For linux:
 
-    ```sh
     make OS=linux
-    ```
 
 For windows using mingw32:
 
-    ```sh
     mingw32-make OS=windows
-    ```
 
-### Library Files
+#### Library Files
 
 makefile will create ./lib directory. All main lib files will be created in that directory so anyone can use them in any project  
 
-## FW_app
+### FW_app
 
-### Compile FW_app
+#### Compile FW_app
 
 In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the FW_app.c program. LINK_TYPE is optional and it's default value is "static"
 
 For linux:
 
-    ```sh
     make OS=linux LINK_TYPE=[static/dynamic/\<empty\>]
-    ```
 
 For windows using mingw32:
 
-    ```sh
     mingw32-make OS=windows LINK_TYPE=[static/dynamic/\<empty\>]
-    ```
 
 ### Usage
 
 Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will be created. The usage of this file is detailed inside FW_app.c file.
 
-    ```sh
     Usage:
         "-p, --path <path>              Specify the path to the input file.
         "-i, --int                      Set the data type to integer.
         "-f, --float                    Set the data type to float.
         "-d, --double                   Set the data type to double.
         "-t, --thread-num <number>      Set the number of threads (default: get_nproc()).
-    ```
 
 # Contribution
 
