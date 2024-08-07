@@ -10,6 +10,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
     #include <windows.h>
+    #include <malloc.h> // Para _aligned_malloc y _aligned_free
     #if defined(BUILDING_DLL)
         #define LIB_EXPORT __declspec(dllexport)
     #else

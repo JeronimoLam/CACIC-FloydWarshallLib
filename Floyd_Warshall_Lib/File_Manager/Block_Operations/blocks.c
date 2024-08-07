@@ -1,10 +1,6 @@
 
 #include "blocks.h"
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <malloc.h> // Para _aligned_malloc y _aligned_free
-#endif
-
 void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
 {
     if (size % BLOCK_SIZE != 0)
