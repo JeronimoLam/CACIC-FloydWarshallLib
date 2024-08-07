@@ -217,13 +217,21 @@ void fwl_matrix_free(FW_Matrix *FW)
         // Free the dynamically allocated dist member, if it's not NULL.
         if (FW->dist != NULL)
         {
-            free(FW->dist);
+            #if defined(_WIN32) || defined(_WIN64)
+                _aligned_free(FW->dist);  // Use _aligned_free for Windows
+            #else
+                free(FW->dist);  // Use free for Unix systems
+            #endif
             FW->dist = NULL; // Avoid dangling pointer
         }
         // Free the dynamically allocated path member, if it's not NULL.
         if (FW->path != NULL)
         {
-            free(FW->path);
+            #if defined(_WIN32) || defined(_WIN64)
+                _aligned_free(FW->path);  // Use _aligned_free for Windows
+            #else
+                free(FW->path);  // Use free for Unix systems
+            #endif
             FW->path = NULL; // Avoid dangling pointer
         }
     }

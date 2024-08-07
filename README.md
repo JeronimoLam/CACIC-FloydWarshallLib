@@ -21,80 +21,53 @@ This library implements the Floyd-Warshall algorithm to find the shortest paths 
 
 ### Clone the Repository
 
-    ```sh
     git clone https://github.com/username/floyd-warshall-lib.git
     cd floyd-warshall-lib
-    ```
 
-### Compile the Library
+### Library
 
-#### **Linux**
+#### Compile
 
-   ```sh
-   ./LinuxCompileWithMakefile.sh [static|dynamic]
-   ```
+The library can be compiled using the makefile in the root directory. Attribute OS is mandatory and it can only be "linux" or "windows".
 
-    The script builds the library and compiles main.c with either static or dynamic linking. By default, it compiles with static linking if no parameter is provided.
+For linux:
 
-#### **Windows**
+    make OS=linux
 
-```sh
-WindowsCompileWithMakefile.bat [static|dynamic]
-```
+For windows using mingw32:
 
-    The script builds the library and compiles main.c with either static or dynamic linking. By default, it compiles with static linking if no parameter is provided.
+    mingw32-make OS=windows
 
-#### **Manual Compilation**
+#### Library Files
 
-For manual compilation of the Floyd-Warshall library, the following steps are provided for both Linux and Windows platforms:
+makefile will create ./lib directory. All main lib files will be created in that directory so anyone can use them in any project.
 
-1. Linux
+### FW_app
 
-```sh
-make
-```
+#### Compile FW_app
 
-Static linking:
+In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the executable program. LINK_TYPE is optional and it's default value is "static"
 
-```sh
-gcc -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_static
-```
+For linux:
 
-Dynamic linking:
-```sh
-    gcc -DBUILDING_DLL -march=native -O3 -fopenmp main.c -o FW.bin -Llib -lFloydWarshall_dynamic -Wl,-rpath,$(pwd)/lib
-    cp ./lib/libFloydWarshall_dynamic.so ./lib/FloydWarshall_dynamic.so
-```
+    make OS=linux LINK_TYPE=[static/dynamic/<empty>]
 
+For windows using mingw32:
 
+    mingw32-make OS=windows LINK_TYPE=[static/dynamic/<empty>]
 
-2. Windows (using mingw32)
+#### Usage
 
-```sh
-mingw32-make OS=Windows_NT
-```
+Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will be created. The usage of this file is detailed inside FW_app.c file.
 
-Static linking:
+    Usage:
+        "-p, --path <path>              Specify the path to the input file.
+        "-i, --int                      Set the data type to integer.
+        "-f, --float                    Set the data type to float.
+        "-d, --double                   Set the data type to double.
+        "-t, --thread-num <number>      Set the number of threads (default: get_nproc()).
 
-```sh
-gcc -O3 -fopenmp -march=native main.c -o FW.exe -Llib -lFloydWarshall_static
-```
-
-Dynamic linking:
-
-```sh
-gcc -DBUILDING_DLL -O3 -fopenmp -march=native main.c -o FW.exe -Llib -lFloydWarshall_dynamic
-copy .\lib\libFloydWarshall_dynamic.dll .\libFloydWarshall_dynamic.dll
-
-```
-
-
-# Usage
-
-# Contribution
-
-
-# License
+# License ??????????????
 
 
     
