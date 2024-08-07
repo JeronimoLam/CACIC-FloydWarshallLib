@@ -28,15 +28,15 @@ This library implements the Floyd-Warshall algorithm to find the shortest paths 
 
 #### Compile
 
-The library can be compiled using the makefile in the root directory. Attribute OS is mandatory and it can only be "linux" or "windows".
+The library can be compiled using the makefile in the root directory. Attribute OS is mandatory and it can only be "linux" or "windows". BS is optional and the defauult value is 128.
 
 For linux:
 
-    make OS=linux
+    make OS=linux (BS=<block_size>)
 
 For windows using mingw32:
 
-    mingw32-make OS=windows
+    mingw32-make OS=windows (BS=<block_size>)
 
 #### Library Files
 
@@ -44,19 +44,19 @@ makefile will create ./lib directory. All main lib files will be created in that
 
 ### FW_app
 
-#### Compile FW_app
+#### FW_app Compile
 
-In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the executable program. LINK_TYPE is optional and it's default value is "static"
+In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the executable program. LINK_TYPE is optional and it's default value is "static".  BS is optional and the defauult value is 128.
 
 For linux:
 
-    make OS=linux LINK_TYPE=[static/dynamic/<empty>]
+    make OS=linux (LINK_TYPE=[static/dynamic]) (BS=<block_size>) 
 
 For windows using mingw32:
 
-    mingw32-make OS=windows LINK_TYPE=[static/dynamic/<empty>]
+    mingw32-make OS=windows (LINK_TYPE=[static/dynamic]) (BS=<block_size>)
 
-#### Usage
+#### FW_app Usage
 
 Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will be created. The usage of this file is detailed inside FW_app.c file.
 
@@ -66,6 +66,36 @@ Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will
         "-f, --float                    Set the data type to float.
         "-d, --double                   Set the data type to double.
         "-t, --thread-num <number>      Set the number of threads (default: get_nproc()).
+
+### Example Generator
+
+This subproject creates example matrixes for testing the library.
+
+#### Generator Compile
+
+Similar to before, the makefile must be used to compile the generator. OS attribute is mandatory and it can only be "linux" or "windows". 
+
+For linux:
+
+    make OS=linux
+
+For windows using mingw32:
+
+    mingw32-make OS=windows
+
+#### Generator Usage
+A list of inputs will be prompt to configure and specify all the characteristics of the matrix to create.
+This are the following configurations
+
+- Datatype: int/float/double
+- Size
+- Graph Type: Directed/ Undirected
+- Integer Places (only for float or double)
+- Decimal places (only for float or double)
+- All decimal places in 0 (only for float or double)
+- Percentage of completeness
+- Output format: CSV/JSON
+- Output Path
 
 # License ??????????????
 
