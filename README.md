@@ -17,16 +17,9 @@ This library implements the Floyd-Warshall algorithm to find the shortest paths 
 - **Libraries**: OpenMP required for the parallel implementation.
 - **Operating System**: Windows 10 or later, any Linux distribution with GCC support.
 
-## Installation
+## Library
 
-### Clone the Repository
-
-    git clone https://github.com/username/floyd-warshall-lib.git
-    cd floyd-warshall-lib
-
-### Library
-
-#### Compile
+### Compile
 
 The library can be compiled using the makefile in the root directory. Attribute OS is mandatory and it can only be "linux" or "windows". BS is optional and the defauult value is 128.
 
@@ -38,13 +31,13 @@ For windows using mingw32:
 
     mingw32-make OS=windows (BS=<block_size>)
 
-#### Library Files
+### Library Files
 
 makefile will create ./lib directory. All main lib files will be created in that directory so anyone can use them in any project.
 
-### FW_app
+## FW_app
 
-#### FW_app Compile
+### FW_app Compile
 
 In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the executable program. LINK_TYPE is optional and it's default value is "static".  BS is optional and the defauult value is 128.
 
@@ -56,7 +49,7 @@ For windows using mingw32:
 
     mingw32-make OS=windows (LINK_TYPE=[static/dynamic]) (BS=<block_size>)
 
-#### FW_app Usage
+### FW_app Usage
 
 Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will be created. The usage of this file is detailed inside FW_app.c file.
 
@@ -67,11 +60,11 @@ Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will
         "-d, --double                   Set the data type to double.
         "-t, --thread-num <number>      Set the number of threads (default: get_nproc()).
 
-### Example Generator
+## Example Generator
 
 This subproject creates example matrixes for testing the library.
 
-#### Generator Compile
+### Generator Compile
 
 Similar to before, the makefile must be used to compile the generator. OS attribute is mandatory and it can only be "linux" or "windows". 
 
@@ -83,7 +76,7 @@ For windows using mingw32:
 
     mingw32-make OS=windows
 
-#### Generator Usage
+### Generator Usage
 
 A list of inputs will be prompt to configure and specify all the characteristics of the matrix to create.
 This are the following configurations
@@ -98,7 +91,12 @@ This are the following configurations
 - Output format: CSV/JSON
 - Output Path
 
-# License ??????????????
+## Clone the Repository
+
+    git clone https://github.com/username/floyd-warshall-lib.git
+    cd floyd-warshall-lib
+
+## License ??????????????
 
 
     
