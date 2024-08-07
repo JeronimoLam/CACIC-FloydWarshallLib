@@ -52,9 +52,9 @@ endif
 static:
 	@echo "-> Static linking"
 ifeq ($(OS),windows)
-	gcc -march=native -O3 -fopenmp FW_app.c -o FW.exe -L../lib -lFloydWarshall_static
+	gcc -march=native -O3 -fopenmp FW_app.c -o FW_app.exe -L../lib -lFloydWarshall_static
 else
-	gcc -march=native -O3 -fopenmp FW_app.c -o FW.bin -L../lib -lFloydWarshall_static
+	gcc -march=native -O3 -fopenmp FW_app.c -o FW_app.bin -L../lib -lFloydWarshall_static
 endif
 	@echo "-> Static Lib compilation Done!"
 
@@ -62,10 +62,10 @@ dynamic:
 	@echo "-> Dynamic linking"
 ifeq ($(OS),windows)
 	@copy ..\lib\libFloydWarshall_dynamic.dll libFloydWarshall_dynamic.dll
-	@gcc -DBUILDING_DLL -O3 -fopenmp -march=native FW_app.c -o FW.exe -L./ -lFloydWarshall_dynamic
+	@gcc -DBUILDING_DLL -O3 -fopenmp -march=native FW_app.c -o FW_app.exe -L./ -lFloydWarshall_dynamic
 else
 	@cp ../lib/libFloydWarshall_dynamic.so ./libFloydWarshall_dynamic.so
-	@gcc -DBUILDING_DLL -march=native -O3 -fopenmp FW_app.c -o FW.bin -L./ -lFloydWarshall_dynamic -Wl,-rpath,$(PWD)
+	@gcc -DBUILDING_DLL -march=native -O3 -fopenmp FW_app.c -o FW_app.bin -L./ -lFloydWarshall_dynamic -Wl,-rpath,$(PWD)
 	@mv ./libFloydWarshall_dynamic.so ./FloydWarshall_dynamic.so
 endif
 	@echo "-> Dynamic Lib compilation Done!"
