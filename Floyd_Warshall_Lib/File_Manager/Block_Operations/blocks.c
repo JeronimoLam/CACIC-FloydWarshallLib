@@ -89,7 +89,6 @@ void *organize_to_blocks(void *matrix, unsigned int size, DataType type)
 
 void *reorganize_to_linear(void *block_matrix, unsigned int size, DataType type)
 {
-
     unsigned int r = size / BLOCK_SIZE; // Number of blocks along one dimension
     void *original_matrix = NULL;
 

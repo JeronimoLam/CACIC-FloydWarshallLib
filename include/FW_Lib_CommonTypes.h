@@ -6,7 +6,9 @@
 #include <limits.h>
 #include <float.h>
 
+#ifndef BLOCK_SIZE
 #define BLOCK_SIZE 128
+#endif
 
 #if defined(_WIN32) || defined(_WIN64)
     #include <windows.h>
