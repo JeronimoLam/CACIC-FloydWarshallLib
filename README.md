@@ -84,6 +84,7 @@ For windows using mingw32:
     mingw32-make OS=windows
 
 #### Generator Usage
+
 A list of inputs will be prompt to configure and specify all the characteristics of the matrix to create.
 This are the following configurations
 
