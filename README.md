@@ -40,23 +40,23 @@ For windows using mingw32:
 
 #### Library Files
 
-makefile will create ./lib directory. All main lib files will be created in that directory so anyone can use them in any project  
+makefile will create ./lib directory. All main lib files will be created in that directory so anyone can use them in any project.
 
 ### FW_app
 
 #### Compile FW_app
 
-In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the FW_app.c program. LINK_TYPE is optional and it's default value is "static"
+In ./app directory, an example program can be found. To compile this example, use the makefile inside that dir. Attribute OS is mandatory and it can only be "linux" or "windows". Attribute LINK_TYPE define the link type between the library and the executable program. LINK_TYPE is optional and it's default value is "static"
 
 For linux:
 
-    make OS=linux LINK_TYPE=[static/dynamic/\<empty\>]
+    make OS=linux LINK_TYPE=[static/dynamic/<empty>]
 
 For windows using mingw32:
 
-    mingw32-make OS=windows LINK_TYPE=[static/dynamic/\<empty\>]
+    mingw32-make OS=windows LINK_TYPE=[static/dynamic/<empty>]
 
-### Usage
+#### Usage
 
 Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will be created. The usage of this file is detailed inside FW_app.c file.
 
@@ -67,10 +67,7 @@ Once compiled, in ./app directory, an executable (FW_app.exe or FW_app.bin) will
         "-d, --double                   Set the data type to double.
         "-t, --thread-num <number>      Set the number of threads (default: get_nproc()).
 
-# Contribution
-
-
-# License
+# License ??????????????
 
 
     
